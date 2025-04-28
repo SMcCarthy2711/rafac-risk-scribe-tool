@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,14 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// RAFAC specific colors
+				rafac: {
+					blue: '#003087',
+					navy: '#001F5F',
+					lightblue: '#5B92E5',
+					gray: '#505A64',
+					white: '#FFFFFF',
 				}
 			},
 			borderRadius: {
