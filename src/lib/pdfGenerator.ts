@@ -3,6 +3,12 @@ import { RiskAssessment } from "./types";
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 
+// Helper function to truncate text
+const truncateText = (text: string, maxLength: number) => {
+  if (!text) return '';
+  return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+};
+
 const exportToPDF = async (assessment: RiskAssessment) => {
   try {
     // Import the required libraries
@@ -117,11 +123,11 @@ const exportToPDF = async (assessment: RiskAssessment) => {
     
     y = (doc as any).lastAutoTable.finalY + 3; // Less spacing
     
-    // Publications - ensure it fits
+    // Publications - using the user's input from the form instead of hardcoded text
     autoTable(doc, {
       startY: y,
       head: [['Relevant Publications / Pamphlets / Procedures:']],
-      body: [[assessment.header["Publications"] || "1. Event Joining Instructions\n2. Pool Operating Procedures\n3. ACPDT1\n4. JSP800\n5. ACPEDT1 005"]],
+      body: [[assessment.header["Publications"] || ""]],
       theme: 'grid',
       styles: {
         fontSize: 9,
@@ -132,7 +138,7 @@ const exportToPDF = async (assessment: RiskAssessment) => {
     
     y = (doc as any).lastAutoTable.finalY + 5;
     
-    // Main risk table headers - Fix for TypeScript error with alignment types
+    // Main risk table headers - with proper typings
     const riskHeaders = [
       [
         { content: '(a)\nRef', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
@@ -151,12 +157,6 @@ const exportToPDF = async (assessment: RiskAssessment) => {
         { content: '(n)\nActions', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } }
       ]
     ];
-    
-    // Create rows for each risk - Truncate long text to fit better
-    const truncateText = (text: string, maxLength: number) => {
-      if (!text) return '';
-      return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
-    };
     
     // Create rows for each risk with truncated text
     const riskRows = assessment.risks.map(risk => [
