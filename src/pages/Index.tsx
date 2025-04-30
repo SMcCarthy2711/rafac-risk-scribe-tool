@@ -51,6 +51,13 @@ const Index = () => {
     setRisks((prevRisks) => [...prevRisks, risk]);
   };
 
+  const handleEditRisk = (index: number, updatedRisk: RiskEntryType) => {
+    const newRisks = [...risks];
+    newRisks[index] = updatedRisk;
+    setRisks(newRisks);
+    toast.success("Risk updated successfully!");
+  };
+
   const handleExport = async () => {
     // Validate that we have at least basic header info
     if (!headerFields.Squadron || !headerFields["Activity Title"]) {
@@ -107,7 +114,7 @@ const Index = () => {
 
           <TabsContent value="risks">
             <RiskEntry onAddRisk={handleAddRisk} />
-            <RiskList risks={risks} />
+            <RiskList risks={risks} onEditRisk={handleEditRisk} />
           </TabsContent>
 
           <TabsContent value="commander">
