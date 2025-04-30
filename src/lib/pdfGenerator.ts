@@ -34,48 +34,45 @@ const exportToPDF = async (assessment: RiskAssessment) => {
     doc.text("Uncontrolled copy when printed", margin, margin);
     doc.text("RAFAC Form 5010(c)", pageWidth - 30, margin);
     
-    // Add risk matrix box
+    // Add guidance and risk matrix image from the provided image
     const matrixStartY = margin + 10;
-    const matrixHeight = 70; // Reduced from 80 to fit better
-    const matrixWidth = effectiveWidth;
+    const matrixHeight = 70;
     
-    // Draw outer box for guidance and risk matrix
-    doc.setDrawColor(0);
-    doc.setFillColor(240, 240, 240);
-    doc.rect(margin, matrixStartY, matrixWidth, matrixHeight, 'S');
+    // Load the risk matrix image
+    const img = new Image();
+    img.src = '/lovable-uploads/339eab27-a618-4257-be6a-69d3eb8d952a.png';
     
-    // Add guidance text with better spacing
-    doc.setFontSize(11);
-    doc.setTextColor(0, 102, 204);
-    doc.text("Key Guidance", margin + 2, matrixStartY + 6);
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(9);
-    doc.text("This section provides an overview of the key concepts for completing a RAFAC risk assessment.", margin + 45, matrixStartY + 6);
-    doc.text("Refer to Notes section for further information. The first line of the risk assessment table, below, shows an illustrative example.", margin + 2, matrixStartY + 12);
-    
-    // Draw the risk matrix - simplified for now
-    doc.setDrawColor(0);
-    doc.setLineWidth(0.1);
-    
-    const tableStartX = pageWidth - 100;
-    doc.text("Risk Score Calculation", tableStartX - 5, matrixStartY + 15);
-    doc.rect(tableStartX - 15, matrixStartY + 10, 75, 50, 'S');
-    
-    // Add 5 Step Process at the bottom of the matrix box
-    doc.setFontSize(9);
-    doc.text("5 Step Process", margin + 2, matrixStartY + matrixHeight - 6);
-    doc.setTextColor(255, 0, 0);
-    doc.text("Step 1", margin + 45, matrixStartY + matrixHeight - 6);
-    doc.setTextColor(0, 0, 0);
-    doc.text("- Identify the hazards", margin + 65, matrixStartY + matrixHeight - 6);
-    
-    doc.setTextColor(255, 0, 0);
-    doc.text("Step 2", margin + 130, matrixStartY + matrixHeight - 6);
-    doc.setTextColor(0, 0, 0);
-    doc.text("- Decide who might be harmed and how", margin + 150, matrixStartY + matrixHeight - 6);
+    // Use a promise to ensure image is loaded before adding to PDF
+    await new Promise<void>((resolve) => {
+      img.onload = () => {
+        // Calculate the aspect ratio to maintain proportions
+        const imgAspect = img.width / img.height;
+        const displayHeight = matrixHeight;
+        const displayWidth = displayHeight * imgAspect;
+        
+        // Center the image horizontally
+        const xPos = margin + (effectiveWidth - displayWidth) / 2;
+        
+        // Add the image to the PDF
+        doc.addImage(
+          img, 
+          'PNG', 
+          xPos, 
+          matrixStartY, 
+          displayWidth, 
+          displayHeight
+        );
+        resolve();
+      };
+      // Fallback in case image fails to load
+      img.onerror = () => {
+        console.error("Failed to load risk matrix image");
+        resolve();
+      };
+    });
     
     // Now add the main form fields with better spacing
-    let y = matrixStartY + matrixHeight + 5; // Reduced spacing
+    let y = matrixStartY + matrixHeight + 5;
     
     // Header section with Squadron info - adjusted column widths
     autoTable(doc, {
@@ -88,8 +85,8 @@ const exportToPDF = async (assessment: RiskAssessment) => {
       ]],
       theme: 'grid',
       styles: {
-        fontSize: 9, // Slightly smaller font
-        cellPadding: 2, // Less padding
+        fontSize: 9,
+        cellPadding: 2,
       },
       margin: { left: margin, right: margin },
       columnStyles: {
@@ -99,7 +96,7 @@ const exportToPDF = async (assessment: RiskAssessment) => {
       }
     });
     
-    y = (doc as any).lastAutoTable.finalY + 3; // Less spacing
+    y = (doc as any).lastAutoTable.finalY + 3;
     
     // Activity Title - adjusted column widths
     autoTable(doc, {
@@ -121,7 +118,7 @@ const exportToPDF = async (assessment: RiskAssessment) => {
       }
     });
     
-    y = (doc as any).lastAutoTable.finalY + 3; // Less spacing
+    y = (doc as any).lastAutoTable.finalY + 3;
     
     // Publications - using the user's input from the form instead of hardcoded text
     autoTable(doc, {
@@ -203,28 +200,28 @@ const exportToPDF = async (assessment: RiskAssessment) => {
       body: riskRows,
       theme: 'grid',
       styles: {
-        fontSize: 7, // Smaller font to fit
-        cellPadding: 1, // Minimal padding
+        fontSize: 7,
+        cellPadding: 1,
         lineColor: [0, 0, 0],
         lineWidth: 0.1,
-        overflow: 'ellipsize' as const, // Handle overflow better
+        overflow: 'ellipsize' as const,
       },
       margin: { left: margin, right: margin },
       columnStyles: {
-        0: { cellWidth: 10 }, // Ref
-        1: { cellWidth: 25 }, // Activity
-        2: { cellWidth: 25 }, // Hazards
-        3: { cellWidth: 25 }, // Who/What
-        4: { cellWidth: 30 }, // Controls
-        5: { cellWidth: 8 }, // L
-        6: { cellWidth: 8 }, // I
-        7: { cellWidth: 12 }, // Rating
-        8: { cellWidth: 15 }, // Ok?
-        9: { cellWidth: 25 }, // Add. Controls
-        10: { cellWidth: 8 }, // Rev L
-        11: { cellWidth: 8 }, // Rev I
-        12: { cellWidth: 15 }, // Rev Rating
-        13: { cellWidth: 25 }, // Actions
+        0: { cellWidth: 10 },
+        1: { cellWidth: 25 },
+        2: { cellWidth: 25 },
+        3: { cellWidth: 25 },
+        4: { cellWidth: 30 },
+        5: { cellWidth: 8 },
+        6: { cellWidth: 8 },
+        7: { cellWidth: 12 },
+        8: { cellWidth: 15 },
+        9: { cellWidth: 25 },
+        10: { cellWidth: 8 },
+        11: { cellWidth: 8 },
+        12: { cellWidth: 15 },
+        13: { cellWidth: 25 },
       },
       headStyles: {
         fillColor: [240, 240, 240],
