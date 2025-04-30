@@ -125,23 +125,23 @@ const exportToPDF = async (assessment: RiskAssessment) => {
     
     y = (doc as any).lastAutoTable.finalY + 10;
     
-    // Main risk table headers - Fix for TypeScript error with fontStyle
+    // Main risk table headers - Fix for TypeScript error with alignment types
     const riskHeaders = [
       [
-        { content: '(a)\nRef', styles: { halign: 'center', valign: 'middle', fontStyle: 'bold' as 'bold' } },
-        { content: '(b)\nActivity / Element\n(Step 1a)', styles: { halign: 'center', valign: 'middle', fontStyle: 'bold' as 'bold' } },
-        { content: '(c)\nHazards identified\n(Step 1b)', styles: { halign: 'center', valign: 'middle', fontStyle: 'bold' as 'bold' } },
-        { content: '(d)\nWho or what might be harmed and how\n(Step 2)', styles: { halign: 'center', valign: 'middle', fontStyle: 'bold' as 'bold' } },
-        { content: '(e)\nExisting control measures\n(Step 3a)', styles: { halign: 'center', valign: 'middle', fontStyle: 'bold' as 'bold' } },
-        { content: '(f)\nL\n(1-5)\n(Step 3b)', styles: { halign: 'center', valign: 'middle', fontStyle: 'bold' as 'bold' } },
-        { content: '(g)\nI\n(1-5)\n(Step 3c)', styles: { halign: 'center', valign: 'middle', fontStyle: 'bold' as 'bold' } },
-        { content: '(h)\nRisk Rating\n(L x I)\n(Step 3d)', styles: { halign: 'center', valign: 'middle', fontStyle: 'bold' as 'bold' } },
-        { content: '(i)\nIs risk acceptable?\n– Refer to\nRisk Score\nCalculation\nabove', styles: { halign: 'center', valign: 'middle', fontStyle: 'bold' as 'bold' } },
-        { content: '(j)\nReasonable additional\ncontrols that can be\nimplemented to reduce\nrisk to ALARP\n(Step 3f)', styles: { halign: 'center', valign: 'middle', fontStyle: 'bold' as 'bold' } },
-        { content: '(k)\nL\n(1-5)\n(Step 3g)', styles: { halign: 'center', valign: 'middle', fontStyle: 'bold' as 'bold' } },
-        { content: '(l)\nI\n(1-5)\n(Step 3h)', styles: { halign: 'center', valign: 'middle', fontStyle: 'bold' as 'bold' } },
-        { content: '(m)\nRisk Rating\n(L x I)\n(Step 3i)', styles: { halign: 'center', valign: 'middle', fontStyle: 'bold' as 'bold' } },
-        { content: '(n)\nList required action(s)\nto instigate controls\n(Who, When and How)\n(Step 3j)', styles: { halign: 'center', valign: 'middle', fontStyle: 'bold' as 'bold' } }
+        { content: '(a)\nRef', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
+        { content: '(b)\nActivity / Element\n(Step 1a)', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
+        { content: '(c)\nHazards identified\n(Step 1b)', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
+        { content: '(d)\nWho or what might be harmed and how\n(Step 2)', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
+        { content: '(e)\nExisting control measures\n(Step 3a)', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
+        { content: '(f)\nL\n(1-5)\n(Step 3b)', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
+        { content: '(g)\nI\n(1-5)\n(Step 3c)', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
+        { content: '(h)\nRisk Rating\n(L x I)\n(Step 3d)', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
+        { content: '(i)\nIs risk acceptable?\n– Refer to\nRisk Score\nCalculation\nabove', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
+        { content: '(j)\nReasonable additional\ncontrols that can be\nimplemented to reduce\nrisk to ALARP\n(Step 3f)', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
+        { content: '(k)\nL\n(1-5)\n(Step 3g)', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
+        { content: '(l)\nI\n(1-5)\n(Step 3h)', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
+        { content: '(m)\nRisk Rating\n(L x I)\n(Step 3i)', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
+        { content: '(n)\nList required action(s)\nto instigate controls\n(Who, When and How)\n(Step 3j)', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } }
       ]
     ];
     
@@ -249,7 +249,7 @@ const exportToPDF = async (assessment: RiskAssessment) => {
         styles: {
           fontSize: 10,
           cellPadding: 3,
-          fontStyle: 'bold' as 'bold'
+          fontStyle: 'bold' as const
         }
       });
       
