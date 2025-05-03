@@ -99,9 +99,9 @@ const Index = () => {
         {/* Logo in top right */}
         <div className="absolute top-4 right-4 md:top-8 md:right-8">
           <img 
-            src="/lovable-uploads/339eab27-a618-4257-be6a-69d3eb8d952a.png" 
-            alt="RAF Air Cadets Logo" 
-            className="h-16 w-auto"
+            src="/lovable-uploads/8ec214f7-9bc9-4aec-9515-b58b16054452.png" 
+            alt="Royal Air Force Logo" 
+            className="h-20 w-auto"
           />
         </div>
         
