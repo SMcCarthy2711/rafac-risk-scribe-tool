@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -31,6 +30,8 @@ const Index = () => {
   });
 
   const [risks, setRisks] = useState<RiskEntryType[]>([]);
+  // Keep track of next reference number - start with 1
+  const [nextRefNumber, setNextRefNumber] = useState<number>(1);
 
   const [commanderFields, setCommanderFields] = useState<CommanderFields>({
     "Commander Name": "",
@@ -49,6 +50,8 @@ const Index = () => {
 
   const handleAddRisk = (risk: RiskEntryType) => {
     setRisks((prevRisks) => [...prevRisks, risk]);
+    // Increment the next reference number
+    setNextRefNumber(nextRefNumber + 1);
   };
 
   const handleEditRisk = (index: number, updatedRisk: RiskEntryType) => {
@@ -113,7 +116,7 @@ const Index = () => {
           </TabsContent>
 
           <TabsContent value="risks">
-            <RiskEntry onAddRisk={handleAddRisk} />
+            <RiskEntry onAddRisk={handleAddRisk} nextRefNumber={nextRefNumber} />
             <RiskList risks={risks} onEditRisk={handleEditRisk} />
           </TabsContent>
 

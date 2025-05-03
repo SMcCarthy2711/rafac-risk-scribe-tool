@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -27,10 +26,34 @@ const emptyRisk: RiskEntryType = {
 
 interface RiskEntryProps {
   onAddRisk: (risk: RiskEntryType) => void;
+  nextRefNumber: number; // New prop to receive the next reference number
 }
 
-const RiskEntry: React.FC<RiskEntryProps> = ({ onAddRisk }) => {
-  const [currentRisk, setCurrentRisk] = useState<RiskEntryType>({...emptyRisk});
+const RiskEntry: React.FC<RiskEntryProps> = ({ onAddRisk, nextRefNumber }) => {
+  const [currentRisk, setCurrentRisk] = useState<RiskEntryType>({
+    "Ref": nextRefNumber.toString(),
+    "Activity/Element": "",
+    "Hazards Identified": "",
+    "Who or What Might be Harmed and How": "",
+    "Existing Control Measures": "",
+    "Likelihood": "1",
+    "Impact": "1",
+    "Risk Rating (LxI)": "1",
+    "Is Risk Acceptable": "Yes",
+    "Reasonable Additional Control Measures": "",
+    "Revised Likelihood": "1",
+    "Revised Impact": "1",
+    "Revised Risk Rating (LxI)": "1",
+    "List Required Actions (Who, When and How)": ""
+  });
+
+  useEffect(() => {
+    // Update ref when nextRefNumber prop changes
+    setCurrentRisk(prev => ({
+      ...prev,
+      "Ref": nextRefNumber.toString()
+    }));
+  }, [nextRefNumber]);
 
   const handleInputChange = (field: keyof RiskEntryType, value: string) => {
     setCurrentRisk((prev) => ({ ...prev, [field]: value }));
@@ -52,13 +75,31 @@ const RiskEntry: React.FC<RiskEntryProps> = ({ onAddRisk }) => {
 
   const handleAddRisk = () => {
     // Simple validation to ensure key fields are filled
-    if (!currentRisk.Ref || !currentRisk["Activity/Element"] || !currentRisk["Hazards Identified"]) {
-      toast.error("Please fill in Ref, Activity/Element, and Hazards Identified");
+    if (!currentRisk["Activity/Element"] || !currentRisk["Hazards Identified"]) {
+      toast.error("Please fill in Activity/Element and Hazards Identified");
       return;
     }
 
     onAddRisk({...currentRisk});
-    setCurrentRisk({...emptyRisk});
+    
+    // Reset form with incremented reference number (keep this for UX, even though the parent component will update nextRefNumber)
+    setCurrentRisk({
+      "Ref": (nextRefNumber + 1).toString(),
+      "Activity/Element": "",
+      "Hazards Identified": "",
+      "Who or What Might be Harmed and How": "",
+      "Existing Control Measures": "",
+      "Likelihood": "1",
+      "Impact": "1",
+      "Risk Rating (LxI)": "1",
+      "Is Risk Acceptable": "Yes",
+      "Reasonable Additional Control Measures": "",
+      "Revised Likelihood": "1",
+      "Revised Impact": "1",
+      "Revised Risk Rating (LxI)": "1",
+      "List Required Actions (Who, When and How)": ""
+    });
+    
     toast.success("Risk entry added successfully!");
   };
 
@@ -74,8 +115,9 @@ const RiskEntry: React.FC<RiskEntryProps> = ({ onAddRisk }) => {
             <Input
               id="ref"
               value={currentRisk.Ref}
-              onChange={(e) => handleInputChange("Ref", e.target.value)}
-              placeholder="Enter reference number"
+              readOnly
+              className="bg-slate-100"
+              placeholder="Reference number (auto-generated)"
             />
           </div>
           
