@@ -98,7 +98,7 @@ const Index = () => {
           <p className="text-sm text-slate-600">Generate standardized risk assessments for activities</p>
         </div>
 
-        <Tabs defaultValue="header" className="w-full">
+        <Tabs defaultValue="header" className="w-full mx-0 py-[11px]">
           <TabsList className="grid grid-cols-4 mb-8">
             <TabsTrigger value="header">Header Details</TabsTrigger>
             <TabsTrigger value="risks">Risk Entries</TabsTrigger>
