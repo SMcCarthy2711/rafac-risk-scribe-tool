@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -95,6 +96,15 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-slate-50 py-8 px-4">
       <div className="max-w-7xl mx-auto">
+        {/* Logo in top right */}
+        <div className="absolute top-4 right-4 md:top-8 md:right-8">
+          <img 
+            src="/lovable-uploads/339eab27-a618-4257-be6a-69d3eb8d952a.png" 
+            alt="RAF Air Cadets Logo" 
+            className="h-16 w-auto"
+          />
+        </div>
+        
         <div className="text-center mb-8">
           <div className="flex justify-center items-center gap-2 mb-2">
             <FilePenLine className="h-8 w-8 text-rafac-blue" />
