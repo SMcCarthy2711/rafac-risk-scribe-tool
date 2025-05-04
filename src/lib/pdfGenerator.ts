@@ -74,13 +74,14 @@ const exportToPDF = async (assessment: RiskAssessment) => {
     // Now add the main form fields with better spacing
     let y = matrixStartY + matrixHeight + 5;
     
-    // Header section with Squadron info - adjusted column widths
+    // Header section with Squadron info - adjusted column widths and adding signature box
     autoTable(doc, {
       startY: y,
-      head: [['RAFAC Formation:', 'Assessor (No, Rank, Name):', 'Assessment Date:']],
+      head: [['RAFAC Formation:', 'Assessor (No, Rank, Name):', 'Signature:', 'Assessment Date:']],
       body: [[
         assessment.header.Squadron, 
         assessment.header["Assessor Name"],
+        '', // Empty cell for signature
         assessment.header["Assessment Date"]
       ]],
       theme: 'grid',
@@ -90,9 +91,10 @@ const exportToPDF = async (assessment: RiskAssessment) => {
       },
       margin: { left: margin, right: margin },
       columnStyles: {
-        0: { cellWidth: 90 },
-        1: { cellWidth: 90 },
-        2: { cellWidth: 50 }
+        0: { cellWidth: 70 },
+        1: { cellWidth: 70 },
+        2: { cellWidth: 50 }, // Width for signature box
+        3: { cellWidth: 40 }
       }
     });
     
@@ -155,22 +157,22 @@ const exportToPDF = async (assessment: RiskAssessment) => {
       ]
     ];
     
-    // Create rows for each risk with truncated text
+    // Create rows for each risk with wrapped text (no truncation)
     const riskRows = assessment.risks.map(risk => [
       risk.Ref,
-      truncateText(risk["Activity/Element"], 25),
-      truncateText(risk["Hazards Identified"], 25),
-      truncateText(risk["Who or What Might be Harmed and How"], 25),
-      truncateText(risk["Existing Control Measures"], 30),
+      risk["Activity/Element"],
+      risk["Hazards Identified"],
+      risk["Who or What Might be Harmed and How"],
+      risk["Existing Control Measures"],
       risk.Likelihood,
       risk.Impact,
       risk["Risk Rating (LxI)"],
       risk["Is Risk Acceptable"],
-      truncateText(risk["Reasonable Additional Control Measures"], 25),
+      risk["Reasonable Additional Control Measures"],
       risk["Revised Likelihood"],
       risk["Revised Impact"],
       risk["Revised Risk Rating (LxI)"],
-      truncateText(risk["List Required Actions (Who, When and How)"], 25)
+      risk["List Required Actions (Who, When and How)"]
     ]);
     
     // Add a default example row if no risks
@@ -193,7 +195,7 @@ const exportToPDF = async (assessment: RiskAssessment) => {
       ]);
     }
     
-    // Create the main risk table with optimized column widths
+    // Create the main risk table with optimized column widths and text wrapping
     autoTable(doc, {
       startY: y,
       head: riskHeaders,
@@ -204,7 +206,7 @@ const exportToPDF = async (assessment: RiskAssessment) => {
         cellPadding: 1,
         lineColor: [0, 0, 0],
         lineWidth: 0.1,
-        overflow: 'ellipsize' as const,
+        overflow: 'linebreak' as const, // Changed from 'ellipsize' to 'linebreak' for text wrapping
       },
       margin: { left: margin, right: margin },
       columnStyles: {
@@ -278,14 +280,15 @@ const exportToPDF = async (assessment: RiskAssessment) => {
         startY: y,
         head: [['Dynamic Reason:', 'New Restrictions:', 'Remarks:']],
         body: [[
-          truncateText(assessment.dynamic["Dynamic Reason"], 30), 
-          truncateText(assessment.dynamic["New Restrictions"], 30),
-          truncateText(assessment.dynamic.Remarks, 30)
+          assessment.dynamic["Dynamic Reason"], 
+          assessment.dynamic["New Restrictions"],
+          assessment.dynamic.Remarks
         ]],
         theme: 'grid',
         styles: {
           fontSize: 9,
           cellPadding: 2,
+          overflow: 'linebreak' as const, // Enable text wrapping
         },
         margin: { left: margin, right: margin },
         columnStyles: {
