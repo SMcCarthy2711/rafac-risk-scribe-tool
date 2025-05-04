@@ -2,12 +2,12 @@
 import { RiskAssessment } from "./types";
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
-
-// Helper function to truncate text
-const truncateText = (text: string, maxLength: number) => {
-  if (!text) return '';
-  return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
-};
+import { createPdfDocument, addPdfHeader, addVersionNumber } from './pdf/utils';
+import { addRiskMatrix } from './pdf/riskMatrix';
+import { addHeaderSection } from './pdf/headerSection';
+import { addRiskTable } from './pdf/riskTable';
+import { addCommanderSection } from './pdf/commanderSection';
+import { addDynamicSection } from './pdf/dynamicSection';
 
 const exportToPDF = async (assessment: RiskAssessment) => {
   try {
@@ -15,11 +15,7 @@ const exportToPDF = async (assessment: RiskAssessment) => {
     const { default: autoTable } = await import('jspdf-autotable');
     
     // Create a new document in landscape orientation
-    const doc = new jsPDF({
-      orientation: 'landscape',
-      unit: 'mm',
-      format: 'a4',
-    });
+    const doc = createPdfDocument();
     
     const pageWidth = doc.internal.pageSize.width;
     const pageHeight = doc.internal.pageSize.height;
@@ -29,302 +25,32 @@ const exportToPDF = async (assessment: RiskAssessment) => {
     const effectiveWidth = pageWidth - (2 * margin);
     
     // Add header - Form title and "Uncontrolled copy when printed"
-    doc.setFontSize(10);
-    doc.setTextColor(0, 0, 0);
-    doc.text("Uncontrolled copy when printed", margin, margin);
-    doc.text("RAFAC Form 5010(c)", pageWidth - 30, margin);
+    addPdfHeader(doc, margin, pageWidth);
     
     // Add guidance and risk matrix image from the provided image
     const matrixStartY = margin + 10;
     const matrixHeight = 70;
     
-    // Load the risk matrix image
-    const img = new Image();
-    img.src = '/lovable-uploads/339eab27-a618-4257-be6a-69d3eb8d952a.png';
-    
-    // Use a promise to ensure image is loaded before adding to PDF
-    await new Promise<void>((resolve) => {
-      img.onload = () => {
-        // Calculate the aspect ratio to maintain proportions
-        const imgAspect = img.width / img.height;
-        const displayHeight = matrixHeight;
-        const displayWidth = displayHeight * imgAspect;
-        
-        // Center the image horizontally
-        const xPos = margin + (effectiveWidth - displayWidth) / 2;
-        
-        // Add the image to the PDF
-        doc.addImage(
-          img, 
-          'PNG', 
-          xPos, 
-          matrixStartY, 
-          displayWidth, 
-          displayHeight
-        );
-        resolve();
-      };
-      // Fallback in case image fails to load
-      img.onerror = () => {
-        console.error("Failed to load risk matrix image");
-        resolve();
-      };
-    });
+    // Add the risk matrix image
+    await addRiskMatrix(doc, matrixStartY, matrixHeight, margin, effectiveWidth);
     
     // Now add the main form fields with better spacing
     let y = matrixStartY + matrixHeight + 5;
     
-    // Header section with Squadron info - adjusted column widths and adding signature box
-    autoTable(doc, {
-      startY: y,
-      head: [['RAFAC Formation:', 'Assessor (No, Rank, Name):', 'Signature:', 'Assessment Date:']],
-      body: [[
-        assessment.header.Squadron, 
-        assessment.header["Assessor Name"],
-        '', // Empty cell for signature
-        assessment.header["Assessment Date"]
-      ]],
-      theme: 'grid',
-      styles: {
-        fontSize: 9,
-        cellPadding: 2,
-      },
-      margin: { left: margin, right: margin },
-      columnStyles: {
-        0: { cellWidth: 70 },
-        1: { cellWidth: 70 },
-        2: { cellWidth: 50 }, // Width for signature box
-        3: { cellWidth: 40 }
-      }
-    });
+    // Add header section with Squadron info
+    y = await addHeaderSection(doc, autoTable, assessment.header, y, margin);
     
-    y = (doc as any).lastAutoTable.finalY + 3;
+    // Add risk table
+    y = addRiskTable(doc, autoTable, assessment.risks, y, margin);
     
-    // Activity Title - adjusted column widths
-    autoTable(doc, {
-      startY: y,
-      head: [['Activity (Step 1a):', 'Type of Risk Assessment:']],
-      body: [[
-        assessment.header["Activity Title"],
-        assessment.header["Risk Assessment Type"] || "Generic ☐     Specific ☑"
-      ]],
-      theme: 'grid',
-      styles: {
-        fontSize: 9,
-        cellPadding: 2,
-      },
-      margin: { left: margin, right: margin },
-      columnStyles: {
-        0: { cellWidth: 140 },
-        1: { cellWidth: 90 }
-      }
-    });
+    // Add commander sign-off information
+    y = addCommanderSection(doc, autoTable, assessment.commander, y, margin);
     
-    y = (doc as any).lastAutoTable.finalY + 3;
-    
-    // Publications - using the user's input from the form instead of hardcoded text
-    autoTable(doc, {
-      startY: y,
-      head: [['Relevant Publications / Pamphlets / Procedures:']],
-      body: [[assessment.header["Publications"] || ""]],
-      theme: 'grid',
-      styles: {
-        fontSize: 9,
-        cellPadding: 2,
-      },
-      margin: { left: margin, right: margin }
-    });
-    
-    y = (doc as any).lastAutoTable.finalY + 5;
-    
-    // Main risk table headers - with proper typings
-    const riskHeaders = [
-      [
-        { content: '(a)\nRef', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
-        { content: '(b)\nActivity', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
-        { content: '(c)\nHazards', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
-        { content: '(d)\nWho/What', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
-        { content: '(e)\nControls', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
-        { content: '(f)\nL', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
-        { content: '(g)\nI', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
-        { content: '(h)\nRating', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
-        { content: '(i)\nAccept?', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
-        { content: '(j)\nAdditional\nControls', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
-        { content: '(k)\nL', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
-        { content: '(l)\nI', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
-        { content: '(m)\nRevised\nRating', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } },
-        { content: '(n)\nActions', styles: { halign: 'center' as const, valign: 'middle' as const, fontStyle: 'bold' as const } }
-      ]
-    ];
-    
-    // Create rows for each risk with wrapped text (no truncation)
-    const riskRows = assessment.risks.map(risk => [
-      risk.Ref,
-      risk["Activity/Element"],
-      risk["Hazards Identified"],
-      risk["Who or What Might be Harmed and How"],
-      risk["Existing Control Measures"],
-      risk.Likelihood,
-      risk.Impact,
-      risk["Risk Rating (LxI)"],
-      risk["Is Risk Acceptable"],
-      risk["Reasonable Additional Control Measures"],
-      risk["Revised Likelihood"],
-      risk["Revised Impact"],
-      risk["Revised Risk Rating (LxI)"],
-      risk["List Required Actions (Who, When and How)"]
-    ]);
-    
-    // Add a default example row if no risks
-    if (riskRows.length === 0) {
-      riskRows.push([
-        'E.g.', 
-        'Driving to / from training', 
-        'Driver fatigue causes RTA',
-        'Injuries to personnel',
-        'Designated drivers · JSP800',
-        '2', 
-        '5', 
-        '10',
-        'NO',
-        'Vehicle commander to monitor',
-        '1',
-        '5',
-        '5',
-        'CFAV to implement controls'
-      ]);
-    }
-    
-    // Create the main risk table with optimized column widths and text wrapping
-    autoTable(doc, {
-      startY: y,
-      head: riskHeaders,
-      body: riskRows,
-      theme: 'grid',
-      styles: {
-        fontSize: 7,
-        cellPadding: 1,
-        lineColor: [0, 0, 0],
-        lineWidth: 0.1,
-        overflow: 'linebreak' as const, // Changed from 'ellipsize' to 'linebreak' for text wrapping
-      },
-      margin: { left: margin, right: margin },
-      columnStyles: {
-        0: { cellWidth: 10 },
-        1: { cellWidth: 25 },
-        2: { cellWidth: 25 },
-        3: { cellWidth: 25 },
-        4: { cellWidth: 30 },
-        5: { cellWidth: 8 },
-        6: { cellWidth: 8 },
-        7: { cellWidth: 12 },
-        8: { cellWidth: 15 },
-        9: { cellWidth: 25 },
-        10: { cellWidth: 8 },
-        11: { cellWidth: 8 },
-        12: { cellWidth: 15 },
-        13: { cellWidth: 25 },
-      },
-      headStyles: {
-        fillColor: [240, 240, 240],
-        textColor: [0, 0, 0],
-        fontStyle: 'bold',
-        fontSize: 7
-      }
-    });
-    
-    y = (doc as any).lastAutoTable.finalY + 5;
-    
-    // Add commander sign-off information in a table with adjusted widths
-    autoTable(doc, {
-      startY: y,
-      head: [['Commander Name:', 'Commander Post:', 'Commander Date:']],
-      body: [[
-        assessment.commander["Commander Name"], 
-        assessment.commander["Commander Post"],
-        assessment.commander["Commander Date"]
-      ]],
-      theme: 'grid',
-      styles: {
-        fontSize: 9,
-        cellPadding: 2,
-      },
-      margin: { left: margin, right: margin },
-      columnStyles: {
-        0: { cellWidth: 90 },
-        1: { cellWidth: 90 },
-        2: { cellWidth: 50 }
-      }
-    });
-    
-    // Add Dynamic RA information if provided with better spacing
-    if (assessment.dynamic["Dynamic Reason"] || assessment.dynamic["New Restrictions"] || assessment.dynamic.Remarks) {
-      y = (doc as any).lastAutoTable.finalY + 5;
-      
-      autoTable(doc, {
-        startY: y,
-        head: [['Dynamic Risk Assessment']],
-        body: [['']],
-        theme: 'grid',
-        styles: {
-          fontSize: 9,
-          cellPadding: 2,
-          fontStyle: 'bold' as const
-        },
-        margin: { left: margin, right: margin }
-      });
-      
-      y = (doc as any).lastAutoTable.finalY;
-      
-      autoTable(doc, {
-        startY: y,
-        head: [['Dynamic Reason:', 'New Restrictions:', 'Remarks:']],
-        body: [[
-          assessment.dynamic["Dynamic Reason"], 
-          assessment.dynamic["New Restrictions"],
-          assessment.dynamic.Remarks
-        ]],
-        theme: 'grid',
-        styles: {
-          fontSize: 9,
-          cellPadding: 2,
-          overflow: 'linebreak' as const, // Enable text wrapping
-        },
-        margin: { left: margin, right: margin },
-        columnStyles: {
-          0: { cellWidth: 90 },
-          1: { cellWidth: 90 },
-          2: { cellWidth: 50 }
-        }
-      });
-      
-      y = (doc as any).lastAutoTable.finalY;
-      
-      autoTable(doc, {
-        startY: y,
-        head: [['Dynamic Officer Name:', 'Dynamic Officer Post:', 'Dynamic Date:']],
-        body: [[
-          assessment.dynamic["Dynamic Officer Name"], 
-          assessment.dynamic["Dynamic Officer Post"],
-          assessment.dynamic["Dynamic Date"]
-        ]],
-        theme: 'grid',
-        styles: {
-          fontSize: 9,
-          cellPadding: 2,
-        },
-        margin: { left: margin, right: margin },
-        columnStyles: {
-          0: { cellWidth: 90 },
-          1: { cellWidth: 90 },
-          2: { cellWidth: 50 }
-        }
-      });
-    }
+    // Add Dynamic RA information if provided
+    y = addDynamicSection(doc, autoTable, assessment.dynamic, y + 5, margin);
     
     // Add version number at bottom right
-    doc.setFontSize(8);
-    doc.text("Version: 2.0", pageWidth - 25, pageHeight - 5);
+    addVersionNumber(doc, pageWidth, pageHeight);
     
     // Save the PDF
     doc.save('RAFAC_Risk_Assessment_5010c.pdf');
