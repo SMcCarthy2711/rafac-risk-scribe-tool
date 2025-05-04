@@ -90,8 +90,8 @@ const RiskList: React.FC<RiskListProps> = ({ risks, onEditRisk }) => {
               {risks.map((risk, index) => (
                 <TableRow key={index}>
                   <TableCell className="font-medium">{risk.Ref}</TableCell>
-                  <TableCell>{risk["Activity/Element"]}</TableCell>
-                  <TableCell>{risk["Hazards Identified"]}</TableCell>
+                  <TableCell className="whitespace-normal break-words">{risk["Activity/Element"]}</TableCell>
+                  <TableCell className="whitespace-normal break-words">{risk["Hazards Identified"]}</TableCell>
                   <TableCell>{risk["Risk Rating (LxI)"]}</TableCell>
                   <TableCell>{risk["Is Risk Acceptable"]}</TableCell>
                   <TableCell>{risk["Revised Risk Rating (LxI)"]}</TableCell>
