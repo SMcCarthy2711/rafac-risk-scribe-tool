@@ -37,14 +37,14 @@ export const addRiskTable = (
     risk["Hazards Identified"],
     risk["Who or What Might be Harmed and How"],
     risk["Existing Control Measures"],
-    risk.Likelihood,
-    risk.Impact,
-    risk["Risk Rating (LxI)"],
-    risk["Is Risk Acceptable"],
+    { content: risk.Likelihood, styles: { halign: 'center', fontStyle: 'bold' } },
+    { content: risk.Impact, styles: { halign: 'center', fontStyle: 'bold' } },
+    { content: risk["Risk Rating (LxI)"], styles: { halign: 'center', fontStyle: 'bold' } },
+    { content: risk["Is Risk Acceptable"], styles: { halign: 'center', fontStyle: 'bold' } },
     risk["Reasonable Additional Control Measures"],
-    risk["Revised Likelihood"],
-    risk["Revised Impact"],
-    risk["Revised Risk Rating (LxI)"],
+    { content: risk["Revised Likelihood"], styles: { halign: 'center', fontStyle: 'bold' } },
+    { content: risk["Revised Impact"], styles: { halign: 'center', fontStyle: 'bold' } },
+    { content: risk["Revised Risk Rating (LxI)"], styles: { halign: 'center', fontStyle: 'bold' } },
     risk["List Required Actions (Who, When and How)"]
   ]);
 
@@ -56,14 +56,14 @@ export const addRiskTable = (
       'Driver fatigue causes RTA',
       'Injuries to personnel',
       'Designated drivers · JSP800',
-      '2', 
-      '5', 
-      '10',
-      'NO',
+      { content: '2', styles: { halign: 'center', fontStyle: 'bold' } }, 
+      { content: '5', styles: { halign: 'center', fontStyle: 'bold' } }, 
+      { content: '10', styles: { halign: 'center', fontStyle: 'bold' } },
+      { content: 'NO', styles: { halign: 'center', fontStyle: 'bold' } },
       'Vehicle commander to monitor',
-      '1',
-      '5',
-      '5',
+      { content: '1', styles: { halign: 'center', fontStyle: 'bold' } },
+      { content: '5', styles: { halign: 'center', fontStyle: 'bold' } },
+      { content: '5', styles: { halign: 'center', fontStyle: 'bold' } },
       'CFAV to implement controls'
     ]);
   }
