@@ -1,4 +1,3 @@
-
 import { jsPDF } from 'jspdf';
 import { RiskEntry } from '../types';
 
@@ -82,6 +81,7 @@ export const addRiskTable = (
       overflow: 'linebreak' as const, // Enable text wrapping
     },
     margin: { left: margin, right: margin },
+    // Keep column widths but ensure overall table respects margin
     columnStyles: {
       0: { cellWidth: 10 },
       1: { cellWidth: 25 },

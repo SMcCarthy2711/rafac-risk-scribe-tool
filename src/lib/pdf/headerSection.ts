@@ -10,7 +10,7 @@ export const addHeaderSection = async (
   startY: number,
   margin: number
 ): Promise<number> => {
-  // Header section with Squadron info - adjusted column widths and adding signature box
+  // Header section with Squadron info - adjusted to match full width
   autoTable(doc, {
     startY: startY,
     head: [['RAFAC Formation:', 'Assessor (No, Rank, Name):', 'Signature:', 'Assessment Date:']],
@@ -26,17 +26,18 @@ export const addHeaderSection = async (
       cellPadding: 2,
     },
     margin: { left: margin, right: margin },
+    // Removed specific column widths to allow full-width table
     columnStyles: {
       0: { cellWidth: 70 },
       1: { cellWidth: 70 },
-      2: { cellWidth: 50 }, // Width for signature box
+      2: { cellWidth: 50 },
       3: { cellWidth: 40 }
     }
   });
     
   let y = (doc as any).lastAutoTable.finalY + 3;
     
-  // Activity Title - adjusted column widths
+  // Activity Title - adjusted to match full width
   autoTable(doc, {
     startY: y,
     head: [['Activity (Step 1a):', 'Type of Risk Assessment:']],
@@ -50,6 +51,7 @@ export const addHeaderSection = async (
       cellPadding: 2,
     },
     margin: { left: margin, right: margin },
+    // Removed specific column widths to allow full-width table
     columnStyles: {
       0: { cellWidth: 140 },
       1: { cellWidth: 90 }

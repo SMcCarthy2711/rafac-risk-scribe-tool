@@ -10,7 +10,7 @@ export const addCommanderSection = (
   startY: number,
   margin: number
 ): number => {
-  // Add commander sign-off information in a table with adjusted widths
+  // Add commander sign-off information in a table with full width
   autoTable(doc, {
     startY: startY,
     head: [['Commander Name:', 'Commander Post:', 'Commander Date:']],
@@ -24,12 +24,8 @@ export const addCommanderSection = (
       fontSize: 9,
       cellPadding: 2,
     },
-    margin: { left: margin, right: margin },
-    columnStyles: {
-      0: { cellWidth: 90 },
-      1: { cellWidth: 90 },
-      2: { cellWidth: 50 }
-    }
+    margin: { left: margin, right: margin }
+    // Removed column styles to ensure full width matching the publications table
   });
 
   return (doc as any).lastAutoTable.finalY;
