@@ -84,12 +84,12 @@ export const addRiskMatrix = async (
   
   // Draw the 5-step process at the bottom
   const stepY = startY + 68;
-  doc.setFillColor(...colors.blue);
+  doc.setFillColor(0, 112, 192); // Using blue color directly
   doc.setTextColor(255, 255, 255);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(7);
   
-  doc.setFillColor(...colors.blue);
+  doc.setFillColor(0, 112, 192); // Using blue color directly
   doc.rect(startX + 2, stepY, 30, 10, 'F');
   doc.text('5 Step', startX + 5, stepY + 4);
   doc.text('Process', startX + 5, stepY + 8);
@@ -141,7 +141,7 @@ export const addRiskMatrix = async (
   const tableStartY = startY + 5;
   
   // Likelihood table header
-  doc.setFillColor(...colors.lightGray);
+  doc.setFillColor(242, 242, 242); // Using lightGray directly
   doc.setDrawColor(0, 0, 0);
   doc.setLineWidth(0.1);
   doc.rect(tableStartX, tableStartY, 70, 10, 'FD');
@@ -180,18 +180,17 @@ export const addRiskMatrix = async (
   doc.text('5 - Critical', tableStartX + 105, likeY + 32);
   
   // Multiplied by text (vertically)
-  doc.save();
-  doc.translate(tableStartX + 85, likeY + 15);
-  doc.rotate(-90);
-  doc.text('Multiplied by', 0, 0);
-  doc.restore();
+  // Fix the translate, rotate and restore methods
+  doc.text("Multiplied by", tableStartX + 85, likeY + 15, {
+    align: "center",
+    angle: 270
+  });
   
   // Equals text (vertically)
-  doc.save();
-  doc.translate(tableStartX + 185, likeY + 15);
-  doc.rotate(-90);
-  doc.text('Equals', 0, 0);
-  doc.restore();
+  doc.text("Equals", tableStartX + 185, likeY + 15, {
+    align: "center",
+    angle: 270
+  });
   
   // Impact note
   doc.setFontSize(6);
@@ -207,7 +206,7 @@ export const addRiskMatrix = async (
   const riskTableY = tableStartY;
   
   // Header
-  doc.setFillColor(...colors.lightGray);
+  doc.setFillColor(242, 242, 242); // Using lightGray directly
   doc.rect(riskTableX, riskTableY, 100, 10, 'FD');
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8);
@@ -233,11 +232,11 @@ export const addRiskMatrix = async (
   
   // Row headers and grid cells
   const rowColors = [
-    colors.red,    // 5
-    colors.amber,  // 4
-    colors.amber,  // 3
-    colors.yellow, // 2
-    colors.green   // 1
+    [255, 0, 0],    // 5 - red
+    [255, 192, 0],  // 4 - amber
+    [255, 192, 0],  // 3 - amber
+    [255, 255, 0],  // 2 - yellow
+    [146, 208, 80]  // 1 - green
   ];
   
   const riskScores = [
@@ -249,23 +248,23 @@ export const addRiskMatrix = async (
   ];
   
   const cellColors = [
-    [colors.red, colors.red, colors.red, colors.amber, colors.yellow],       // 5
-    [colors.red, colors.red, colors.amber, colors.amber, colors.yellow],     // 4
-    [colors.red, colors.amber, colors.amber, colors.yellow, colors.green],   // 3
-    [colors.amber, colors.amber, colors.yellow, colors.yellow, colors.green], // 2
-    [colors.yellow, colors.yellow, colors.green, colors.green, colors.green]  // 1
+    [[255, 0, 0], [255, 0, 0], [255, 0, 0], [255, 192, 0], [255, 255, 0]],       // 5
+    [[255, 0, 0], [255, 0, 0], [255, 192, 0], [255, 192, 0], [255, 255, 0]],     // 4
+    [[255, 0, 0], [255, 192, 0], [255, 192, 0], [255, 255, 0], [146, 208, 80]],   // 3
+    [[255, 192, 0], [255, 192, 0], [255, 255, 0], [255, 255, 0], [146, 208, 80]], // 2
+    [[255, 255, 0], [255, 255, 0], [146, 208, 80], [146, 208, 80], [146, 208, 80]]  // 1
   ];
   
   for (let i = 0; i < 5; i++) {
     // Row header
-    doc.setFillColor(...rowColors[i]);
+    doc.setFillColor(rowColors[i][0], rowColors[i][1], rowColors[i][2]);
     doc.rect(riskTableX, riskTableY + 30 + (i * colWidth), 20, colWidth, 'FD');
     doc.setTextColor(0, 0, 0);
     doc.text(`${5-i}`, riskTableX + 10, riskTableY + 40 + (i * colWidth));
     
     // Cells
     for (let j = 0; j < 5; j++) {
-      doc.setFillColor(...cellColors[i][j]);
+      doc.setFillColor(cellColors[i][j][0], cellColors[i][j][1], cellColors[i][j][2]);
       doc.rect(riskTableX + 20 + (j * colWidth), riskTableY + 30 + (i * colWidth), colWidth, colWidth, 'FD');
       doc.setTextColor(0, 0, 0);
       doc.text(riskScores[i][j], riskTableX + 28 + (j * colWidth), riskTableY + 40 + (i * colWidth));
@@ -273,11 +272,10 @@ export const addRiskMatrix = async (
   }
   
   // Impact text (vertically)
-  doc.save();
-  doc.translate(riskTableX + 10, riskTableY + 60);
-  doc.rotate(-90);
-  doc.text('Impact', 0, 0);
-  doc.restore();
+  doc.text("Impact", riskTableX + 10, riskTableY + 60, {
+    align: "center",
+    angle: 270
+  });
   
   return Promise.resolve();
 };
