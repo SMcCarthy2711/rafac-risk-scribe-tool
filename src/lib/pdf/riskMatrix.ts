@@ -26,208 +26,192 @@ export const addRiskMatrix = async (
     lightGray: [242, 242, 242]
   };
   
-  // Draw main guidance box
+  // Draw main guidance box - smaller font size and more compact layout
   doc.setFillColor(255, 255, 255);
   doc.setDrawColor(0, 0, 0);
   doc.setLineWidth(0.1);
   
-  // Setup text properties for guidance section
+  // Setup text properties for guidance section with reduced font size
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(8);
+  doc.setFontSize(7); // Reduced from 8
   doc.setTextColor(0, 112, 192); // blue text
-  doc.text('Key Guidance', startX + 2, startY + 5);
-  doc.text('This section provides an overview of the key concepts for completing a RAFAC risk assessment.', startX + 25, startY + 5);
-  doc.text('Refer to Notes section for further information. The first line of the risk assessment table, below, shows an illustrative', startX + 2, startY + 9);
-  doc.text('example.', startX + 2, startY + 13);
+  doc.text('Key Guidance', startX + 2, startY + 4); // Reduced Y spacing
+  doc.text('This section provides an overview of the key concepts for completing a RAFAC risk assessment.', startX + 22, startY + 4);
+  doc.text('Refer to Notes section for further information.', startX + 2, startY + 7); // Reduced Y spacing
   
-  // Reset to black text and normal font for the rest of the content
+  // Reset to black text and normal font for the rest of the content with reduced spacing
   doc.setTextColor(0, 0, 0);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Hazard', startX + 2, startY + 18);
-  doc.setFont('helvetica', 'normal');
-  doc.text('is anything that may cause harm, e.g. working at height on a ladder.', startX + 25, startY + 18);
+  doc.setFontSize(6.5); // Reduced font size further
   
   doc.setFont('helvetica', 'bold');
-  doc.text('Risk', startX + 2, startY + 22);
+  doc.text('Hazard', startX + 2, startY + 11);
   doc.setFont('helvetica', 'normal');
-  doc.text('is the chance of someone or something being harmed by the hazard. Risk is measured by multiplying the', startX + 25, startY + 22);
-  doc.text('likelihood of it happening with its impact (severity). Eg. it is \'', startX + 2, startY + 26);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Possible\'', startX + 188, startY + 26);
-  doc.setFont('helvetica', 'normal');
-  doc.text('that someone who is not competent could fall', startX + 212, startY + 26);
-  doc.text('from a ladder (3 rating) resulting in \'', startX + 2, startY + 30);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Moderate\'', startX + 132, startY + 30);
-  doc.setFont('helvetica', 'normal');
-  doc.text('impact with multiple injuries (2 rating), creating a score of 3x2=6', startX + 170, startY + 30);
-  doc.text('(low). However, reducing the risk to as low as reasonably practicable (ALARP) through the implementation of', startX + 2, startY + 34);
-  doc.text('control measures eg. training on ladder use to ensure competency, the likelihood of injury would be reduced to', startX + 2, startY + 38);
-  doc.text('\'', startX + 2, startY + 42);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Unlikely\'', startX + 4, startY + 42);
-  doc.setFont('helvetica', 'normal');
-  doc.text('(2 rating) giving a final score of 2x2=4 (very low).', startX + 35, startY + 42);
+  doc.text('is anything that may cause harm, e.g. working at height on a ladder.', startX + 22, startY + 11);
   
   doc.setFont('helvetica', 'bold');
-  doc.text('Note', startX + 2, startY + 46);
+  doc.text('Risk', startX + 2, startY + 15);
   doc.setFont('helvetica', 'normal');
-  doc.text('- Persons undergoing training cannot be deemed competent until their capability is properly assessed.', startX + 25, startY + 46);
+  doc.text('is the chance of someone being harmed by the hazard. Risk is measured by multiplying the likelihood', startX + 22, startY + 15);
+  doc.text('of it happening with its impact (severity). E.g. it is \'', startX + 2, startY + 18);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Possible\'', startX + 130, startY + 18);
+  doc.setFont('helvetica', 'normal');
+  doc.text('that someone who is not competent could fall from a ladder (3 rating)', startX + 155, startY + 18);
+  doc.text('resulting in \'', startX + 2, startY + 21);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Moderate\'', startX + 35, startY + 21);
+  doc.setFont('helvetica', 'normal');
+  doc.text('impact with multiple injuries (2 rating), creating a score of 3x2=6 (low).', startX + 65, startY + 21);
   
   doc.setFont('helvetica', 'bold');
-  doc.text('Dynamic Risk Assessment', startX + 2, startY + 50);
+  doc.text('Dynamic Risk Assessment', startX + 2, startY + 25);
   doc.setFont('helvetica', 'normal');
-  doc.text('compliments generic and specific risk assessment. Regardless of completing this', startX + 95, startY + 50);
-  doc.text('RAFAC 5010C, it is beholden on the person creating the risk to continue to monitor the activity and the control', startX + 2, startY + 54);
-  doc.text('measures. Any changes to the activity (including the environmental conditions) or the control measures, must be', startX + 2, startY + 58);
-  doc.text('addressed via the mechanism of a dynamic risk assessment such that risks remain ALARP.', startX + 2, startY + 62);
+  doc.text('compliments generic and specific risk assessment. It is beholden on the person creating', startX + 85, startY + 25);
+  doc.text('the risk to continue to monitor the activity and control measures.', startX + 2, startY + 28);
   
-  // Draw the 5-step process at the bottom
-  const stepY = startY + 68;
+  // Draw the 5-step process at the bottom with reduced height
+  const stepY = startY + 32; // Reduced from 68
   doc.setFillColor(0, 112, 192); // Using blue color directly
   doc.setTextColor(255, 255, 255);
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(7);
+  doc.setFontSize(6);
   
   doc.setFillColor(0, 112, 192); // Using blue color directly
-  doc.rect(startX + 2, stepY, 30, 10, 'F');
-  doc.text('5 Step', startX + 5, stepY + 4);
-  doc.text('Process', startX + 5, stepY + 8);
+  doc.rect(startX + 2, stepY, 25, 8, 'F'); // Smaller box
+  doc.text('5 Step', startX + 5, stepY + 3);
+  doc.text('Process', startX + 5, stepY + 7);
   
   // Step 1
   doc.setTextColor(255, 0, 0);
-  doc.text('Step 1', startX + 38, stepY + 4);
+  doc.text('Step 1', startX + 32, stepY + 3);
   doc.setTextColor(0, 0, 0);
-  doc.text('- Identify', startX + 58, stepY + 4);
-  doc.text('the hazards', startX + 38, stepY + 8);
+  doc.text('- Identify', startX + 48, stepY + 3);
+  doc.text('the hazards', startX + 32, stepY + 7);
   
   // Step 2
   doc.setTextColor(255, 0, 0);
-  doc.text('Step 2', startX + 95, stepY + 4);
+  doc.text('Step 2', startX + 80, stepY + 3);
   doc.setTextColor(0, 0, 0);
-  doc.text('- Decide who might', startX + 115, stepY + 4);
-  doc.text('be harmed and how', startX + 95, stepY + 8);
+  doc.text('- Decide who might', startX + 96, stepY + 3);
+  doc.text('be harmed and how', startX + 80, stepY + 7);
   
   // Step 3
   doc.setTextColor(255, 0, 0);
-  doc.text('Step 3', startX + 175, stepY + 4);
+  doc.text('Step 3', startX + 145, stepY + 3);
   doc.setTextColor(0, 0, 0);
-  doc.text('- Evaluate the risks and decide on', startX + 195, stepY + 4);
-  doc.text('precautions (control measures)', startX + 175, stepY + 8);
+  doc.text('- Evaluate the risks and decide on', startX + 161, stepY + 3);
+  doc.text('precautions (control measures)', startX + 145, stepY + 7);
   
   // Step 4
   doc.setTextColor(255, 0, 0);
-  doc.text('Step 4', startX + 280, stepY + 4);
+  doc.text('Step 4', startX + 230, stepY + 3);
   doc.setTextColor(0, 0, 0);
-  doc.text('- Record your significant findings. Implement control', startX + 300, stepY + 4);
-  doc.text('measures. Brief participants prior to activity commencement.', startX + 280, stepY + 8);
+  doc.text('- Record your findings. Implement control', startX + 246, stepY + 3);
+  doc.text('measures. Brief participants prior to activity.', startX + 230, stepY + 7);
   
   // Step 5
   doc.setTextColor(255, 0, 0);
-  doc.text('Step 5', startX + 450, stepY + 4);
+  doc.text('Step 5', startX + 350, stepY + 3);
   doc.setTextColor(0, 0, 0);
-  doc.text('- Review your risk assessment', startX + 470, stepY + 4);
-  doc.text('and update as necessary', startX + 450, stepY + 8);
+  doc.text('- Review your risk assessment', startX + 366, stepY + 3);
+  doc.text('and update as necessary', startX + 350, stepY + 7);
   
   // Draw arrow for the steps
   doc.setDrawColor(255, 0, 0);
   doc.setLineWidth(0.5);
-  doc.line(startX + 32, stepY + 5, startX + 35, stepY + 5);
-  doc.line(startX + 35, stepY + 3, startX + 38, stepY + 5);
-  doc.line(startX + 35, stepY + 7, startX + 38, stepY + 5);
+  doc.line(startX + 27, stepY + 4, startX + 30, stepY + 4);
+  doc.line(startX + 30, stepY + 2, startX + 32, stepY + 4);
+  doc.line(startX + 30, stepY + 6, startX + 32, stepY + 4);
   
-  // Draw Likelihood and Impact tables
-  const tableStartX = startX + width - 300;
+  // Draw Likelihood and Impact tables - move to the right side to save space
+  const tableStartX = startX + width - 250; // Adjusted to move tables to the right
   const tableStartY = startY + 5;
   
-  // Likelihood table header
+  // Likelihood table header - smaller with reduced spacing
   doc.setFillColor(242, 242, 242); // Using lightGray directly
   doc.setDrawColor(0, 0, 0);
   doc.setLineWidth(0.1);
-  doc.rect(tableStartX, tableStartY, 70, 10, 'FD');
+  doc.rect(tableStartX, tableStartY, 55, 8, 'FD'); // Smaller width
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(8);
+  doc.setFontSize(7);
   doc.setTextColor(0, 0, 0);
-  doc.text('Likelihood (L)', tableStartX + 15, tableStartY + 6);
+  doc.text('Likelihood (L)', tableStartX + 12, tableStartY + 5);
   
   // X column
-  doc.rect(tableStartX + 70, tableStartY, 30, 10, 'FD');
-  doc.text('x', tableStartX + 85, tableStartY + 6);
+  doc.rect(tableStartX + 55, tableStartY, 20, 8, 'FD'); // Smaller width
+  doc.text('x', tableStartX + 65, tableStartY + 5);
   
   // Impact column
-  doc.rect(tableStartX + 100, tableStartY, 70, 10, 'FD');
-  doc.text('Impact (I)', tableStartX + 125, tableStartY + 6);
+  doc.rect(tableStartX + 75, tableStartY, 55, 8, 'FD'); // Smaller width
+  doc.text('Impact (I)', tableStartX + 100, tableStartY + 5);
   
   // Equal sign
-  doc.rect(tableStartX + 170, tableStartY, 30, 10, 'FD');
-  doc.text('=', tableStartX + 185, tableStartY + 6);
+  doc.rect(tableStartX + 130, tableStartY, 20, 8, 'FD'); // Smaller width
+  doc.text('=', tableStartX + 140, tableStartY + 5);
   
-  // Likelihood ratings
-  doc.setFontSize(7);
-  let likeY = tableStartY + 15;
+  // Likelihood and Impact ratings - smaller font and more compact
+  doc.setFontSize(6);
+  let likeY = tableStartY + 13; // Reduced spacing
   
   doc.text('5 - Highly Probable', tableStartX + 5, likeY);
-  doc.text('4 - Probable', tableStartX + 5, likeY + 8);
-  doc.text('3 - Possible', tableStartX + 5, likeY + 16);
-  doc.text('2 - Unlikely', tableStartX + 5, likeY + 24);
-  doc.text('1 - Remote', tableStartX + 5, likeY + 32);
+  doc.text('4 - Probable', tableStartX + 5, likeY + 5); // Reduced spacing
+  doc.text('3 - Possible', tableStartX + 5, likeY + 10); // Reduced spacing
+  doc.text('2 - Unlikely', tableStartX + 5, likeY + 15); // Reduced spacing
+  doc.text('1 - Remote', tableStartX + 5, likeY + 20); // Reduced spacing
   
   // Impact ratings
-  doc.text('1 - Minor', tableStartX + 105, likeY);
-  doc.text('2 - Moderate', tableStartX + 105, likeY + 8);
-  doc.text('3 - Major', tableStartX + 105, likeY + 16);
-  doc.text('4 - Severe', tableStartX + 105, likeY + 24);
-  doc.text('5 - Critical', tableStartX + 105, likeY + 32);
+  doc.text('1 - Minor', tableStartX + 80, likeY);
+  doc.text('2 - Moderate', tableStartX + 80, likeY + 5);
+  doc.text('3 - Major', tableStartX + 80, likeY + 10);
+  doc.text('4 - Severe', tableStartX + 80, likeY + 15);
+  doc.text('5 - Critical', tableStartX + 80, likeY + 20);
   
   // Multiplied by text (vertically)
-  // Fix the translate, rotate and restore methods
-  doc.text("Multiplied by", tableStartX + 85, likeY + 15, {
+  doc.text("Multiplied by", tableStartX + 65, likeY + 10, {
     align: "center",
     angle: 270
   });
   
   // Equals text (vertically)
-  doc.text("Equals", tableStartX + 185, likeY + 15, {
+  doc.text("Equals", tableStartX + 140, likeY + 10, {
     align: "center",
     angle: 270
   });
   
   // Impact note
-  doc.setFontSize(6);
-  doc.text('Note: impact', tableStartX + 135, likeY + 12);
-  doc.text('number is', tableStartX + 135, likeY + 16);
-  doc.text('unlikely to', tableStartX + 135, likeY + 20);
-  doc.text('change with', tableStartX + 135, likeY + 24);
-  doc.text('control', tableStartX + 135, likeY + 28);
-  doc.text('measures', tableStartX + 135, likeY + 32);
+  doc.setFontSize(5.5);
+  doc.text('Note: impact', tableStartX + 105, likeY + 8);
+  doc.text('number unlikely', tableStartX + 105, likeY + 11);
+  doc.text('to change with', tableStartX + 105, likeY + 14);
+  doc.text('control measures', tableStartX + 105, likeY + 17);
   
   // Draw Risk Score Calculation table
-  const riskTableX = width - 110 + startX;
+  const riskTableX = width - 90 + startX; // Adjusted to avoid overlap
   const riskTableY = tableStartY;
   
   // Header
   doc.setFillColor(242, 242, 242); // Using lightGray directly
-  doc.rect(riskTableX, riskTableY, 100, 10, 'FD');
+  doc.rect(riskTableX, riskTableY, 80, 8, 'FD'); // Smaller width and height
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(8);
+  doc.setFontSize(7);
   doc.setTextColor(0, 0, 0);
-  doc.text('Risk Score Calculation', riskTableX + 25, riskTableY + 6);
+  doc.text('Risk Score Calculation', riskTableX + 20, riskTableY + 5);
   
   // Likelihood header
-  doc.rect(riskTableX, riskTableY + 10, 100, 10, 'FD');
-  doc.setFontSize(7);
-  doc.text('Likelihood', riskTableX + 45, riskTableY + 16);
+  doc.rect(riskTableX, riskTableY + 8, 80, 7, 'FD'); // Smaller width and height
+  doc.setFontSize(6);
+  doc.text('Likelihood', riskTableX + 36, riskTableY + 13);
   
   // Create the grid headers
-  const colWidth = 16;
-  doc.rect(riskTableX, riskTableY + 20, 20, 10, 'FD');
-  doc.text('Impact', riskTableX + 5, riskTableY + 26);
+  const colWidth = 12; // Smaller grid cells
+  doc.rect(riskTableX, riskTableY + 15, 16, 7, 'FD'); // Smaller width and height
+  doc.text('Impact', riskTableX + 4, riskTableY + 20);
   
   // Column headers (1-5)
   for (let i = 0; i < 5; i++) {
     doc.setTextColor(255, 0, 0);
-    doc.rect(riskTableX + 20 + (i * colWidth), riskTableY + 20, colWidth, 10, 'FD');
-    doc.text(`${i + 1}`, riskTableX + 28 + (i * colWidth), riskTableY + 26);
+    doc.rect(riskTableX + 16 + (i * colWidth), riskTableY + 15, colWidth, 7, 'FD'); // Smaller width and height
+    doc.text(`${i + 1}`, riskTableX + 20 + (i * colWidth), riskTableY + 20);
   }
   
   // Row headers and grid cells
@@ -258,21 +242,21 @@ export const addRiskMatrix = async (
   for (let i = 0; i < 5; i++) {
     // Row header
     doc.setFillColor(rowColors[i][0], rowColors[i][1], rowColors[i][2]);
-    doc.rect(riskTableX, riskTableY + 30 + (i * colWidth), 20, colWidth, 'FD');
+    doc.rect(riskTableX, riskTableY + 22 + (i * colWidth), 16, colWidth, 'FD'); // Smaller width and height
     doc.setTextColor(0, 0, 0);
-    doc.text(`${5-i}`, riskTableX + 10, riskTableY + 40 + (i * colWidth));
+    doc.text(`${5-i}`, riskTableX + 8, riskTableY + 30 + (i * colWidth));
     
     // Cells
     for (let j = 0; j < 5; j++) {
       doc.setFillColor(cellColors[i][j][0], cellColors[i][j][1], cellColors[i][j][2]);
-      doc.rect(riskTableX + 20 + (j * colWidth), riskTableY + 30 + (i * colWidth), colWidth, colWidth, 'FD');
+      doc.rect(riskTableX + 16 + (j * colWidth), riskTableY + 22 + (i * colWidth), colWidth, colWidth, 'FD'); // Smaller width and height
       doc.setTextColor(0, 0, 0);
-      doc.text(riskScores[i][j], riskTableX + 28 + (j * colWidth), riskTableY + 40 + (i * colWidth));
+      doc.text(riskScores[i][j], riskTableX + 20 + (j * colWidth), riskTableY + 30 + (i * colWidth));
     }
   }
   
   // Impact text (vertically)
-  doc.text("Impact", riskTableX + 10, riskTableY + 60, {
+  doc.text("Impact", riskTableX + 8, riskTableY + 40, {
     align: "center",
     angle: 270
   });
