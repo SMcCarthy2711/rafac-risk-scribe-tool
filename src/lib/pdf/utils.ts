@@ -16,15 +16,15 @@ export const createPdfDocument = () => {
   });
 };
 
-// Add header information to the PDF
+// Add header information to the PDF - updated to match example image
 export const addPdfHeader = (doc: jsPDF, margin: number, pageWidth: number) => {
-  doc.setFontSize(10);
+  doc.setFontSize(8);
   doc.setTextColor(0, 0, 0);
   doc.text("Uncontrolled copy when printed", margin, margin);
-  doc.text("RAFAC Form 5010(c)", pageWidth - 30, margin);
+  doc.text("RAFAC Form 5010(c)", pageWidth - 35, margin);
 };
 
-// Add version number at bottom of page
+// Add version number at bottom of page - updated to match example image
 export const addVersionNumber = (doc: jsPDF, pageWidth: number, pageHeight: number) => {
   doc.setFontSize(8);
   doc.text("Version: 2.0", pageWidth - 25, pageHeight - 5);

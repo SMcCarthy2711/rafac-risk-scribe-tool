@@ -2,7 +2,7 @@
 import { jsPDF } from 'jspdf';
 import { HeaderFields } from '../types';
 
-// Add header section tables to the PDF
+// Add header section tables to the PDF - updated to match example image format
 export const addHeaderSection = async (
   doc: jsPDF,
   autoTable: any,
@@ -10,10 +10,11 @@ export const addHeaderSection = async (
   startY: number,
   margin: number
 ): Promise<number> => {
-  // Header section with Squadron info - adjusted to match full width
+  
+  // RAFAC Formation and Assessor info row
   autoTable(doc, {
     startY: startY,
-    head: [['RAFAC Formation:', 'Assessor (No, Rank, Name):', 'Signature:', 'Assessment Date:']],
+    head: [['RAFAC Formation:', 'Assessor (No, Rank, Name):', 'Assessor\'s Signature:', 'Assessment Date:']],
     body: [[
       headerFields.Squadron, 
       headerFields["Assessor Name"],
@@ -24,54 +25,59 @@ export const addHeaderSection = async (
     styles: {
       fontSize: 9,
       cellPadding: 2,
+      lineWidth: 0.1,
     },
     margin: { left: margin, right: margin },
-    // Removed specific column widths to allow full-width table
     columnStyles: {
-      0: { cellWidth: 70 },
-      1: { cellWidth: 70 },
-      2: { cellWidth: 50 },
+      0: { cellWidth: 110 },
+      1: { cellWidth: 110 },
+      2: { cellWidth: 70 },
       3: { cellWidth: 40 }
     }
   });
     
-  let y = (doc as any).lastAutoTable.finalY + 3;
+  let y = (doc as any).lastAutoTable.finalY;
     
-  // Activity Title - adjusted to match full width
+  // Activity Title row - with "Step 1a" annotation like in the example
   autoTable(doc, {
     startY: y,
     head: [['Activity (Step 1a):', 'Type of Risk Assessment:']],
     body: [[
       headerFields["Activity Title"],
-      headerFields["Risk Assessment Type"] || "Generic ☐     Specific ☑"
+      headerFields["Risk Assessment Type"] ? headerFields["Risk Assessment Type"] : 
+      `Generic ${headerFields["Risk Assessment Type"] === "Generic" ? "☑" : "☐"}     Specific ${headerFields["Risk Assessment Type"] === "Specific" ? "☑" : "☐"}`
     ]],
     theme: 'grid',
     styles: {
       fontSize: 9,
       cellPadding: 2,
+      lineWidth: 0.1,
     },
     margin: { left: margin, right: margin },
-    // Removed specific column widths to allow full-width table
     columnStyles: {
-      0: { cellWidth: 140 },
-      1: { cellWidth: 90 }
+      0: { cellWidth: 220 },
+      1: { cellWidth: 110 }
     }
   });
     
-  y = (doc as any).lastAutoTable.finalY + 3;
+  y = (doc as any).lastAutoTable.finalY;
     
-  // Publications - using the user's input from the form
+  // Publications - create a numbered list format similar to the example
+  const publicationsText = headerFields.Publications || "";
+  const publications = publicationsText.split('\n').map((item, index) => `${index + 1}.    ${item.trim()}`).join('\n');
+  
   autoTable(doc, {
     startY: y,
     head: [['Relevant Publications / Pamphlets / Procedures:']],
-    body: [[headerFields.Publications || ""]],
+    body: [[publications]],
     theme: 'grid',
     styles: {
       fontSize: 9,
       cellPadding: 2,
+      lineWidth: 0.1,
     },
     margin: { left: margin, right: margin }
   });
     
-  return (doc as any).lastAutoTable.finalY + 5;
+  return (doc as any).lastAutoTable.finalY;
 };

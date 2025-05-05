@@ -28,16 +28,16 @@ const exportToPDF = async (assessment: RiskAssessment) => {
     addPdfHeader(doc, margin, pageWidth);
     
     // Add guidance and risk matrix image from the provided image
-    // Reduced matrix height to take up about 1/3 of the page
-    const matrixStartY = margin + 10;
-    const matrixHeight = 45; // Reduced from 70 to make it smaller
+    // Further reduced matrix height to match example image (about 1/4 of the page)
+    const matrixStartY = margin + 5;
+    const matrixHeight = 35; // Reduced height to match example image
     
     // Add the risk matrix image
     await addRiskMatrix(doc, matrixStartY, matrixHeight, margin, effectiveWidth);
     
     // Now add the main form fields with better spacing
     // Added more space between matrix and header section
-    let y = matrixStartY + matrixHeight + 15; // Added more spacing (15 instead of 5)
+    let y = matrixStartY + matrixHeight + 20; // Added more spacing between matrix and main content
     
     // Add header section with Squadron info
     y = await addHeaderSection(doc, autoTable, assessment.header, y, margin);
