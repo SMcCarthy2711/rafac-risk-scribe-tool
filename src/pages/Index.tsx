@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -10,7 +9,8 @@ import CommanderSignOff from "@/components/CommanderSignOff";
 import DynamicRA from "@/components/DynamicRA";
 import exportToPDF from "@/lib/pdfGenerator";
 import { HeaderFields, RiskEntry as RiskEntryType, CommanderFields, DynamicFields } from "@/lib/types";
-import { FilePenLine } from "lucide-react";
+import { FilePenLine, FileText, Download } from "lucide-react";
+import { getTestData } from "@/lib/testData";
 
 // Import jsPDF
 import { jsPDF } from "jspdf";
@@ -84,6 +84,18 @@ const Index = () => {
       toast.error("Failed to export Risk Assessment");
     }
   };
+  const handleExportTestData = async () => {
+    // Get example test data
+    const testData = getTestData();
+    
+    // Try to export as PDF
+    const success = await exportToPDF(testData);
+    if (success) {
+      toast.success("Test Risk Assessment PDF generated successfully!");
+    } else {
+      toast.error("Failed to generate test PDF");
+    }
+  };
   return <div className="min-h-screen bg-slate-50 py-8 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Logo in top right */}
@@ -125,9 +137,17 @@ const Index = () => {
           </TabsContent>
         </Tabs>
 
-        <div className="mt-8 text-center">
+        <div className="mt-8 flex flex-col md:flex-row items-center justify-center gap-4">
           <Button onClick={handleExport} className="bg-rafac-blue hover:bg-rafac-navy text-white py-2 px-8 text-lg">
-            Export Risk Assessment PDF
+            <FileText className="mr-2 h-5 w-5" /> Export Risk Assessment PDF
+          </Button>
+          
+          <Button 
+            onClick={handleExportTestData} 
+            variant="outline" 
+            className="border-rafac-blue text-rafac-blue hover:bg-rafac-blue hover:text-white"
+          >
+            <Download className="mr-2 h-5 w-5" /> Generate Test PDF
           </Button>
         </div>
       </div>
