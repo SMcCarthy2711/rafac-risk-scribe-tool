@@ -11,7 +11,7 @@ export const addHeaderSection = async (
   margin: number
 ): Promise<number> => {
   
-  // RAFAC Formation and Assessor info row
+  // RAFAC Formation and Assessor info row - fixed margins to prevent overhang
   autoTable(doc, {
     startY: startY,
     head: [['RAFAC Formation:', 'Assessor (No, Rank, Name):', 'Assessor\'s Signature:', 'Assessment Date:']],
@@ -28,17 +28,18 @@ export const addHeaderSection = async (
       lineWidth: 0.1,
     },
     margin: { left: margin, right: margin },
+    tableWidth: 'auto', // Let the table adjust to the content within margins
     columnStyles: {
-      0: { cellWidth: 110 },
-      1: { cellWidth: 110 },
-      2: { cellWidth: 70 },
-      3: { cellWidth: 40 }
+      0: { cellWidth: 'auto' },
+      1: { cellWidth: 'auto' },
+      2: { cellWidth: 'auto' },
+      3: { cellWidth: 'auto' }
     }
   });
     
   let y = (doc as any).lastAutoTable.finalY;
     
-  // Activity Title row - with "Step 1a" annotation like in the example
+  // Activity Title row - fixed margins to prevent overhang
   autoTable(doc, {
     startY: y,
     head: [['Activity (Step 1a):', 'Type of Risk Assessment:']],
@@ -54,9 +55,10 @@ export const addHeaderSection = async (
       lineWidth: 0.1,
     },
     margin: { left: margin, right: margin },
+    tableWidth: 'auto', // Let the table adjust to the content within margins
     columnStyles: {
-      0: { cellWidth: 220 },
-      1: { cellWidth: 110 }
+      0: { cellWidth: 'auto' },
+      1: { cellWidth: 'auto' }
     }
   });
     

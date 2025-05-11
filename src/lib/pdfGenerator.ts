@@ -20,8 +20,8 @@ const exportToPDF = async (assessment: RiskAssessment) => {
     const pageWidth = doc.internal.pageSize.width;
     const pageHeight = doc.internal.pageSize.height;
     
-    // Define consistent margins for all tables
-    const margin = 10;
+    // Define consistent margins for all tables - increased margin for better presentation
+    const margin = 12; // Increased from 10 to 12
     const effectiveWidth = pageWidth - (2 * margin);
     
     // Add header - Form title and "Uncontrolled copy when printed"
