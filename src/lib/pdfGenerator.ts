@@ -20,7 +20,7 @@ const exportToPDF = async (assessment: RiskAssessment) => {
     const pageWidth = doc.internal.pageSize.width;
     const pageHeight = doc.internal.pageSize.height;
     
-    // Define margins to prevent content from going off page
+    // Define consistent margins for all tables
     const margin = 10;
     const effectiveWidth = pageWidth - (2 * margin);
     
@@ -37,9 +37,9 @@ const exportToPDF = async (assessment: RiskAssessment) => {
     
     // Now add the main form fields with better spacing
     // Added more space between matrix and header section
-    let y = matrixStartY + matrixHeight + 20; // Added more spacing between matrix and main content
+    let y = matrixStartY + matrixHeight + 10; // Adjusted spacing between matrix and main content
     
-    // Add header section with Squadron info
+    // Add header section with Squadron info - using the same margins for all tables
     y = await addHeaderSection(doc, autoTable, assessment.header, y, margin);
     
     // Add risk table
