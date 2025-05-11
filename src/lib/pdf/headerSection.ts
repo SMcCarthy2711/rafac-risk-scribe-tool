@@ -11,9 +11,46 @@ export const addHeaderSection = async (
   margin: number
 ): Promise<number> => {
   
-  // RAFAC Formation and Assessor info row
+  // Top row with two merged cells
   autoTable(doc, {
     startY: startY,
+    head: [['RAFAC Risk Assessment Form', 'For Cadet Activities']],
+    theme: 'grid',
+    styles: {
+      fontSize: 10,
+      fontStyle: 'bold',
+      halign: 'center',
+      cellPadding: 2,
+      lineWidth: 0.1,
+    },
+    margin: { left: margin, right: margin },
+    columnStyles: {
+      0: { cellWidth: 165 },
+      1: { cellWidth: 165 }
+    }
+  });
+  
+  let y = (doc as any).lastAutoTable.finalY;
+  
+  // Second row with one merged cell spanning the width
+  autoTable(doc, {
+    startY: y,
+    body: [['This form is used to record the risk assessment process for RAF Air Cadet activities.']],
+    theme: 'grid',
+    styles: {
+      fontSize: 9,
+      halign: 'center',
+      cellPadding: 2,
+      lineWidth: 0.1,
+    },
+    margin: { left: margin, right: margin }
+  });
+  
+  y = (doc as any).lastAutoTable.finalY;
+  
+  // RAFAC Formation and Assessor info row
+  autoTable(doc, {
+    startY: y,
     head: [['RAFAC Formation:', 'Assessor (No, Rank, Name):', 'Assessor\'s Signature:', 'Assessment Date:']],
     body: [[
       headerFields.Squadron, 
@@ -36,7 +73,7 @@ export const addHeaderSection = async (
     }
   });
     
-  let y = (doc as any).lastAutoTable.finalY;
+  y = (doc as any).lastAutoTable.finalY;
     
   // Activity Title row - with "Step 1a" annotation like in the example
   autoTable(doc, {
@@ -81,3 +118,4 @@ export const addHeaderSection = async (
     
   return (doc as any).lastAutoTable.finalY;
 };
+
