@@ -2,12 +2,14 @@
 import { RiskAssessment } from "./types";
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
-import { createPdfDocument, addPdfHeader, addVersionNumber } from './pdf/utils';
-import { addRiskMatrix } from './pdf/riskMatrix';
+import { createPdfDocument, addPdfHeader, addVersionNumber, addSvgImage } from './pdf/utils';
 import { addHeaderSection } from './pdf/headerSection';
 import { addRiskTable } from './pdf/riskTable';
 import { addCommanderSection } from './pdf/commanderSection';
 import { addDynamicSection } from './pdf/dynamicSection';
+
+// SVG placeholder - replace with your actual SVG
+const placeholderSvg = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgNjAwIDE1MCI+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2YwZjBmMCIvPgogIDx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiPgogICAgUkFGQUMgUmlzayBNYXRyaXggKFJlcGxhY2Ugd2l0aCB5b3VyIFNWRykKICA8L3RleHQ+Cjwvc3ZnPg==';
 
 const exportToPDF = async (assessment: RiskAssessment) => {
   try {
@@ -27,29 +29,26 @@ const exportToPDF = async (assessment: RiskAssessment) => {
     // Add header - Form title and "Uncontrolled copy when printed"
     addPdfHeader(doc, margin, pageWidth);
     
-    // Add guidance and risk matrix image from the provided image
-    // Further reduced matrix height to match example image (about 1/4 of the page)
+    // Add SVG image instead of risk matrix
     const matrixStartY = margin + 5;
-    const matrixHeight = 35; // Reduced height to match example image
     
-    // Add the risk matrix image
-    await addRiskMatrix(doc, matrixStartY, matrixHeight, margin, effectiveWidth);
+    // Add the SVG image with consistent margins
+    const yAfterImage = await addSvgImage(doc, placeholderSvg, matrixStartY, margin, effectiveWidth);
     
     // Now add the main form fields with better spacing
-    // Added more space between matrix and header section
-    let y = matrixStartY + matrixHeight + 10; // Adjusted spacing between matrix and main content
+    const y = yAfterImage + 10; // Add space after the SVG
     
     // Add header section with Squadron info - using the same margins for all tables
-    y = await addHeaderSection(doc, autoTable, assessment.header, y, margin);
+    const headerSectionY = await addHeaderSection(doc, autoTable, assessment.header, y, margin);
     
     // Add risk table
-    y = addRiskTable(doc, autoTable, assessment.risks, y, margin);
+    const riskTableY = addRiskTable(doc, autoTable, assessment.risks, headerSectionY, margin);
     
     // Add commander sign-off information
-    y = addCommanderSection(doc, autoTable, assessment.commander, y, margin);
+    const commanderSectionY = addCommanderSection(doc, autoTable, assessment.commander, riskTableY, margin);
     
     // Add Dynamic RA information if provided
-    y = addDynamicSection(doc, autoTable, assessment.dynamic, y + 5, margin);
+    const dynamicSectionY = addDynamicSection(doc, autoTable, assessment.dynamic, commanderSectionY + 5, margin);
     
     // Add version number at bottom right
     addVersionNumber(doc, pageWidth, pageHeight);
