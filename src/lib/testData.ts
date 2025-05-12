@@ -10,6 +10,9 @@ const rafSvgLogo = `
 </svg>
 `;
 
+// Path to the PNG image for testing
+const riskMatrixPng = "/lovable-uploads/9ee6b445-141e-4074-9cf1-0fbdd7ee8a11.png";
+
 export const getTestData = (): RiskAssessment => {
   return {
     header: {
@@ -19,7 +22,8 @@ export const getTestData = (): RiskAssessment => {
       "Assessment Date": new Date().toLocaleDateString("en-GB"),
       "Publications": "AP1034 - RAF Health and Safety Guidelines\nACP 4 - Air Cadet Health and Safety Manual\nJSP 375 - MOD Health and Safety Handbook",
       "Risk Assessment Type": "Generic",
-      "SvgLogo": rafSvgLogo // Adding the SVG logo to test data
+      // "SvgLogo": rafSvgLogo // Adding the SVG logo to test data
+      "PngImage": riskMatrixPng // Using PNG image instead of SVG
     },
     risks: [
       {

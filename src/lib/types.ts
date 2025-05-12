@@ -6,6 +6,7 @@ export interface HeaderFields {
   "Publications": string;
   "Risk Assessment Type": string;
   "SvgLogo"?: string; // Optional SVG logo data
+  "PngImage"?: string; // Optional PNG image path
 }
 
 export interface RiskEntry {

@@ -1,4 +1,3 @@
-
 import { jsPDF } from 'jspdf';
 
 // Helper function to truncate text if needed
@@ -30,7 +29,26 @@ export const addVersionNumber = (doc: jsPDF, pageWidth: number, pageHeight: numb
   doc.text("Version: 2.0", pageWidth - 25, pageHeight - 5);
 };
 
-// Helper function to add an SVG image to the PDF with proper margins
+// Helper function to add a PNG image to the PDF with proper margins
+export const addPngImage = async (doc: jsPDF, imagePath: string, startY: number, margin: number, width: number) => {
+  try {
+    // Calculate height based on width to maintain aspect ratio
+    const height = width * 0.3; // Adjust aspect ratio as needed for the PNG
+    
+    // Add the PNG image to the document
+    doc.addImage(imagePath, 'PNG', margin, startY, width, height);
+    
+    console.log("PNG image added successfully");
+    
+    // Return the Y position after the image for further content
+    return startY + height;
+  } catch (error) {
+    console.error("Error adding PNG image:", error);
+    return startY; // Return original position if there's an error
+  }
+};
+
+// Keep the SVG function for backward compatibility
 export const addSvgImage = async (doc: jsPDF, svgData: string, startY: number, margin: number, width: number) => {
   try {
     // Calculate height based on width to maintain aspect ratio
