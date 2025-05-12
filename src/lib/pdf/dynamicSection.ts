@@ -46,12 +46,8 @@ export const addDynamicSection = (
       cellPadding: 2,
       overflow: 'linebreak' as const, // Enable text wrapping
     },
-    margin: { left: margin, right: margin },
-    columnStyles: {
-      0: { cellWidth: 90 },
-      1: { cellWidth: 90 },
-      2: { cellWidth: 50 }
-    }
+    margin: { left: margin, right: margin }
+    // Removed column styles to allow full width
   });
       
   y = (doc as any).lastAutoTable.finalY;
@@ -69,12 +65,8 @@ export const addDynamicSection = (
       fontSize: 9,
       cellPadding: 2,
     },
-    margin: { left: margin, right: margin },
-    columnStyles: {
-      0: { cellWidth: 90 },
-      1: { cellWidth: 90 },
-      2: { cellWidth: 50 }
-    }
+    margin: { left: margin, right: margin }
+    // Removed column styles to allow full width
   });
 
   return (doc as any).lastAutoTable.finalY;
