@@ -1,11 +1,11 @@
-
 export interface HeaderFields {
-  Squadron: string;
+  "Squadron": string;
   "Assessor Name": string;
   "Activity Title": string;
   "Assessment Date": string;
-  Publications: string;
+  "Publications": string;
   "Risk Assessment Type": string;
+  "SvgLogo"?: string; // Optional SVG logo data
 }
 
 export interface RiskEntry {

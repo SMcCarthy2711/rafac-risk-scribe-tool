@@ -31,14 +31,25 @@ export const addVersionNumber = (doc: jsPDF, pageWidth: number, pageHeight: numb
 };
 
 // Helper function to add an SVG image to the PDF with proper margins
-export const addSvgImage = async (doc: jsPDF, svgUrl: string, startY: number, margin: number, width: number) => {
+export const addSvgImage = async (doc: jsPDF, svgData: string, startY: number, margin: number, width: number) => {
   try {
     // Calculate height based on width to maintain aspect ratio
-    // You can adjust the aspect ratio as needed for your specific SVG
     const height = width * 0.25; // Assuming a 4:1 aspect ratio, adjust as needed
     
+    // For SVGs: ensure it has proper encoding
+    // If it's a URL or base64, it should work directly
+    // If not, we need to encode it
+    let processedSvgData = svgData;
+    
+    // If not already a data URL and not an HTTP URL, convert to data URL
+    if (!svgData.startsWith('data:') && !svgData.startsWith('http')) {
+      processedSvgData = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+    }
+    
     // Add the SVG image to the document
-    doc.addImage(svgUrl, 'SVG', margin, startY, width, height);
+    doc.addImage(processedSvgData, 'SVG', margin, startY, width, height);
+    
+    console.log("SVG image added successfully");
     
     // Return the Y position after the image for further content
     return startY + height;

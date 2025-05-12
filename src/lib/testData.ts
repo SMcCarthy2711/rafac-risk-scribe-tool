@@ -1,6 +1,15 @@
 
 import { RiskAssessment } from "./types";
 
+// A simple RAF logo SVG for testing
+const rafSvgLogo = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" width="800" height="200">
+  <rect x="50" y="50" width="700" height="100" fill="#003D87" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="400" y="120" font-family="Arial" font-size="60" fill="#FFFFFF" text-anchor="middle">RAF RISK ASSESSMENT</text>
+  <circle cx="120" cy="100" r="40" fill="#CE1126"/>
+</svg>
+`;
+
 export const getTestData = (): RiskAssessment => {
   return {
     header: {
@@ -9,7 +18,8 @@ export const getTestData = (): RiskAssessment => {
       "Activity Title": "Annual Camp - Adventure Training",
       "Assessment Date": new Date().toLocaleDateString("en-GB"),
       "Publications": "AP1034 - RAF Health and Safety Guidelines\nACP 4 - Air Cadet Health and Safety Manual\nJSP 375 - MOD Health and Safety Handbook",
-      "Risk Assessment Type": "Generic"
+      "Risk Assessment Type": "Generic",
+      "SvgLogo": rafSvgLogo // Adding the SVG logo to test data
     },
     risks: [
       {
