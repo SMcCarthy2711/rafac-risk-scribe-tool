@@ -27,7 +27,8 @@ export const addDynamicSection = (
       cellPadding: 2,
       fontStyle: 'bold' as const
     },
-    margin: { left: margin, right: margin }
+    margin: { left: margin, right: margin },
+    tableWidth: 'auto' // Let the table adjust to the content within margins
   });
       
   let y = (doc as any).lastAutoTable.finalY;
@@ -46,8 +47,8 @@ export const addDynamicSection = (
       cellPadding: 2,
       overflow: 'linebreak' as const, // Enable text wrapping
     },
-    margin: { left: margin, right: margin }
-    // Removed column styles to allow full width
+    margin: { left: margin, right: margin },
+    tableWidth: 'auto' // Let the table adjust to the content within margins
   });
       
   y = (doc as any).lastAutoTable.finalY;
@@ -65,8 +66,8 @@ export const addDynamicSection = (
       fontSize: 9,
       cellPadding: 2,
     },
-    margin: { left: margin, right: margin }
-    // Removed column styles to allow full width
+    margin: { left: margin, right: margin },
+    tableWidth: 'auto' // Let the table adjust to the content within margins
   });
 
   return (doc as any).lastAutoTable.finalY;
