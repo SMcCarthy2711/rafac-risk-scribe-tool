@@ -81,22 +81,17 @@ export const addRiskTable = (
       overflow: 'linebreak' as const, // Enable text wrapping
     },
     margin: { left: margin, right: margin },
-    // Keep column widths but ensure overall table respects margin
+    tableWidth: 'auto', // Let the table adjust to the content within margins
+    // Remove fixed column widths to allow automatic adjustment
     columnStyles: {
-      0: { cellWidth: 10 },
-      1: { cellWidth: 25 },
-      2: { cellWidth: 25 },
-      3: { cellWidth: 25 },
-      4: { cellWidth: 30 },
-      5: { cellWidth: 8 },
-      6: { cellWidth: 8 },
-      7: { cellWidth: 12 },
-      8: { cellWidth: 15 },
-      9: { cellWidth: 25 },
-      10: { cellWidth: 8 },
-      11: { cellWidth: 8 },
-      12: { cellWidth: 15 },
-      13: { cellWidth: 25 },
+      // Keep minimal width guidance for the narrow columns while allowing flexibility
+      5: { cellWidth: 'auto' }, // Likelihood
+      6: { cellWidth: 'auto' }, // Impact
+      7: { cellWidth: 'auto' }, // Rating
+      8: { cellWidth: 'auto' }, // Accept?
+      10: { cellWidth: 'auto' }, // Revised L
+      11: { cellWidth: 'auto' }, // Revised I
+      12: { cellWidth: 'auto' }, // Revised Rating
     },
     headStyles: {
       fillColor: [240, 240, 240],
