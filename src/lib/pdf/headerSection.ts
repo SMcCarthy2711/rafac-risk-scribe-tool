@@ -1,6 +1,7 @@
 
 import { jsPDF } from 'jspdf';
 import { HeaderFields } from '../types';
+import { addSvgLogo } from './utils';
 
 // Add header section tables to the PDF - updated to match example image format
 export const addHeaderSection = async (
@@ -10,10 +11,19 @@ export const addHeaderSection = async (
   startY: number,
   margin: number
 ): Promise<number> => {
+  // First, add the SVG logo at the top
+  const pageWidth = doc.internal.pageSize.width;
+  let currentY = startY;
+  
+  // Add the RAFAC SVG header
+  currentY = await addSvgLogo(doc, currentY, margin, pageWidth);
+  
+  // Add some space after the logo
+  currentY += 5;
   
   // RAFAC Formation and Assessor info row - fixed margins to prevent overhang
   autoTable(doc, {
-    startY: startY,
+    startY: currentY,
     head: [['RAFAC Formation:', 'Assessor (No, Rank, Name):', 'Assessor\'s Signature:', 'Assessment Date:']],
     body: [[
       headerFields.Squadron, 

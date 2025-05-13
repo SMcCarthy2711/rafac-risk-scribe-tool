@@ -1,4 +1,6 @@
+
 import { jsPDF } from 'jspdf';
+import RAFACSVG from '../pdf/RAFAC RISK Headder-2.svg';
 
 // Helper function to truncate text if needed
 export const truncateText = (text: string, maxLength: number) => {
@@ -13,6 +15,26 @@ export const createPdfDocument = () => {
     unit: 'mm',
     format: 'a4',
   });
+};
+
+// Add SVG logo to the top of the PDF
+export const addSvgLogo = async (doc: jsPDF, startY: number, margin: number, pageWidth: number) => {
+  try {
+    // Calculate appropriate dimensions for the SVG
+    const logoWidth = pageWidth - (margin * 2);
+    const logoHeight = 25; // Adjust height as needed for your specific SVG
+    
+    // Add the SVG image to the document
+    doc.addImage(RAFACSVG, 'SVG', margin, startY, logoWidth, logoHeight);
+    
+    console.log("RAFAC SVG header added successfully");
+    
+    // Return the Y position after the image for further content
+    return startY + logoHeight;
+  } catch (error) {
+    console.error("Error adding RAFAC SVG header:", error);
+    return startY; // Return original position if there's an error
+  }
 };
 
 // Add header information to the PDF - updated to match example image
