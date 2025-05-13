@@ -81,7 +81,7 @@ export const addRiskTable = (
       overflow: 'linebreak' as const, // Enable text wrapping
     },
     margin: { left: margin, right: margin },
-    tableWidth: 'auto', // Let the table adjust to the content within margins
+    tableWidth: '940px', // Let the table adjust to the content within margins
     // Remove fixed column widths to allow automatic adjustment
     columnStyles: {
       // Keep minimal width guidance for the narrow columns while allowing flexibility
