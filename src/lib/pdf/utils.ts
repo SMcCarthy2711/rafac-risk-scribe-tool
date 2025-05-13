@@ -17,12 +17,23 @@ export const createPdfDocument = () => {
   });
 };
 
-// Add SVG logo to the top of the PDF
+// Add SVG logo to the top of the PDF with specific dimensions (1107x255)
 export const addSvgLogo = async (doc: jsPDF, startY: number, margin: number, pageWidth: number) => {
   try {
-    // Calculate appropriate dimensions for the SVG
+    // Convert the specified dimensions (1107x255) to appropriate scale for PDF
+    // For reference: A4 landscape is 297mm x 210mm
+    // We need to scale the large SVG dimensions down to fit the page width while maintaining aspect ratio
+    
+    // Calculate aspect ratio of the original SVG
+    const aspectRatio = 1107 / 255;
+    
+    // Calculate the width to use (page width minus margins)
     const logoWidth = pageWidth - (margin * 2);
-    const logoHeight = 25; // Adjust height as needed for your specific SVG
+    
+    // Calculate height based on the aspect ratio
+    const logoHeight = logoWidth / aspectRatio;
+    
+    console.log(`Adding SVG with width: ${logoWidth}mm, height: ${logoHeight}mm`);
     
     // Add the SVG image to the document
     doc.addImage(RAFACSVG, 'SVG', margin, startY, logoWidth, logoHeight);
