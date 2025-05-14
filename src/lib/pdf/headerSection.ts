@@ -57,7 +57,9 @@ export const addHeaderSection = async (
   // Activity Title row - fixed margins to prevent overhang
   // Format the risk assessment type to show both options with a checkbox
   const isGeneric = headerFields["Risk Assessment Type"] === "Generic";
-  const riskTypeDisplay = `Generic ${isGeneric ? "☑" : "☐"}     Specific ${!isGeneric ? "☑" : "☐"}`;
+  const genericCheckbox = isGeneric ? "☑" : "☐";
+  const specificCheckbox = !isGeneric ? "☑" : "☐";
+  const riskTypeDisplay = `Generic ${genericCheckbox}     Specific ${specificCheckbox}`;
   
   autoTable(doc, {
     startY: y,
