@@ -2,7 +2,7 @@
 import { RiskAssessment } from "./types";
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
-import { createPdfDocument, addPdfHeader, addVersionNumber, addSvgImage } from './pdf/utils';
+import { createPdfDocument, addVersionNumber, addSvgImage } from './pdf/utils';
 import { addHeaderSection } from './pdf/headerSection';
 import { addRiskTable } from './pdf/riskTable';
 import { addCommanderSection } from './pdf/commanderSection';

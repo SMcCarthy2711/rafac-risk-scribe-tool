@@ -59,7 +59,7 @@ export const addHeaderSection = async (
   const isGeneric = headerFields["Risk Assessment Type"] === "Generic";
   const genericCheckbox = isGeneric ? "☑" : "☐";
   const specificCheckbox = !isGeneric ? "☑" : "☐";
-  const riskTypeDisplay = `Generic ${genericCheckbox}     Specific ${specificCheckbox}`;
+  const riskTypeDisplay = `Generic ${genericCheckbox}    Specific ${specificCheckbox}`;
   
   autoTable(doc, {
     startY: y,
