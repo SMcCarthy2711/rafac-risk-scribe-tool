@@ -24,7 +24,12 @@ export const addCommanderSection = (
       fontSize: 9,
       cellPadding: 2,
     },
-    margin: { left: margin, right: margin }
+    margin: { left: margin, right: margin },
+    headStyles: {
+      fillColor: [5, 52, 133], // Changed to #053485 (RGB: 5, 52, 133)
+      textColor: [255, 255, 255], // White text for better contrast
+      fontStyle: 'bold'
+    }
     // Removed column styles to ensure full width matching the publications table
   });
 

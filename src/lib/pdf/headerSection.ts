@@ -44,6 +44,11 @@ export const addHeaderSection = async (
       1: { cellWidth: 'auto' },
       2: { cellWidth: 'auto' },
       3: { cellWidth: 'auto' }
+    },
+    headStyles: {
+      fillColor: [5, 52, 133], // Changed to #053485 (RGB: 5, 52, 133)
+      textColor: [255, 255, 255], // White text for better contrast
+      fontStyle: 'bold'
     }
   });
     
@@ -69,6 +74,11 @@ export const addHeaderSection = async (
     columnStyles: {
       0: { cellWidth: 'auto' },
       1: { cellWidth: 'auto' }
+    },
+    headStyles: {
+      fillColor: [5, 52, 133], // Changed to #053485 (RGB: 5, 52, 133)
+      textColor: [255, 255, 255], // White text for better contrast
+      fontStyle: 'bold'
     }
   });
     
@@ -88,7 +98,12 @@ export const addHeaderSection = async (
       cellPadding: 2,
       lineWidth: 0.1,
     },
-    margin: { left: margin, right: margin }
+    margin: { left: margin, right: margin },
+    headStyles: {
+      fillColor: [5, 52, 133], // Changed to #053485 (RGB: 5, 52, 133)
+      textColor: [255, 255, 255], // White text for better contrast
+      fontStyle: 'bold'
+    }
   });
     
   return (doc as any).lastAutoTable.finalY;

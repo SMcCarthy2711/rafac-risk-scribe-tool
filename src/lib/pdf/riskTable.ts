@@ -1,3 +1,4 @@
+
 import { jsPDF } from 'jspdf';
 import { RiskEntry } from '../types';
 
@@ -81,7 +82,7 @@ export const addRiskTable = (
       overflow: 'linebreak' as const, // Enable text wrapping
     },
     margin: { left: margin, right: margin },
-    tableWidth: '940px', // Let the table adjust to the content within margins
+    tableWidth: 'auto', // Let the table adjust to the content within margins
     // Remove fixed column widths to allow automatic adjustment
     columnStyles: {
       // Keep minimal width guidance for the narrow columns while allowing flexibility
@@ -94,8 +95,8 @@ export const addRiskTable = (
       12: { cellWidth: 'auto' }, // Revised Rating
     },
     headStyles: {
-      fillColor: [240, 240, 240],
-      textColor: [0, 0, 0],
+      fillColor: [5, 52, 133], // Changed from [240, 240, 240] to #053485 (RGB: 5, 52, 133)
+      textColor: [255, 255, 255], // Changed text color to white for better contrast
       fontStyle: 'bold',
       fontSize: 7
     }

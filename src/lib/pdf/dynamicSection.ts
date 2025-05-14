@@ -28,7 +28,12 @@ export const addDynamicSection = (
       fontStyle: 'bold' as const
     },
     margin: { left: margin, right: margin },
-    tableWidth: 'auto' // Let the table adjust to the content within margins
+    tableWidth: 'auto', // Let the table adjust to the content within margins
+    headStyles: {
+      fillColor: [5, 52, 133], // Changed to #053485 (RGB: 5, 52, 133)
+      textColor: [255, 255, 255], // White text for better contrast
+      fontStyle: 'bold'
+    }
   });
       
   let y = (doc as any).lastAutoTable.finalY;
@@ -48,7 +53,12 @@ export const addDynamicSection = (
       overflow: 'linebreak' as const, // Enable text wrapping
     },
     margin: { left: margin, right: margin },
-    tableWidth: 'auto' // Let the table adjust to the content within margins
+    tableWidth: 'auto', // Let the table adjust to the content within margins
+    headStyles: {
+      fillColor: [5, 52, 133], // Changed to #053485 (RGB: 5, 52, 133)
+      textColor: [255, 255, 255], // White text for better contrast
+      fontStyle: 'bold'
+    }
   });
       
   y = (doc as any).lastAutoTable.finalY;
@@ -67,7 +77,12 @@ export const addDynamicSection = (
       cellPadding: 2,
     },
     margin: { left: margin, right: margin },
-    tableWidth: 'auto' // Let the table adjust to the content within margins
+    tableWidth: 'auto', // Let the table adjust to the content within margins
+    headStyles: {
+      fillColor: [5, 52, 133], // Changed to #053485 (RGB: 5, 52, 133)
+      textColor: [255, 255, 255], // White text for better contrast
+      fontStyle: 'bold'
+    }
   });
 
   return (doc as any).lastAutoTable.finalY;
