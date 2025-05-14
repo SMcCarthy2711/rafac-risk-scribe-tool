@@ -3,7 +3,9 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { HeaderFields } from "@/lib/types";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface HeaderProps {
   headerFields: HeaderFields;
@@ -18,21 +20,79 @@ const Header: React.FC<HeaderProps> = ({ headerFields, setHeaderFields }) => {
   return (
     <Card className="w-full">
       <CardHeader className="bg-rafac-blue text-white">
-        <CardTitle>Header Details</CardTitle>
+        <CardTitle>Risk Assessment Header Details</CardTitle>
       </CardHeader>
       <CardContent className="pt-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {(Object.keys(headerFields) as Array<keyof HeaderFields>).map((field) => (
-            <div key={field} className="space-y-2">
-              <Label htmlFor={field}>{field}</Label>
-              <Input
-                id={field}
-                value={headerFields[field]}
-                onChange={(e) => handleInputChange(field, e.target.value)}
-                placeholder={`Enter ${field}`}
-              />
-            </div>
-          ))}
+          <div className="space-y-2">
+            <Label htmlFor="squadron">RAFAC Squadron/Formation</Label>
+            <Input
+              id="squadron"
+              value={headerFields.Squadron}
+              onChange={(e) => handleInputChange("Squadron", e.target.value)}
+              placeholder="e.g. 1234 (City) Squadron"
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="assessor">Assessor (No, Rank, Name)</Label>
+            <Input
+              id="assessor"
+              value={headerFields["Assessor Name"]}
+              onChange={(e) => handleInputChange("Assessor Name", e.target.value)}
+              placeholder="e.g. F12345 Flt Lt J Smith"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="activity">Activity Title</Label>
+            <Input
+              id="activity"
+              value={headerFields["Activity Title"]}
+              onChange={(e) => handleInputChange("Activity Title", e.target.value)}
+              placeholder="e.g. Annual Camp Field Day"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="date">Assessment Date</Label>
+            <Input
+              id="date"
+              value={headerFields["Assessment Date"]}
+              onChange={(e) => handleInputChange("Assessment Date", e.target.value)}
+              placeholder="DD/MM/YYYY"
+            />
+          </div>
+
+          <div className="space-y-2 md:col-span-2">
+            <Label htmlFor="publications">Relevant Publications / Pamphlets / Procedures</Label>
+            <Textarea
+              id="publications"
+              value={headerFields.Publications}
+              onChange={(e) => handleInputChange("Publications", e.target.value)}
+              placeholder="Enter relevant publications, one per line"
+              className="min-h-[100px]"
+            />
+            <p className="text-xs text-gray-500">Each line will be numbered in the final document.</p>
+          </div>
+
+          <div className="space-y-4 md:col-span-2">
+            <Label>Type of Risk Assessment</Label>
+            <RadioGroup 
+              value={headerFields["Risk Assessment Type"] || ""} 
+              onValueChange={(value) => handleInputChange("Risk Assessment Type", value)}
+              className="flex space-x-4"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="Generic" id="generic" />
+                <Label htmlFor="generic" className="cursor-pointer">Generic</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="Specific" id="specific" />
+                <Label htmlFor="specific" className="cursor-pointer">Specific</Label>
+              </div>
+            </RadioGroup>
+          </div>
         </div>
       </CardContent>
     </Card>

@@ -1,3 +1,4 @@
+
 import { RiskAssessment } from "./types";
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
@@ -23,7 +24,7 @@ const exportToPDF = async (assessment: RiskAssessment) => {
     const svgWidth = 1107;
     const svgHeight = 255;
     const svgStartY = margin;
-    const yAfterSvg = await addSvgImage(doc, headerSvgPath, svgStartY, margin, pageWidth - (2 * margin), svgWidth, svgHeight);
+    const yAfterSvg = await addSvgImage(doc, headerSvgPath, svgStartY, margin, pageWidth - (2 * margin));
 
     // Adjust starting Y position after the SVG
     const y = yAfterSvg + 10;

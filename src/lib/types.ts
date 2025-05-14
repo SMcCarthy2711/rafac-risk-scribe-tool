@@ -1,10 +1,11 @@
+
 export interface HeaderFields {
   "Squadron": string;
   "Assessor Name": string;
   "Activity Title": string;
   "Assessment Date": string;
   "Publications": string;
-  "Risk Assessment Type": string;
+  "Risk Assessment Type": "Generic" | "Specific" | ""; // Limited to these two options
   "SvgLogo"?: string; // Optional SVG logo data
   "PngImage"?: string; // Optional PNG image path
 }

@@ -55,13 +55,16 @@ export const addHeaderSection = async (
   let y = (doc as any).lastAutoTable.finalY;
     
   // Activity Title row - fixed margins to prevent overhang
+  // Format the risk assessment type to show both options with a checkbox
+  const isGeneric = headerFields["Risk Assessment Type"] === "Generic";
+  const riskTypeDisplay = `Generic ${isGeneric ? "☑" : "☐"}     Specific ${!isGeneric ? "☑" : "☐"}`;
+  
   autoTable(doc, {
     startY: y,
     head: [['Activity (Step 1a):', 'Type of Risk Assessment:']],
     body: [[
       headerFields["Activity Title"],
-      headerFields["Risk Assessment Type"] ? headerFields["Risk Assessment Type"] : 
-      `Generic ${headerFields["Risk Assessment Type"] === "Generic" ? "☑" : "☐"}     Specific ${headerFields["Risk Assessment Type"] === "Specific" ? "☑" : "☐"}`
+      riskTypeDisplay
     ]],
     theme: 'grid',
     styles: {
