@@ -1,4 +1,4 @@
-# Welcome to your Lovable project
+# Welcome to the RAFAC Risk Scribe Tool 
 
 ## Project info
 
@@ -8,11 +8,6 @@
 
 There are several ways of editing your application.
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/6fe91de5-518c-463b-9ca9-b55feb9ffedb) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
 
 **Use your preferred IDE**
 
