@@ -50,5 +50,5 @@ export const addVersionNumber = (
   pageHeight: number
 ): void => {
   doc.setFontSize(8);
-  doc.text('Version: 2.0 X', pageWidth - 25, pageHeight - 5);
+  doc.text('Version: 2.0X', pageWidth - 25, pageHeight - 5);
 };
