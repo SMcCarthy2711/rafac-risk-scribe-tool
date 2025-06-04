@@ -1,6 +1,6 @@
 
+
 import { jsPDF } from 'jspdf';
-import RAFACSVG from '@/lib/pdf/RAFAC RISK Headder-2.svg';
 
 // Truncate text to a maximum length
 export const truncateText = (text: string, maxLength: number): string =>
@@ -26,13 +26,19 @@ export const addSvgLogo = async (
     console.log(`Page dimensions: ${pageWidth}mm x ${pageHeight}mm`);
     console.log(`Logo will be: ${logoWidth}mm x ${logoHeight}mm`);
 
-    // Convert SVG to base64 for embedding
-    const response = await fetch(RAFACSVG);
+    // Try to load SVG from public directory first
+    const svgUrl = '/RAFAC_RISK_Header.svg';
+    console.log(`Attempting to load SVG from: ${svgUrl}`);
+    
+    const response = await fetch(svgUrl);
     if (!response.ok) {
-      throw new Error(`Failed to load SVG: ${response.status}`);
+      throw new Error(`Failed to load SVG: ${response.status} - ${response.statusText}`);
     }
     
     const svgText = await response.text();
+    console.log(`SVG loaded successfully, content length: ${svgText.length}`);
+    
+    // Convert SVG to base64 for embedding
     const svgBase64 = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgText)));
 
     // Add the SVG image to the PDF
@@ -43,13 +49,12 @@ export const addSvgLogo = async (
     return margin + logoHeight + 5;
   } catch (error) {
     console.error('Error adding RAFAC SVG header:', error);
-    console.error('SVG path:', RAFACSVG);
     
     // Fallback: add a text header if SVG fails
     doc.setFontSize(16);
     doc.setTextColor(5, 52, 133);
     doc.text('RAFAC RISK ASSESSMENT', margin, margin + 10);
-    console.log('Added fallback text header');
+    console.log('Added fallback text header due to SVG loading failure');
     
     return margin + 20;
   }
