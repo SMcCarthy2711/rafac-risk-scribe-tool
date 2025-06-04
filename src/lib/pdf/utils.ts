@@ -44,38 +44,28 @@ export const addSvgLogo = async (
     // Clean up the SVG text - remove any BOM or extra whitespace
     const cleanSvgText = svgText.trim().replace(/^\uFEFF/, '');
     
-    // Convert SVG to base64 for embedding
-    const svgBase64 = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(cleanSvgText)));
-    console.log(`SVG base64 created, length: ${svgBase64.length}`);
-
-    // Create a new Image to test if the SVG is valid
-    const img = new Image();
-    
-    return new Promise((resolve, reject) => {
-      img.onload = () => {
-        console.log(`SVG image loaded successfully, dimensions: ${img.width}x${img.height}`);
+    // Try to add SVG directly first
+    console.log('Attempting to add SVG directly to PDF...');
+    try {
+      doc.addImage(cleanSvgText, 'SVG', margin, margin, logoWidth, logoHeight);
+      console.log(`SVG added directly to PDF at position (${margin}, ${margin}) with size ${logoWidth}x${logoHeight}`);
+      return margin + logoHeight + 5;
+    } catch (directSvgError) {
+      console.log('Direct SVG addition failed, trying base64 conversion:', directSvgError);
+      
+      // Fallback to base64 conversion
+      try {
+        const svgBase64 = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(cleanSvgText)));
+        console.log(`SVG base64 created, length: ${svgBase64.length}`);
         
-        try {
-          // Add the SVG image to the PDF
-          doc.addImage(svgBase64, 'SVG', margin, margin, logoWidth, logoHeight);
-          console.log(`SVG added to PDF at position (${margin}, ${margin}) with size ${logoWidth}x${logoHeight}`);
-          
-          // Return the Y position after the logo plus some spacing
-          resolve(margin + logoHeight + 5);
-        } catch (addImageError) {
-          console.error('Error adding image to PDF:', addImageError);
-          reject(addImageError);
-        }
-      };
-      
-      img.onerror = (error) => {
-        console.error('SVG image failed to load:', error);
-        reject(new Error('SVG image failed to load'));
-      };
-      
-      // Set the source to trigger loading
-      img.src = svgBase64;
-    });
+        doc.addImage(svgBase64, 'SVG', margin, margin, logoWidth, logoHeight);
+        console.log(`SVG base64 added to PDF at position (${margin}, ${margin}) with size ${logoWidth}x${logoHeight}`);
+        return margin + logoHeight + 5;
+      } catch (base64Error) {
+        console.log('Base64 SVG addition also failed:', base64Error);
+        throw base64Error;
+      }
+    }
 
   } catch (error) {
     console.error('Error in addSvgLogo:', error);
