@@ -1,4 +1,3 @@
-
 import { jsPDF } from 'jspdf';
 import { HeaderFields } from '../types';
 import { addSvgLogo } from './utils';
@@ -15,8 +14,8 @@ export const addHeaderSection = async (
   const pageWidth = doc.internal.pageSize.width;
   let currentY = startY;
   
-  // Add the RAFAC SVG header
-  currentY = await addSvgLogo(doc, currentY, margin, pageWidth);
+  // Add the RAFAC SVG header - fixed to use correct number of arguments
+  currentY = await addSvgLogo(doc, margin);
   
   // Add some space after the logo
   currentY += 5;
