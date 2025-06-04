@@ -2,14 +2,11 @@
 import { RiskAssessment } from "./types";
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
-import { createPdfDocument, addVersionNumber, addSvgImage } from './pdf/utils';
+import { createPdfDocument, addVersionNumber, addSvgLogo } from './pdf/utils';
 import { addHeaderSection } from './pdf/headerSection';
 import { addRiskTable } from './pdf/riskTable';
 import { addCommanderSection } from './pdf/commanderSection';
 import { addDynamicSection } from './pdf/dynamicSection';
-
-// Path to the SVG file
-const headerSvgPath = 'src/lib/pdf/RAFAC RISK Headder-2.svg';
 
 const exportToPDF = async (assessment: RiskAssessment) => {
   try {
@@ -20,14 +17,8 @@ const exportToPDF = async (assessment: RiskAssessment) => {
     const pageHeight = doc.internal.pageSize.height;
     const margin = 12;
 
-    // Add the SVG at the top of the PDF
-    const svgWidth = 1107;
-    const svgHeight = 255;
-    const svgStartY = margin;
-    const yAfterSvg = await addSvgImage(doc, headerSvgPath, svgStartY, margin, pageWidth - (2 * margin));
-
-    // Adjust starting Y position after the SVG
-    const y = yAfterSvg + 10;
+    // Start with header section which now includes the SVG logo
+    const y = margin;
     const headerSectionY = await addHeaderSection(doc, autoTable, assessment.header, y, margin);
     const riskTableY = addRiskTable(doc, autoTable, assessment.risks, headerSectionY, margin);
     const commanderSectionY = addCommanderSection(doc, autoTable, assessment.commander, riskTableY, margin);
