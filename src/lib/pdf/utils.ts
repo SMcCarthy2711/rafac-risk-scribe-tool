@@ -1,3 +1,4 @@
+
 import { jsPDF } from 'jspdf';
 import RAFACSVG from '@/lib/pdf/RAFAC RISK Headder-2.svg';
 
@@ -9,29 +10,48 @@ export const truncateText = (text: string, maxLength: number): string =>
 export const createPdfDocument = (): jsPDF =>
   new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
 
-// Add SVG logo to the top of page 1
+// Add SVG logo to the top of page 1 - taking up 1/4 of the page
 export const addSvgLogo = async (
   doc: jsPDF,
   margin: number
 ): Promise<number> => {
   try {
     const pageWidth = doc.internal.pageSize.getWidth();
-    const aspectRatio = 1107 / 255;
+    const pageHeight = doc.internal.pageSize.getHeight();
+    
+    // Calculate logo dimensions to take up 1/4 of the page height
+    const logoHeight = pageHeight / 4;
     const logoWidth = pageWidth - margin * 2;
-    const logoHeight = logoWidth / aspectRatio;
 
-    const svgUrl = RAFACSVG;
-    const response = await fetch(svgUrl);
+    console.log(`Page dimensions: ${pageWidth}mm x ${pageHeight}mm`);
+    console.log(`Logo will be: ${logoWidth}mm x ${logoHeight}mm`);
+
+    // Convert SVG to base64 for embedding
+    const response = await fetch(RAFACSVG);
+    if (!response.ok) {
+      throw new Error(`Failed to load SVG: ${response.status}`);
+    }
+    
     const svgText = await response.text();
     const svgBase64 = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgText)));
 
+    // Add the SVG image to the PDF
     doc.addImage(svgBase64, 'SVG', margin, margin, logoWidth, logoHeight);
-    console.log(`RAFAC SVG header added: ${logoWidth}mm x ${logoHeight}mm`);
+    console.log(`RAFAC SVG header added successfully at position (${margin}, ${margin})`);
 
-    return margin + logoHeight;
+    // Return the Y position after the logo plus some spacing
+    return margin + logoHeight + 5;
   } catch (error) {
     console.error('Error adding RAFAC SVG header:', error);
-    return margin;
+    console.error('SVG path:', RAFACSVG);
+    
+    // Fallback: add a text header if SVG fails
+    doc.setFontSize(16);
+    doc.setTextColor(5, 52, 133);
+    doc.text('RAFAC RISK ASSESSMENT', margin, margin + 10);
+    console.log('Added fallback text header');
+    
+    return margin + 20;
   }
 };
 
