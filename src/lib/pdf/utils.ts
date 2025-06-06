@@ -1,4 +1,3 @@
-
 import { jsPDF } from 'jspdf';
 import { svg2pdf } from 'svg2pdf.js';
 
@@ -22,8 +21,8 @@ export const addSvgLogo = async (
     // Set specific margins for the logo (10px converted to mm)
     const logoMargin = 10 * 0.352778; // Convert 10px to mm (1px ≈ 0.352778mm)
     
-    // Set specific logo dimensions (1107x255px converted to mm)
-    const logoWidth = 1107 * 0.352778; // Convert 1107px to mm
+    // Calculate logo width accounting for left and right margins
+    const logoWidth = pageWidth - (logoMargin * 2); // Subtract both left and right margins
     const logoHeight = 255 * 0.352778; // Convert 255px to mm
 
     console.log(`Page dimensions: ${pageWidth}mm x ${pageHeight}mm`);
