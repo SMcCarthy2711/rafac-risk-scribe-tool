@@ -1,3 +1,4 @@
+
 import { jsPDF } from 'jspdf';
 import { svg2pdf } from 'svg2pdf.js';
 
@@ -20,7 +21,7 @@ export const addSvgLogo = async (
     
     // Calculate logo dimensions to take up 1/4 of the page height
     const logoHeight = pageHeight / 4;
-    const logoWidth = pageWidth - margin * 2;
+    const logoWidth = pageWidth; // Changed to use full page width
 
     console.log(`Page dimensions: ${pageWidth}mm x ${pageHeight}mm`);
     console.log(`Logo will be: ${logoWidth}mm x ${logoHeight}mm`);
@@ -53,14 +54,14 @@ export const addSvgLogo = async (
     
     // Use svg2pdf to convert and add the SVG
     await svg2pdf(svgElement, doc, {
-      x: margin,
-      y: margin,
+      x: 0, // Changed to start at edge of page
+      y: 0, // Changed to start at very top of page
       width: logoWidth,
       height: logoHeight
     });
     
-    console.log(`SVG added to PDF using svg2pdf at position (${margin}, ${margin}) with size ${logoWidth}x${logoHeight}`);
-    return margin + logoHeight + 5;
+    console.log(`SVG added to PDF using svg2pdf at position (0, 0) with size ${logoWidth}x${logoHeight}`);
+    return logoHeight + 5; // Return position after logo plus small gap
 
   } catch (error) {
     console.error('Error in addSvgLogo:', error);
