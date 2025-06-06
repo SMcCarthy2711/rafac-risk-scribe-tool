@@ -1,4 +1,3 @@
-
 import { jsPDF } from 'jspdf';
 import { svg2pdf } from 'svg2pdf.js';
 
@@ -10,7 +9,7 @@ export const truncateText = (text: string, maxLength: number): string =>
 export const createPdfDocument = (): jsPDF =>
   new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
 
-// Add SVG logo to the top of page 1 - taking up 1/4 of the page
+// Add SVG logo to the top of page 1 - with 10px margins
 export const addSvgLogo = async (
   doc: jsPDF,
   margin: number
@@ -19,9 +18,12 @@ export const addSvgLogo = async (
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     
-    // Calculate logo dimensions to take up 1/4 of the page height
+    // Set specific margins for the logo (10px converted to mm)
+    const logoMargin = 10 * 0.352778; // Convert 10px to mm (1px ≈ 0.352778mm)
+    
+    // Calculate logo dimensions with margins
     const logoHeight = pageHeight / 4;
-    const logoWidth = pageWidth; // Changed to use full page width
+    const logoWidth = pageWidth - (logoMargin * 2); // Account for left and right margins
 
     console.log(`Page dimensions: ${pageWidth}mm x ${pageHeight}mm`);
     console.log(`Logo will be: ${logoWidth}mm x ${logoHeight}mm`);
@@ -52,16 +54,16 @@ export const addSvgLogo = async (
     
     console.log('Parsed SVG element successfully');
     
-    // Use svg2pdf to convert and add the SVG
+    // Use svg2pdf to convert and add the SVG with margins
     await svg2pdf(svgElement, doc, {
-      x: 0, // Changed to start at edge of page
-      y: 0, // Changed to start at very top of page
+      x: logoMargin, // 10px left margin
+      y: logoMargin, // 10px top margin
       width: logoWidth,
       height: logoHeight
     });
     
-    console.log(`SVG added to PDF using svg2pdf at position (0, 0) with size ${logoWidth}x${logoHeight}`);
-    return logoHeight + 5; // Return position after logo plus small gap
+    console.log(`SVG added to PDF using svg2pdf at position (${logoMargin}, ${logoMargin}) with size ${logoWidth}x${logoHeight}`);
+    return logoMargin + logoHeight + 5; // Return position after logo plus small gap
 
   } catch (error) {
     console.error('Error in addSvgLogo:', error);
