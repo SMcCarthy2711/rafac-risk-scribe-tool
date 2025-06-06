@@ -1,6 +1,5 @@
-
 import { jsPDF } from 'jspdf';
-import 'svg2pdf.js';
+import { svg2pdf } from 'svg2pdf.js';
 
 // Truncate text to a maximum length
 export const truncateText = (text: string, maxLength: number): string =>
@@ -53,7 +52,6 @@ export const addSvgLogo = async (
     console.log('Parsed SVG element successfully');
     
     // Use svg2pdf to convert and add the SVG
-    const { svg2pdf } = await import('svg2pdf.js');
     await svg2pdf(svgElement, doc, {
       x: margin,
       y: margin,
