@@ -1,5 +1,6 @@
 
 import { jsPDF } from 'jspdf';
+import 'svg2pdf.js';
 
 // Truncate text to a maximum length
 export const truncateText = (text: string, maxLength: number): string =>
@@ -44,28 +45,24 @@ export const addSvgLogo = async (
     // Clean up the SVG text - remove any BOM or extra whitespace
     const cleanSvgText = svgText.trim().replace(/^\uFEFF/, '');
     
-    // Try to add SVG directly first
-    console.log('Attempting to add SVG directly to PDF...');
-    try {
-      doc.addImage(cleanSvgText, 'SVG', margin, margin, logoWidth, logoHeight);
-      console.log(`SVG added directly to PDF at position (${margin}, ${margin}) with size ${logoWidth}x${logoHeight}`);
-      return margin + logoHeight + 5;
-    } catch (directSvgError) {
-      console.log('Direct SVG addition failed, trying base64 conversion:', directSvgError);
-      
-      // Fallback to base64 conversion
-      try {
-        const svgBase64 = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(cleanSvgText)));
-        console.log(`SVG base64 created, length: ${svgBase64.length}`);
-        
-        doc.addImage(svgBase64, 'SVG', margin, margin, logoWidth, logoHeight);
-        console.log(`SVG base64 added to PDF at position (${margin}, ${margin}) with size ${logoWidth}x${logoHeight}`);
-        return margin + logoHeight + 5;
-      } catch (base64Error) {
-        console.log('Base64 SVG addition also failed:', base64Error);
-        throw base64Error;
-      }
-    }
+    // Parse the SVG as DOM element
+    const parser = new DOMParser();
+    const svgDoc = parser.parseFromString(cleanSvgText, 'image/svg+xml');
+    const svgElement = svgDoc.documentElement;
+    
+    console.log('Parsed SVG element successfully');
+    
+    // Use svg2pdf to convert and add the SVG
+    const { svg2pdf } = await import('svg2pdf.js');
+    await svg2pdf(svgElement, doc, {
+      x: margin,
+      y: margin,
+      width: logoWidth,
+      height: logoHeight
+    });
+    
+    console.log(`SVG added to PDF using svg2pdf at position (${margin}, ${margin}) with size ${logoWidth}x${logoHeight}`);
+    return margin + logoHeight + 5;
 
   } catch (error) {
     console.error('Error in addSvgLogo:', error);
