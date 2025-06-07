@@ -54,13 +54,8 @@ export const addHeaderSection = async (
     
   let y = (doc as any).lastAutoTable.finalY;
     
-  // Activity Title row - format the risk assessment type with bold/strikethrough
-  const isGeneric = headerFields["Risk Assessment Type"] === "Generic";
-  
-  // Create formatted text with HTML-like tags for jsPDF
-  const genericText = isGeneric ? "**Generic ☑**" : "~~Generic ☐~~";
-  const specificText = !isGeneric ? "**Specific ☑**" : "~~Specific ☐~~";
-  const riskTypeDisplay = `${genericText}    ${specificText}`;
+  // Activity Title row - show only the selected risk assessment type
+  const riskTypeDisplay = headerFields["Risk Assessment Type"] || "Generic";
   
   autoTable(doc, {
     startY: y,
@@ -85,38 +80,6 @@ export const addHeaderSection = async (
       fillColor: [5, 52, 133], // Changed to #053485 (RGB: 5, 52, 133)
       textColor: [255, 255, 255], // White text for better contrast
       fontStyle: 'bold'
-    },
-    // Custom styling for the risk assessment type cell
-    didParseCell: function(data: any) {
-      if (data.row.index === 0 && data.column.index === 1) {
-        // Parse the text to apply formatting
-        const text = data.cell.text[0];
-        if (text.includes('**') || text.includes('~~')) {
-          // Split the text and apply formatting
-          const parts = text.split('    ');
-          let formattedText = '';
-          
-          parts.forEach((part: string, index: number) => {
-            if (part.includes('**')) {
-              // Bold formatting for selected option
-              const cleanText = part.replace(/\*\*/g, '');
-              formattedText += cleanText;
-            } else if (part.includes('~~')) {
-              // Strikethrough formatting for unselected option
-              const cleanText = part.replace(/~~/g, '');
-              formattedText += cleanText;
-            } else {
-              formattedText += part;
-            }
-            
-            if (index < parts.length - 1) {
-              formattedText += '    ';
-            }
-          });
-          
-          data.cell.text = [formattedText];
-        }
-      }
     }
   });
     
