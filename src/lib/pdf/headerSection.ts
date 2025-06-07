@@ -1,3 +1,4 @@
+
 import { jsPDF } from 'jspdf';
 import { HeaderFields } from '../types';
 import { addSvgLogo } from './utils';
@@ -10,15 +11,15 @@ export const addHeaderSection = async (
   startY: number,
   margin: number
 ): Promise<number> => {
-  // First, add the SVG logo at the top
-  const pageWidth = doc.internal.pageSize.width;
+  // First, add the SVG logo at the top with 10px margin
   let currentY = startY;
   
-  // Add the RAFAC SVG header - fixed to use correct number of arguments
+  // Add the RAFAC SVG header
   currentY = await addSvgLogo(doc, margin);
   
-  // Add some space after the logo
-  currentY += 5;
+  // Add 10px gap (converted to mm) after the logo before the tables
+  const gapAfterLogo = 10 * 0.352778; // Convert 10px to mm
+  currentY += gapAfterLogo;
   
   // RAFAC Formation and Assessor info row - fixed margins to prevent overhang
   autoTable(doc, {

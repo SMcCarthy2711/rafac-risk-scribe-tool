@@ -1,3 +1,4 @@
+
 import { jsPDF } from 'jspdf';
 import { svg2pdf } from 'svg2pdf.js';
 
@@ -9,7 +10,7 @@ export const truncateText = (text: string, maxLength: number): string =>
 export const createPdfDocument = (): jsPDF =>
   new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
 
-// Add SVG logo to the top of page 1 - with 10px margins
+// Add SVG logo to the top of page 1 - with 10px margins on all sides
 export const addSvgLogo = async (
   doc: jsPDF,
   margin: number
@@ -54,7 +55,7 @@ export const addSvgLogo = async (
     
     console.log('Parsed SVG element successfully');
     
-    // Use svg2pdf to convert and add the SVG with margins
+    // Use svg2pdf to convert and add the SVG with 10px margins on all sides
     await svg2pdf(svgElement, doc, {
       x: logoMargin, // 10px left margin
       y: logoMargin, // 10px top margin
@@ -63,18 +64,19 @@ export const addSvgLogo = async (
     });
     
     console.log(`SVG added to PDF using svg2pdf at position (${logoMargin}, ${logoMargin}) with size ${logoWidth}x${logoHeight}`);
-    return logoMargin + logoHeight + 5; // Return position after logo plus small gap
+    return logoMargin + logoHeight; // Return position after logo (no extra gap here)
 
   } catch (error) {
     console.error('Error in addSvgLogo:', error);
     
     // Fallback: add a text header if SVG fails
+    const logoMargin = 10 * 0.352778; // Convert 10px to mm
     doc.setFontSize(16);
     doc.setTextColor(5, 52, 133);
-    doc.text('RAFAC RISK ASSESSMENT', margin, margin + 10);
+    doc.text('RAFAC RISK ASSESSMENT', logoMargin, logoMargin + 10);
     console.log('Added fallback text header due to SVG loading failure');
     
-    return margin + 20;
+    return logoMargin + 20;
   }
 };
 
