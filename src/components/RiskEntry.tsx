@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -26,7 +27,7 @@ const emptyRisk: RiskEntryType = {
 
 interface RiskEntryProps {
   onAddRisk: (risk: RiskEntryType) => void;
-  nextRefNumber: number; // New prop to receive the next reference number
+  nextRefNumber: number;
 }
 
 const RiskEntry: React.FC<RiskEntryProps> = ({ onAddRisk, nextRefNumber }) => {
@@ -63,7 +64,12 @@ const RiskEntry: React.FC<RiskEntryProps> = ({ onAddRisk, nextRefNumber }) => {
     // Calculate risk rating when likelihood or impact changes
     const l = parseInt(currentRisk.Likelihood) || 0;
     const i = parseInt(currentRisk.Impact) || 0;
-    handleInputChange("Risk Rating (LxI)", (l * i).toString());
+    const riskRating = l * i;
+    handleInputChange("Risk Rating (LxI)", riskRating.toString());
+    
+    // Automatically set "Is Risk Acceptable" based on risk rating
+    const isAcceptable = riskRating < 10 ? "Yes" : "No";
+    handleInputChange("Is Risk Acceptable", isAcceptable);
   }, [currentRisk.Likelihood, currentRisk.Impact]);
 
   useEffect(() => {
@@ -207,18 +213,13 @@ const RiskEntry: React.FC<RiskEntryProps> = ({ onAddRisk, nextRefNumber }) => {
           
           <div className="space-y-2">
             <Label htmlFor="acceptable">Is Risk Acceptable</Label>
-            <Select 
-              value={currentRisk["Is Risk Acceptable"]} 
-              onValueChange={(value) => handleInputChange("Is Risk Acceptable", value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Is risk acceptable?" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Yes">Yes</SelectItem>
-                <SelectItem value="No">No</SelectItem>
-              </SelectContent>
-            </Select>
+            <Input
+              id="acceptable"
+              value={currentRisk["Is Risk Acceptable"]}
+              readOnly
+              className="bg-slate-100"
+              placeholder="Auto-calculated based on risk rating"
+            />
           </div>
           
           <div className="space-y-2 md:col-span-2">
