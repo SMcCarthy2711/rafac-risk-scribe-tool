@@ -1,12 +1,11 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RiskEntry as RiskEntryType } from "@/lib/types";
 import { toast } from "sonner";
+import RiskFormFields from "./RiskFormFields";
+import RiskCalculationFields from "./RiskCalculationFields";
+import RevisedRiskFields from "./RevisedRiskFields";
 
 const emptyRisk: RiskEntryType = {
   "Ref": "",
@@ -116,175 +115,18 @@ const RiskEntry: React.FC<RiskEntryProps> = ({ onAddRisk, nextRefNumber }) => {
       </CardHeader>
       <CardContent className="pt-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="ref">Ref</Label>
-            <Input
-              id="ref"
-              value={currentRisk.Ref}
-              readOnly
-              className="bg-slate-100"
-              placeholder="Reference number (auto-generated)"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="activity">Activity/Element</Label>
-            <Input
-              id="activity"
-              value={currentRisk["Activity/Element"]}
-              onChange={(e) => handleInputChange("Activity/Element", e.target.value)}
-              placeholder="Enter activity or element"
-            />
-          </div>
-          
-          <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="hazards">Hazards Identified</Label>
-            <Input
-              id="hazards"
-              value={currentRisk["Hazards Identified"]}
-              onChange={(e) => handleInputChange("Hazards Identified", e.target.value)}
-              placeholder="Describe hazards"
-            />
-          </div>
-          
-          <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="who-harmed">Who or What Might be Harmed and How</Label>
-            <Input
-              id="who-harmed"
-              value={currentRisk["Who or What Might be Harmed and How"]}
-              onChange={(e) => handleInputChange("Who or What Might be Harmed and How", e.target.value)}
-              placeholder="Describe who/what might be harmed"
-            />
-          </div>
-          
-          <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="existing-controls">Existing Control Measures</Label>
-            <Input
-              id="existing-controls"
-              value={currentRisk["Existing Control Measures"]}
-              onChange={(e) => handleInputChange("Existing Control Measures", e.target.value)}
-              placeholder="Describe existing controls"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="likelihood">Likelihood (1-5)</Label>
-            <Select 
-              value={currentRisk.Likelihood} 
-              onValueChange={(value) => handleInputChange("Likelihood", value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select likelihood" />
-              </SelectTrigger>
-              <SelectContent>
-                {[1, 2, 3, 4, 5].map(num => (
-                  <SelectItem key={`l-${num}`} value={num.toString()}>{num}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="impact">Impact (1-5)</Label>
-            <Select 
-              value={currentRisk.Impact} 
-              onValueChange={(value) => handleInputChange("Impact", value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select impact" />
-              </SelectTrigger>
-              <SelectContent>
-                {[1, 2, 3, 4, 5].map(num => (
-                  <SelectItem key={`i-${num}`} value={num.toString()}>{num}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="risk-rating">Risk Rating (LxI)</Label>
-            <Input
-              id="risk-rating"
-              value={currentRisk["Risk Rating (LxI)"]}
-              readOnly
-              className="bg-slate-100"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="acceptable">Is Risk Acceptable</Label>
-            <Input
-              id="acceptable"
-              value={currentRisk["Is Risk Acceptable"]}
-              readOnly
-              className="bg-slate-100"
-              placeholder="Auto-calculated based on risk rating"
-            />
-          </div>
-          
-          <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="additional-controls">Reasonable Additional Control Measures</Label>
-            <Input
-              id="additional-controls"
-              value={currentRisk["Reasonable Additional Control Measures"]}
-              onChange={(e) => handleInputChange("Reasonable Additional Control Measures", e.target.value)}
-              placeholder="Describe additional controls"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="revised-likelihood">Revised Likelihood (1-5)</Label>
-            <Select 
-              value={currentRisk["Revised Likelihood"]} 
-              onValueChange={(value) => handleInputChange("Revised Likelihood", value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select revised likelihood" />
-              </SelectTrigger>
-              <SelectContent>
-                {[1, 2, 3, 4, 5].map(num => (
-                  <SelectItem key={`rl-${num}`} value={num.toString()}>{num}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="revised-impact">Revised Impact (1-5)</Label>
-            <Select 
-              value={currentRisk["Revised Impact"]} 
-              onValueChange={(value) => handleInputChange("Revised Impact", value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select revised impact" />
-              </SelectTrigger>
-              <SelectContent>
-                {[1, 2, 3, 4, 5].map(num => (
-                  <SelectItem key={`ri-${num}`} value={num.toString()}>{num}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="revised-risk-rating">Revised Risk Rating (LxI)</Label>
-            <Input
-              id="revised-risk-rating"
-              value={currentRisk["Revised Risk Rating (LxI)"]}
-              readOnly
-              className="bg-slate-100"
-            />
-          </div>
-          
-          <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="required-actions">List Required Actions (Who, When and How)</Label>
-            <Input
-              id="required-actions"
-              value={currentRisk["List Required Actions (Who, When and How)"]}
-              onChange={(e) => handleInputChange("List Required Actions (Who, When and How)", e.target.value)}
-              placeholder="Describe required actions"
-            />
-          </div>
+          <RiskFormFields 
+            currentRisk={currentRisk} 
+            onInputChange={handleInputChange} 
+          />
+          <RiskCalculationFields 
+            currentRisk={currentRisk} 
+            onInputChange={handleInputChange} 
+          />
+          <RevisedRiskFields 
+            currentRisk={currentRisk} 
+            onInputChange={handleInputChange} 
+          />
         </div>
       </CardContent>
       <CardFooter className="flex justify-end">
