@@ -55,7 +55,7 @@ export const addHeaderSection = async (
   let y = (doc as any).lastAutoTable.finalY;
     
   // Activity Title row - clean and show only the selected risk assessment type
-  let riskTypeDisplay = headerFields["Risk Assessment Type"] || "Generic";
+  let riskTypeDisplay: string = headerFields["Risk Assessment Type"] || "Generic";
   
   // Clean the risk type display to remove any unwanted characters
   riskTypeDisplay = riskTypeDisplay.trim();
@@ -67,12 +67,13 @@ export const addHeaderSection = async (
   riskTypeDisplay = riskTypeDisplay.trim(); // Trim again after cleaning
   
   // Ensure we only have "Generic" or "Specific"
+  let finalRiskType: "Generic" | "Specific";
   if (riskTypeDisplay.toLowerCase().includes('generic')) {
-    riskTypeDisplay = 'Generic';
+    finalRiskType = 'Generic';
   } else if (riskTypeDisplay.toLowerCase().includes('specific')) {
-    riskTypeDisplay = 'Specific';
+    finalRiskType = 'Specific';
   } else {
-    riskTypeDisplay = 'Generic'; // Default fallback
+    finalRiskType = 'Generic'; // Default fallback
   }
   
   autoTable(doc, {
@@ -80,7 +81,7 @@ export const addHeaderSection = async (
     head: [['Activity (Step 1a):', 'Type of Risk Assessment:']],
     body: [[
       headerFields["Activity Title"],
-      riskTypeDisplay
+      finalRiskType
     ]],
     theme: 'grid',
     styles: {
