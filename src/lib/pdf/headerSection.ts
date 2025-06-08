@@ -54,8 +54,26 @@ export const addHeaderSection = async (
     
   let y = (doc as any).lastAutoTable.finalY;
     
-  // Activity Title row - show only the selected risk assessment type
-  const riskTypeDisplay = headerFields["Risk Assessment Type"] || "Generic";
+  // Activity Title row - clean and show only the selected risk assessment type
+  let riskTypeDisplay = headerFields["Risk Assessment Type"] || "Generic";
+  
+  // Clean the risk type display to remove any unwanted characters
+  riskTypeDisplay = riskTypeDisplay.trim();
+  
+  // Remove any potential HTML entities, checkboxes, or special characters
+  riskTypeDisplay = riskTypeDisplay.replace(/&[^;]+;/g, ''); // Remove HTML entities like &amp;
+  riskTypeDisplay = riskTypeDisplay.replace(/[☑☐✓✗]/g, ''); // Remove checkbox symbols
+  riskTypeDisplay = riskTypeDisplay.replace(/[&]/g, ''); // Remove & characters
+  riskTypeDisplay = riskTypeDisplay.trim(); // Trim again after cleaning
+  
+  // Ensure we only have "Generic" or "Specific"
+  if (riskTypeDisplay.toLowerCase().includes('generic')) {
+    riskTypeDisplay = 'Generic';
+  } else if (riskTypeDisplay.toLowerCase().includes('specific')) {
+    riskTypeDisplay = 'Specific';
+  } else {
+    riskTypeDisplay = 'Generic'; // Default fallback
+  }
   
   autoTable(doc, {
     startY: y,
