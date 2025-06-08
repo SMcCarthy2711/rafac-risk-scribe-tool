@@ -1,4 +1,3 @@
-
 import { jsPDF } from 'jspdf';
 import { HeaderFields } from '../types';
 import { addSvgLogo } from './utils';
@@ -17,7 +16,7 @@ export const addHeaderSection = async (
   // Add the RAFAC SVG header
   currentY = await addSvgLogo(doc, margin);
   
-  // Add 10px gap (converted to mm) after the logo before the tables
+  // Add exactly 10px gap (converted to mm) after the logo before the tables
   const gapAfterLogo = 10 * 0.352778; // Convert 10px to mm
   currentY += gapAfterLogo;
   
