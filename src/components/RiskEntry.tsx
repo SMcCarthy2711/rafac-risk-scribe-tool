@@ -1,11 +1,14 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RiskEntry as RiskEntryType } from "@/lib/types";
 import { toast } from "sonner";
+import { BookOpen } from "lucide-react";
 import RiskFormFields from "./RiskFormFields";
 import RiskCalculationFields from "./RiskCalculationFields";
 import RevisedRiskFields from "./RevisedRiskFields";
+import PreSavedRiskSelector from "./PreSavedRiskSelector";
 
 const emptyRisk: RiskEntryType = {
   "Ref": "",
@@ -46,6 +49,8 @@ const RiskEntry: React.FC<RiskEntryProps> = ({ onAddRisk, nextRefNumber }) => {
     "Revised Risk Rating (LxI)": "1",
     "List Required Actions (Who, When and How)": ""
   });
+
+  const [showPreSavedSelector, setShowPreSavedSelector] = useState(false);
 
   useEffect(() => {
     // Update ref when nextRefNumber prop changes
@@ -108,31 +113,56 @@ const RiskEntry: React.FC<RiskEntryProps> = ({ onAddRisk, nextRefNumber }) => {
     toast.success("Risk entry added successfully!");
   };
 
+  const handlePreSavedRiskSelect = (risk: RiskEntryType) => {
+    setCurrentRisk(risk);
+    toast.success("Pre-saved risk loaded successfully!");
+  };
+
   return (
-    <Card className="w-full">
-      <CardHeader className="bg-rafac-blue text-white">
-        <CardTitle>Risk Entry</CardTitle>
-      </CardHeader>
-      <CardContent className="pt-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <RiskFormFields 
-            currentRisk={currentRisk} 
-            onInputChange={handleInputChange} 
-          />
-          <RiskCalculationFields 
-            currentRisk={currentRisk} 
-            onInputChange={handleInputChange} 
-          />
-          <RevisedRiskFields 
-            currentRisk={currentRisk} 
-            onInputChange={handleInputChange} 
-          />
-        </div>
-      </CardContent>
-      <CardFooter className="flex justify-end">
-        <Button onClick={handleAddRisk} className="bg-rafac-blue hover:bg-rafac-navy">Add Risk</Button>
-      </CardFooter>
-    </Card>
+    <>
+      <Card className="w-full">
+        <CardHeader className="bg-rafac-blue text-white">
+          <div className="flex justify-between items-center">
+            <CardTitle>Risk Entry</CardTitle>
+            <Button 
+              variant="secondary" 
+              size="sm"
+              onClick={() => setShowPreSavedSelector(true)}
+              className="bg-white text-rafac-blue hover:bg-gray-100"
+            >
+              <BookOpen className="h-4 w-4 mr-2" />
+              Add Pre-Saved Risk
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <RiskFormFields 
+              currentRisk={currentRisk} 
+              onInputChange={handleInputChange} 
+            />
+            <RiskCalculationFields 
+              currentRisk={currentRisk} 
+              onInputChange={handleInputChange} 
+            />
+            <RevisedRiskFields 
+              currentRisk={currentRisk} 
+              onInputChange={handleInputChange} 
+            />
+          </div>
+        </CardContent>
+        <CardFooter className="flex justify-end">
+          <Button onClick={handleAddRisk} className="bg-rafac-blue hover:bg-rafac-navy">Add Risk</Button>
+        </CardFooter>
+      </Card>
+
+      <PreSavedRiskSelector
+        open={showPreSavedSelector}
+        onOpenChange={setShowPreSavedSelector}
+        onSelectRisk={handlePreSavedRiskSelect}
+        nextRefNumber={nextRefNumber}
+      />
+    </>
   );
 };
 
