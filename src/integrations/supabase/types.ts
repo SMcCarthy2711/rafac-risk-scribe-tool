@@ -9,7 +9,122 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      pre_saved_risks: {
+        Row: {
+          activity_element: string
+          additional_control_measures: string | null
+          category_id: string
+          created_at: string
+          existing_control_measures: string
+          hazards_identified: string
+          id: string
+          impact: number
+          likelihood: number
+          required_actions: string | null
+          subcategory_id: string | null
+          updated_at: string
+          who_might_be_harmed: string
+        }
+        Insert: {
+          activity_element: string
+          additional_control_measures?: string | null
+          category_id: string
+          created_at?: string
+          existing_control_measures: string
+          hazards_identified: string
+          id?: string
+          impact: number
+          likelihood: number
+          required_actions?: string | null
+          subcategory_id?: string | null
+          updated_at?: string
+          who_might_be_harmed: string
+        }
+        Update: {
+          activity_element?: string
+          additional_control_measures?: string | null
+          category_id?: string
+          created_at?: string
+          existing_control_measures?: string
+          hazards_identified?: string
+          id?: string
+          impact?: number
+          likelihood?: number
+          required_actions?: string | null
+          subcategory_id?: string | null
+          updated_at?: string
+          who_might_be_harmed?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pre_saved_risks_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "risk_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pre_saved_risks_subcategory_id_fkey"
+            columns: ["subcategory_id"]
+            isOneToOne: false
+            referencedRelation: "risk_subcategories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      risk_categories: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      risk_subcategories: {
+        Row: {
+          category_id: string
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          category_id: string
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "risk_subcategories_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "risk_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +133,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      risk_assessment_type: "Generic" | "Specific"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +248,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      risk_assessment_type: ["Generic", "Specific"],
+    },
   },
 } as const
