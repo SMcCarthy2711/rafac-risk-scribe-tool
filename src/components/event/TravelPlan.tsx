@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -39,7 +40,13 @@ const TravelPlan = ({ eventPlanId }) => {
         // Safely parse vehicle details JSON
         const vehicleData = data.vehicle_details;
         if (Array.isArray(vehicleData)) {
-          setVehicles(vehicleData);
+          // Convert Json objects to Vehicle objects
+          const vehicleList = vehicleData.map(vehicle => ({
+            vrn: vehicle?.vrn || "",
+            driver_name: vehicle?.driver_name || "",
+            capacity: vehicle?.capacity || ""
+          }));
+          setVehicles(vehicleList);
         } else {
           setVehicles([]);
         }
@@ -81,6 +88,13 @@ const TravelPlan = ({ eventPlanId }) => {
 
   const handleSave = async () => {
     try {
+      // Convert Vehicle array to Json-compatible format
+      const vehicleDetailsJson = vehicles.filter(v => v.vrn || v.driver_name).map(v => ({
+        vrn: v.vrn,
+        driver_name: v.driver_name,
+        capacity: v.capacity
+      }));
+
       const travelData = {
         event_plan_id: eventPlanId,
         collection_point: travelPlan?.collection_point || "",
@@ -88,7 +102,7 @@ const TravelPlan = ({ eventPlanId }) => {
         departure_time: travelPlan?.departure_time || null,
         return_time: travelPlan?.return_time || null,
         transport_method: travelPlan?.transport_method || "",
-        vehicle_details: vehicles.filter(v => v.vrn || v.driver_name),
+        vehicle_details: vehicleDetailsJson as any, // Cast to any to satisfy Json type
         map_link: travelPlan?.map_link || ""
       };
 

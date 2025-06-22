@@ -19,8 +19,8 @@ import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 
 const Index = () => {
-  // Initialize today's date in DD/MM/YYYY format
-  const today = new Date().toLocaleDateString("en-GB");
+  // Initialize today's date in ISO format for database compatibility
+  const today = new Date().toISOString().split('T')[0];
   
   // State for active tab
   const [activeTab, setActiveTab] = useState("header");
@@ -133,7 +133,7 @@ const Index = () => {
           risks,
           commander: commanderFields,
           dynamic: dynamicFields
-        }
+        } as any // Cast to any to satisfy Json type requirement
       };
 
       const { data: savedRA, error } = await supabase
