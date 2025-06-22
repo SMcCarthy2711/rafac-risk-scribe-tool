@@ -20,6 +20,7 @@ const EventBuilder = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [eventPlan, setEventPlan] = useState(null);
   const [riskAssessment, setRiskAssessment] = useState(null);
+  const [eventDescription, setEventDescription] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -136,10 +137,14 @@ const EventBuilder = () => {
 
         {/* Event Planning Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid grid-cols-6 mb-8">
+          <TabsList className="grid grid-cols-7 mb-8">
             <TabsTrigger value="overview" className="flex items-center gap-1">
               <Users className="h-4 w-4" />
               Overview
+            </TabsTrigger>
+            <TabsTrigger value="description" className="flex items-center gap-1">
+              <FileText className="h-4 w-4" />
+              Description
             </TabsTrigger>
             <TabsTrigger value="travel" className="flex items-center gap-1">
               <MapPin className="h-4 w-4" />
@@ -167,6 +172,10 @@ const EventBuilder = () => {
             <EventOverview eventPlan={eventPlan} setEventPlan={setEventPlan} />
           </TabsContent>
 
+          <TabsContent value="description">
+            <EventDescription description={eventDescription} setDescription={setEventDescription} />
+          </TabsContent>
+
           <TabsContent value="travel">
             <TravelPlan eventPlanId={eventPlan?.id} />
           </TabsContent>
@@ -180,7 +189,11 @@ const EventBuilder = () => {
           </TabsContent>
 
           <TabsContent value="joining">
-            <JoiningOrders eventPlan={eventPlan} riskAssessment={riskAssessment} />
+            <JoiningOrders 
+              eventPlan={eventPlan} 
+              riskAssessment={riskAssessment} 
+              eventDescription={eventDescription}
+            />
           </TabsContent>
 
           <TabsContent value="export">

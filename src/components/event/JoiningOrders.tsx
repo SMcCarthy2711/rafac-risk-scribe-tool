@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,7 +5,13 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { FileText, Download, QrCode } from "lucide-react";
 
-const JoiningOrders = ({ eventPlan, riskAssessment }) => {
+interface JoiningOrdersProps {
+  eventPlan: any;
+  riskAssessment: any;
+  eventDescription?: string;
+}
+
+const JoiningOrders: React.FC<JoiningOrdersProps> = ({ eventPlan, riskAssessment, eventDescription }) => {
   const [joiningOrder, setJoiningOrder] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -53,6 +58,7 @@ const JoiningOrders = ({ eventPlan, riskAssessment }) => {
         end_date: eventPlan.end_date,
         staff_lead: eventPlan.staff_lead,
         emergency_contact: eventPlan.emergency_contact,
+        event_description: eventDescription || "",
         travel_plan: travelData.data,
         kit_list: kitData.data,
         schedule: scheduleData.data,
@@ -115,6 +121,7 @@ const JoiningOrders = ({ eventPlan, riskAssessment }) => {
           .header { text-align: center; border-bottom: 2px solid #0066cc; padding-bottom: 10px; }
           .section { margin: 20px 0; }
           .kit-item { margin: 5px 0; }
+          .kit-caption { font-style: italic; font-size: 0.9em; color: #666; margin-left: 10px; }
           .schedule-item { border: 1px solid #ddd; padding: 10px; margin: 5px 0; }
         </style>
       </head>
@@ -130,6 +137,7 @@ const JoiningOrders = ({ eventPlan, riskAssessment }) => {
           <p><strong>Date:</strong> ${content.start_date || 'TBC'} ${content.end_date && content.end_date !== content.start_date ? `to ${content.end_date}` : ''}</p>
           <p><strong>Staff Lead:</strong> ${content.staff_lead || 'TBC'}</p>
           <p><strong>Emergency Contact:</strong> ${content.emergency_contact || 'TBC'}</p>
+          ${content.event_description ? `<p><strong>Event Description:</strong> ${content.event_description}</p>` : ''}
         </div>
 
         ${content.travel_plan ? `
@@ -144,7 +152,30 @@ const JoiningOrders = ({ eventPlan, riskAssessment }) => {
         ${content.kit_list && content.kit_list.cadet_kit ? `
         <div class="section">
           <h3>Required Kit</h3>
-          ${content.kit_list.cadet_kit.map(item => `<div class="kit-item">• ${item}</div>`).join('')}
+          ${content.kit_list.cadet_kit.general ? `
+            <h4>General Kit (All Cadets)</h4>
+            ${content.kit_list.cadet_kit.general.map(item => `
+              <div class="kit-item">• ${item.item}
+                ${item.caption ? `<div class="kit-caption">${item.caption}</div>` : ''}
+              </div>
+            `).join('')}
+          ` : ''}
+          ${content.kit_list.cadet_kit.male ? `
+            <h4>Male Specific Kit</h4>
+            ${content.kit_list.cadet_kit.male.map(item => `
+              <div class="kit-item">• ${item.item}
+                ${item.caption ? `<div class="kit-caption">${item.caption}</div>` : ''}
+              </div>
+            `).join('')}
+          ` : ''}
+          ${content.kit_list.cadet_kit.female ? `
+            <h4>Female Specific Kit</h4>
+            ${content.kit_list.cadet_kit.female.map(item => `
+              <div class="kit-item">• ${item.item}
+                ${item.caption ? `<div class="kit-caption">${item.caption}</div>` : ''}
+              </div>
+            `).join('')}
+          ` : ''}
         </div>
         ` : ''}
       </body>
@@ -209,6 +240,9 @@ const JoiningOrders = ({ eventPlan, riskAssessment }) => {
                   <h4 className="font-semibold">Event: {joiningOrder.content.event_name}</h4>
                   <p className="text-sm text-slate-600">Location: {joiningOrder.content.location}</p>
                   <p className="text-sm text-slate-600">Date: {joiningOrder.content.start_date}</p>
+                  {joiningOrder.content.event_description && (
+                    <p className="text-sm text-slate-600 mt-2">Description: {joiningOrder.content.event_description}</p>
+                  )}
                 </div>
                 
                 {joiningOrder.qr_code_data && (
