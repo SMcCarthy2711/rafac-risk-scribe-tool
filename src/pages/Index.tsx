@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,7 @@ import exportToPDF from "@/lib/pdfGenerator";
 import { HeaderFields, RiskEntry as RiskEntryType, CommanderFields, DynamicFields } from "@/lib/types";
 import { FilePenLine, FileText, Download, ChevronLeft, ChevronRight, Calendar } from "lucide-react";
 import { getTestData } from "@/lib/testData";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 
 // Import jsPDF
 import { jsPDF } from "jspdf";

@@ -1,23 +1,30 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { MapPin, Clock, Car, Plus, Trash2 } from "lucide-react";
 
+interface Vehicle {
+  vrn: string;
+  driver_name: string;
+  capacity: string;
+}
+
 const TravelPlan = ({ eventPlanId }) => {
   const [travelPlan, setTravelPlan] = useState(null);
-  const [vehicles, setVehicles] = useState([{ vrn: "", driver_name: "", capacity: "" }]);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 
   useEffect(() => {
     loadTravelPlan();
   }, [eventPlanId]);
 
   const loadTravelPlan = async () => {
+    if (!eventPlanId) return;
+
     try {
       const { data, error } = await supabase
         .from("travel_plans")
@@ -29,11 +36,46 @@ const TravelPlan = ({ eventPlanId }) => {
 
       if (data) {
         setTravelPlan(data);
-        setVehicles(data.vehicle_details || [{ vrn: "", driver_name: "", capacity: "" }]);
+        // Safely parse vehicle details JSON
+        const vehicleData = data.vehicle_details;
+        if (Array.isArray(vehicleData)) {
+          setVehicles(vehicleData);
+        } else {
+          setVehicles([]);
+        }
       }
     } catch (error) {
       console.error("Error loading travel plan:", error);
       toast.error("Failed to load travel plan");
+    }
+  };
+
+  const handleUpdate = async (field, value) => {
+    if (!eventPlanId) return;
+
+    try {
+      const updateData = { [field]: value };
+
+      if (travelPlan) {
+        const { error } = await supabase
+          .from("travel_plans")
+          .update(updateData)
+          .eq("id", travelPlan.id);
+        if (error) throw error;
+      } else {
+        const { data, error } = await supabase
+          .from("travel_plans")
+          .insert({ event_plan_id: eventPlanId, ...updateData })
+          .select()
+          .single();
+        if (error) throw error;
+        setTravelPlan(data);
+      }
+
+      toast.success("Travel plan updated");
+    } catch (error) {
+      console.error("Error updating travel plan:", error);
+      toast.error("Failed to update travel plan");
     }
   };
 

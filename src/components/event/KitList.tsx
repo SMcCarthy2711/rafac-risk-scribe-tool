@@ -1,20 +1,21 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Package, Plus, Trash2, Copy } from "lucide-react";
+import { Package, Plus, X } from "lucide-react";
 
 const KitList = ({ eventPlanId }) => {
   const [kitList, setKitList] = useState(null);
+  const [templates, setTemplates] = useState([]);
   const [cadetKit, setCadetKit] = useState([]);
   const [staffKit, setStaffKit] = useState([]);
-  const [templates, setTemplates] = useState([]);
-  const [selectedTemplate, setSelectedTemplate] = useState("");
+  const [newCadetItem, setNewCadetItem] = useState("");
+  const [newStaffItem, setNewStaffItem] = useState("");
 
   useEffect(() => {
     loadKitList();
@@ -22,6 +23,8 @@ const KitList = ({ eventPlanId }) => {
   }, [eventPlanId]);
 
   const loadKitList = async () => {
+    if (!eventPlanId) return;
+
     try {
       const { data, error } = await supabase
         .from("kit_lists")
@@ -33,8 +36,9 @@ const KitList = ({ eventPlanId }) => {
 
       if (data) {
         setKitList(data);
-        setCadetKit(data.cadet_kit || []);
-        setStaffKit(data.staff_kit || []);
+        // Safely parse JSON arrays
+        setCadetKit(Array.isArray(data.cadet_kit) ? data.cadet_kit : []);
+        setStaffKit(Array.isArray(data.staff_kit) ? data.staff_kit : []);
       }
     } catch (error) {
       console.error("Error loading kit list:", error);
@@ -56,16 +60,18 @@ const KitList = ({ eventPlanId }) => {
     }
   };
 
-  const handleSave = async () => {
+  const saveKitList = async () => {
+    if (!eventPlanId) return;
+
     try {
       const kitData = {
         event_plan_id: eventPlanId,
-        activity_type: kitList?.activity_type || "",
         cadet_kit: cadetKit,
-        staff_kit: staffKit
+        staff_kit: staffKit,
+        activity_type: "Custom"
       };
 
-      if (kitList?.id) {
+      if (kitList) {
         const { error } = await supabase
           .from("kit_lists")
           .update(kitData)
@@ -88,42 +94,28 @@ const KitList = ({ eventPlanId }) => {
     }
   };
 
-  const addKitItem = (type) => {
-    if (type === "cadet") {
-      setCadetKit([...cadetKit, ""]);
-    } else {
-      setStaffKit([...staffKit, ""]);
-    }
+  const handleAddCadetItem = () => {
+    if (newCadetItem.trim() === "") return;
+    setCadetKit([...cadetKit, newCadetItem.trim()]);
+    setNewCadetItem("");
   };
 
-  const removeKitItem = (type, index) => {
-    if (type === "cadet") {
-      setCadetKit(cadetKit.filter((_, i) => i !== index));
-    } else {
-      setStaffKit(staffKit.filter((_, i) => i !== index));
-    }
+  const handleAddStaffItem = () => {
+    if (newStaffItem.trim() === "") return;
+    setStaffKit([...staffKit, newStaffItem.trim()]);
+    setNewStaffItem("");
   };
 
-  const updateKitItem = (type, index, value) => {
-    if (type === "cadet") {
-      const updated = [...cadetKit];
-      updated[index] = value;
-      setCadetKit(updated);
-    } else {
-      const updated = [...staffKit];
-      updated[index] = value;
-      setStaffKit(updated);
-    }
+  const handleRemoveCadetItem = (index) => {
+    const newKit = [...cadetKit];
+    newKit.splice(index, 1);
+    setCadetKit(newKit);
   };
 
-  const loadTemplate = () => {
-    const template = templates.find(t => t.id === selectedTemplate);
-    if (template) {
-      setCadetKit(template.cadet_kit || []);
-      setStaffKit(template.staff_kit || []);
-      setKitList(prev => ({ ...prev, activity_type: template.activity_type }));
-      toast.success("Template loaded successfully");
-    }
+  const handleRemoveStaffItem = (index) => {
+    const newKit = [...staffKit];
+    newKit.splice(index, 1);
+    setStaffKit(newKit);
   };
 
   return (
@@ -134,101 +126,62 @@ const KitList = ({ eventPlanId }) => {
           Kit List
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Template Selection */}
-        <div className="flex gap-4 items-end">
-          <div className="flex-1 space-y-2">
-            <Label>Load from Template</Label>
-            <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a template" />
-              </SelectTrigger>
-              <SelectContent>
-                {templates.map((template) => (
-                  <SelectItem key={template.id} value={template.id}>
-                    {template.activity_type}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <Button onClick={loadTemplate} disabled={!selectedTemplate} variant="outline">
-            <Copy className="h-4 w-4 mr-2" />
-            Load Template
-          </Button>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="activity-type">Activity Type</Label>
-          <Input
-            id="activity-type"
-            value={kitList?.activity_type || ""}
-            onChange={(e) => setKitList(prev => ({ ...prev, activity_type: e.target.value }))}
-            placeholder="e.g., Adventure Training, Range Day"
-          />
-        </div>
-
+      <CardContent className="space-y-4">
         {/* Cadet Kit */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <Label className="text-lg font-medium">Cadet Kit</Label>
-            <Button onClick={() => addKitItem("cadet")} size="sm" variant="outline">
-              <Plus className="h-4 w-4 mr-1" />
-              Add Item
+        <div className="space-y-2">
+          <Label>Cadet Kit</Label>
+          <div className="flex gap-2">
+            <Input
+              type="text"
+              placeholder="Add item"
+              value={newCadetItem}
+              onChange={(e) => setNewCadetItem(e.target.value)}
+            />
+            <Button type="button" onClick={handleAddCadetItem} className="bg-green-500 hover:bg-green-700 text-white">
+              <Plus className="h-4 w-4 mr-2" />
+              Add
             </Button>
           </div>
-          
-          {cadetKit.map((item, index) => (
-            <div key={index} className="flex gap-2">
-              <Input
-                value={item}
-                onChange={(e) => updateKitItem("cadet", index, e.target.value)}
-                placeholder="Enter kit item"
-                className="flex-1"
-              />
-              <Button
-                onClick={() => removeKitItem("cadet", index)}
-                variant="outline"
-                size="sm"
-                className="text-red-600 hover:text-red-700"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
-          ))}
+          <div className="flex flex-wrap gap-2">
+            {cadetKit.map((item, index) => (
+              <Badge key={index} className="gap-1 items-center">
+                {item}
+                <Button type="button" variant="ghost" size="icon" onClick={() => handleRemoveCadetItem(index)}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </Badge>
+            ))}
+          </div>
         </div>
 
         {/* Staff Kit */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <Label className="text-lg font-medium">Staff Kit</Label>
-            <Button onClick={() => addKitItem("staff")} size="sm" variant="outline">
-              <Plus className="h-4 w-4 mr-1" />
-              Add Item
+        <div className="space-y-2">
+          <Label>Staff Kit</Label>
+          <div className="flex gap-2">
+            <Input
+              type="text"
+              placeholder="Add item"
+              value={newStaffItem}
+              onChange={(e) => setNewStaffItem(e.target.value)}
+            />
+            <Button type="button" onClick={handleAddStaffItem} className="bg-green-500 hover:bg-green-700 text-white">
+              <Plus className="h-4 w-4 mr-2" />
+              Add
             </Button>
           </div>
-          
-          {staffKit.map((item, index) => (
-            <div key={index} className="flex gap-2">
-              <Input
-                value={item}
-                onChange={(e) => updateKitItem("staff", index, e.target.value)}
-                placeholder="Enter kit item"
-                className="flex-1"
-              />
-              <Button
-                onClick={() => removeKitItem("staff", index)}
-                variant="outline"
-                size="sm"
-                className="text-red-600 hover:text-red-700"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
-          ))}
+          <div className="flex flex-wrap gap-2">
+            {staffKit.map((item, index) => (
+              <Badge key={index} className="gap-1 items-center">
+                {item}
+                <Button type="button" variant="ghost" size="icon" onClick={() => handleRemoveStaffItem(index)}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </Badge>
+            ))}
+          </div>
         </div>
 
-        <Button onClick={handleSave} className="bg-rafac-blue hover:bg-rafac-navy text-white">
+        <Button onClick={saveKitList} className="bg-rafac-blue hover:bg-rafac-navy text-white">
           Save Kit List
         </Button>
       </CardContent>
