@@ -40,12 +40,15 @@ const TravelPlan = ({ eventPlanId }) => {
         // Safely parse vehicle details JSON
         const vehicleData = data.vehicle_details;
         if (Array.isArray(vehicleData)) {
-          // Convert Json objects to Vehicle objects
-          const vehicleList = vehicleData.map(vehicle => ({
-            vrn: vehicle?.vrn || "",
-            driver_name: vehicle?.driver_name || "",
-            capacity: vehicle?.capacity || ""
-          }));
+          // Convert Json objects to Vehicle objects with proper type casting
+          const vehicleList = vehicleData.map(vehicle => {
+            const vehicleObj = vehicle as any; // Cast to any to access properties
+            return {
+              vrn: vehicleObj?.vrn || "",
+              driver_name: vehicleObj?.driver_name || "",
+              capacity: vehicleObj?.capacity || ""
+            };
+          });
           setVehicles(vehicleList);
         } else {
           setVehicles([]);
