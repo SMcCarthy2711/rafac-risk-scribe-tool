@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -10,8 +9,9 @@ import CommanderSignOff from "@/components/CommanderSignOff";
 import DynamicRA from "@/components/DynamicRA";
 import exportToPDF from "@/lib/pdfGenerator";
 import { HeaderFields, RiskEntry as RiskEntryType, CommanderFields, DynamicFields } from "@/lib/types";
-import { FilePenLine, FileText, Download, ChevronLeft, ChevronRight } from "lucide-react";
+import { FilePenLine, FileText, Download, ChevronLeft, ChevronRight, Calendar } from "lucide-react";
 import { getTestData } from "@/lib/testData";
+import { supabase } from "@/lib/supabase";
 
 // Import jsPDF
 import { jsPDF } from "jspdf";
@@ -106,6 +106,56 @@ const Index = () => {
     }
   };
 
+  const handleConvertToEvent = async () => {
+    // First save the current risk assessment
+    if (!headerFields.Squadron || !headerFields["Activity Title"]) {
+      toast.error("Please fill in Squadron and Activity Title before converting to event");
+      return;
+    }
+
+    if (risks.length === 0) {
+      toast.error("Please add at least one risk before converting to event");
+      return;
+    }
+
+    try {
+      // Save the risk assessment first
+      const riskAssessmentData = {
+        squadron: headerFields.Squadron,
+        assessor_name: headerFields["Assessor Name"],
+        activity_title: headerFields["Activity Title"],
+        assessment_date: headerFields["Assessment Date"],
+        risk_assessment_type: headerFields["Risk Assessment Type"],
+        publications: headerFields.Publications,
+        data: {
+          header: headerFields,
+          risks,
+          commander: commanderFields,
+          dynamic: dynamicFields
+        }
+      };
+
+      const { data: savedRA, error } = await supabase
+        .from("risk_assessments")
+        .insert(riskAssessmentData)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      toast.success("Risk assessment saved! Redirecting to Event Builder...");
+      
+      // Redirect to Event Builder
+      setTimeout(() => {
+        window.location.href = `/event-builder/${savedRA.id}`;
+      }, 1000);
+
+    } catch (error) {
+      console.error("Error saving risk assessment:", error);
+      toast.error("Failed to save risk assessment");
+    }
+  };
+
   const handleNext = () => {
     const tabs = ["header", "risks", "commander", "dynamic"];
     const currentIndex = tabs.indexOf(activeTab);
@@ -190,6 +240,14 @@ const Index = () => {
               <div className="flex flex-col md:flex-row items-center justify-center gap-4">
                 <Button onClick={handleExport} className="bg-rafac-blue hover:bg-rafac-navy text-white py-2 px-8 text-lg">
                   <FileText className="mr-2 h-5 w-5" /> Export Risk Assessment PDF
+                </Button>
+                
+                <Button 
+                  onClick={handleConvertToEvent} 
+                  variant="outline" 
+                  className="border-green-600 text-green-600 hover:bg-green-600 hover:text-white py-2 px-8 text-lg"
+                >
+                  <Calendar className="mr-2 h-5 w-5" /> Convert to Event Plan
                 </Button>
                 
                 <Button 
