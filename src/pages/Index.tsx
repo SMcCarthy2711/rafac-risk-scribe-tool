@@ -120,8 +120,16 @@ const Index = () => {
     }
 
     try {
+      // Get current user
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) {
+        toast.error("Please log in to save risk assessment");
+        return;
+      }
+
       // Save the risk assessment first
       const riskAssessmentData = {
+        user_id: user.id,
         squadron: headerFields.Squadron,
         assessor_name: headerFields["Assessor Name"],
         activity_title: headerFields["Activity Title"],
