@@ -28,6 +28,7 @@ export type Database = {
           total_cadets: number | null
           total_staff: number | null
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           created_at?: string
@@ -42,6 +43,7 @@ export type Database = {
           total_cadets?: number | null
           total_staff?: number | null
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           created_at?: string
@@ -56,6 +58,7 @@ export type Database = {
           total_cadets?: number | null
           total_staff?: number | null
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -80,6 +83,7 @@ export type Database = {
           start_time: string
           target_audience: string | null
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           activity: string
@@ -93,6 +97,7 @@ export type Database = {
           start_time: string
           target_audience?: string | null
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           activity?: string
@@ -106,6 +111,7 @@ export type Database = {
           start_time?: string
           target_audience?: string | null
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -125,6 +131,7 @@ export type Database = {
           id: string
           qr_code_data: string | null
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           content?: Json | null
@@ -133,6 +140,7 @@ export type Database = {
           id?: string
           qr_code_data?: string | null
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           content?: Json | null
@@ -141,6 +149,7 @@ export type Database = {
           id?: string
           qr_code_data?: string | null
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -161,6 +170,7 @@ export type Database = {
           id: string
           staff_kit: Json | null
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           activity_type?: string | null
@@ -170,6 +180,7 @@ export type Database = {
           id?: string
           staff_kit?: Json | null
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           activity_type?: string | null
@@ -179,6 +190,7 @@ export type Database = {
           id?: string
           staff_kit?: Json | null
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -265,6 +277,7 @@ export type Database = {
           risk_assessment_type: string | null
           squadron: string | null
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           activity_title?: string | null
@@ -277,6 +290,7 @@ export type Database = {
           risk_assessment_type?: string | null
           squadron?: string | null
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           activity_title?: string | null
@@ -289,6 +303,7 @@ export type Database = {
           risk_assessment_type?: string | null
           squadron?: string | null
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -357,6 +372,7 @@ export type Database = {
           return_time: string | null
           transport_method: string | null
           updated_at: string
+          user_id: string | null
           vehicle_details: Json | null
         }
         Insert: {
@@ -370,6 +386,7 @@ export type Database = {
           return_time?: string | null
           transport_method?: string | null
           updated_at?: string
+          user_id?: string | null
           vehicle_details?: Json | null
         }
         Update: {
@@ -383,6 +400,7 @@ export type Database = {
           return_time?: string | null
           transport_method?: string | null
           updated_at?: string
+          user_id?: string | null
           vehicle_details?: Json | null
         }
         Relationships: [
