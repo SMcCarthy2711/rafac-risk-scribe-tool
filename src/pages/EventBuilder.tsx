@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { ArrowLeft, FileText, Calendar, MapPin, Package, Clock, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import EventOverview from "@/components/event/EventOverview";
+import EventDescription from "@/components/event/EventDescription";
 import TravelPlan from "@/components/event/TravelPlan";
 import KitList from "@/components/event/KitList";
 import EventSchedule from "@/components/event/EventSchedule";
