@@ -4,8 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 import { HeaderFields } from "@/lib/types";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useAuth } from "@/components/AuthWrapper";
+import { LogOut, Shield } from "lucide-react";
 
 interface HeaderProps {
   headerFields: HeaderFields;
@@ -17,10 +20,29 @@ const Header: React.FC<HeaderProps> = ({ headerFields, setHeaderFields }) => {
     setHeaderFields((prev) => ({ ...prev, [field]: value }));
   };
 
+  const { user, signOut } = useAuth();
+
   return (
     <Card className="w-full">
       <CardHeader className="bg-rafac-blue text-white">
-        <CardTitle>Risk Assessment Header Details</CardTitle>
+        <div className="flex justify-between items-center">
+          <CardTitle>Risk Assessment Header Details</CardTitle>
+          <div className="flex items-center gap-4 text-sm">
+            <div className="flex items-center gap-2">
+              <Shield className="h-4 w-4" />
+              <span>{user?.email}</span>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={signOut}
+              className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
+            </Button>
+          </div>
+        </div>
       </CardHeader>
       <CardContent className="pt-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
