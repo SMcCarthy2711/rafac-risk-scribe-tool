@@ -53,10 +53,19 @@ const EventBuilder = () => {
         if (epError && epError.code !== 'PGRST116') throw epError;
 
         if (!epData) {
+          // Get current user for creating event plan
+          const { data: { user }, error: userError } = await supabase.auth.getUser();
+          if (userError || !user) {
+            toast.error("Please log in to create event plan");
+            navigate("/auth");
+            return;
+          }
+
           // Create a new event plan
           const { data: newEventPlan, error: createError } = await supabase
             .from("event_plans")
             .insert({
+              user_id: user.id,
               risk_assessment_id: riskAssessmentId,
               name: raData.activity_title || "New Event",
               staff_lead: raData.assessor_name || ""
