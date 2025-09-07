@@ -80,7 +80,15 @@ const KitList: React.FC<KitListProps> = ({ eventPlanId }) => {
     if (!eventPlanId) return;
 
     try {
+      // Get current user for RLS compliance
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) {
+        toast.error("Please log in to save kit list");
+        return;
+      }
+
       const kitData = {
+        user_id: user.id,
         event_plan_id: eventPlanId,
         cadet_kit: {
           general: generalKit,
