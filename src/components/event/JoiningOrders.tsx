@@ -81,9 +81,17 @@ const JoiningOrders: React.FC<JoiningOrdersProps> = ({ eventPlan, riskAssessment
           .eq("id", joiningOrder.id);
         if (error) throw error;
       } else {
+        // Get current user for RLS compliance
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        if (userError || !user) {
+          toast.error("Please log in to create joining orders");
+          return;
+        }
+
         const { data, error } = await supabase
           .from("joining_orders")
           .insert({
+            user_id: user.id,
             event_plan_id: eventPlan.id,
             content: joData,
             qr_code_data: qrCodeData

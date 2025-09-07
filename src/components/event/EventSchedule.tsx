@@ -50,9 +50,17 @@ const EventSchedule = ({ eventPlanId }) => {
     }
 
     try {
+      // Get current user for RLS compliance
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) {
+        toast.error("Please log in to add schedule item");
+        return;
+      }
+
       const { data, error } = await supabase
         .from("event_schedules")
         .insert({
+          user_id: user.id,
           event_plan_id: eventPlanId,
           ...newItem
         })
