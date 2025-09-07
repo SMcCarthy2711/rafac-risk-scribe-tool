@@ -64,6 +64,13 @@ const TravelPlan = ({ eventPlanId }) => {
     if (!eventPlanId) return;
 
     try {
+      // Get current user for RLS compliance
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) {
+        toast.error("Please log in to update travel plan");
+        return;
+      }
+
       const updateData = { [field]: value };
 
       if (travelPlan) {
@@ -75,7 +82,7 @@ const TravelPlan = ({ eventPlanId }) => {
       } else {
         const { data, error } = await supabase
           .from("travel_plans")
-          .insert({ event_plan_id: eventPlanId, ...updateData })
+          .insert({ user_id: user.id, event_plan_id: eventPlanId, ...updateData })
           .select()
           .single();
         if (error) throw error;
@@ -91,6 +98,13 @@ const TravelPlan = ({ eventPlanId }) => {
 
   const handleSave = async () => {
     try {
+      // Get current user for RLS compliance
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) {
+        toast.error("Please log in to save travel plan");
+        return;
+      }
+
       // Convert Vehicle array to Json-compatible format
       const vehicleDetailsJson = vehicles.filter(v => v.vrn || v.driver_name).map(v => ({
         vrn: v.vrn,
@@ -99,6 +113,7 @@ const TravelPlan = ({ eventPlanId }) => {
       }));
 
       const travelData = {
+        user_id: user.id,
         event_plan_id: eventPlanId,
         collection_point: travelPlan?.collection_point || "",
         drop_off_point: travelPlan?.drop_off_point || "",
