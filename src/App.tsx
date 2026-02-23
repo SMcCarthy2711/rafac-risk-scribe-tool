@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import SavedItems from "./pages/SavedItems";
+import SettingsPage from "./pages/SettingsPage";
 import EventBuilder from "./pages/EventBuilder";
 import NotFound from "./pages/NotFound";
 
@@ -39,6 +40,11 @@ const App = () => (
           <Route path="/saved" element={
             <ProtectedRoute>
               <SavedItems />
+            </ProtectedRoute>
+          } />
+          <Route path="/settings" element={
+            <ProtectedRoute>
+              <SettingsPage />
             </ProtectedRoute>
           } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
