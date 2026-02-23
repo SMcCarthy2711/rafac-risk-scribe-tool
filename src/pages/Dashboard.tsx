@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Shield, Calendar, FileText, LogOut } from "lucide-react";
+import { Shield, Calendar, FileText, LogOut, FolderOpen } from "lucide-react";
 import { useAuth } from "@/components/AuthWrapper";
 
 const Dashboard = () => {
@@ -24,10 +24,10 @@ const Dashboard = () => {
             <Shield className="h-8 w-8 text-white" />
           </div>
           <h1 className="text-2xl font-bold text-rafac-blue mb-2">RAFAC Event Planner</h1>
-          <p className="text-slate-600">What would you like to create?</p>
+          <p className="text-slate-600">What would you like to do?</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card 
             className="cursor-pointer hover:shadow-lg hover:border-rafac-blue transition-all duration-200 group"
             onClick={() => navigate("/risk-assessment")}
@@ -40,7 +40,7 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent>
               <CardDescription className="text-center">
-                Create a standardized risk assessment for activities with hazard identification, control measures, and commander sign-off.
+                Create a standardized risk assessment for activities.
               </CardDescription>
             </CardContent>
           </Card>
@@ -57,7 +57,24 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent>
               <CardDescription className="text-center">
-                Plan a complete activity with risk assessment, travel plans, kit lists, schedules, and joining orders.
+                Plan a complete activity with travel, kit lists, and schedules.
+              </CardDescription>
+            </CardContent>
+          </Card>
+
+          <Card 
+            className="cursor-pointer hover:shadow-lg hover:border-amber-600 transition-all duration-200 group"
+            onClick={() => navigate("/saved")}
+          >
+            <CardHeader className="text-center pb-2">
+              <div className="mx-auto w-14 h-14 bg-amber-50 rounded-full flex items-center justify-center mb-3 group-hover:bg-amber-100 transition-colors">
+                <FolderOpen className="h-7 w-7 text-amber-600" />
+              </div>
+              <CardTitle className="text-lg text-amber-700">Saved Items</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription className="text-center">
+                View and manage previous risk assessments and event plans.
               </CardDescription>
             </CardContent>
           </Card>

@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -10,7 +11,7 @@ import CommanderSignOff from "@/components/CommanderSignOff";
 import DynamicRA from "@/components/DynamicRA";
 import exportToPDF from "@/lib/pdfGenerator";
 import { HeaderFields, RiskEntry as RiskEntryType, CommanderFields, DynamicFields } from "@/lib/types";
-import { FilePenLine, FileText, Download, ChevronLeft, ChevronRight, Calendar } from "lucide-react";
+import { FilePenLine, FileText, Download, ChevronLeft, ChevronRight, Calendar, Home } from "lucide-react";
 import { getTestData } from "@/lib/testData";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -19,6 +20,7 @@ import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 
 const Index = () => {
+  const navigate = useNavigate();
   // Initialize today's date in ISO format for database compatibility
   const today = new Date().toISOString().split('T')[0];
   
@@ -184,8 +186,11 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-slate-50 py-8 px-4">
       <div className="max-w-7xl mx-auto">
-        {/* Logo in top right */}
-        <div className="absolute top-4 right-4 md:top-8 md:right-8">
+        {/* Top bar */}
+        <div className="flex justify-between items-start mb-8">
+          <Button variant="outline" onClick={() => navigate("/")} className="border-rafac-blue text-rafac-blue hover:bg-rafac-blue hover:text-white">
+            <Home className="mr-2 h-4 w-4" /> Home
+          </Button>
           <img src="/lovable-uploads/8ec214f7-9bc9-4aec-9515-b58b16054452.png" alt="Royal Air Force Logo" className="h-20 w-auto" />
         </div>
         
