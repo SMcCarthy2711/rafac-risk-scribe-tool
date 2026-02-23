@@ -7,6 +7,7 @@ import { AuthProvider, ProtectedRoute } from "@/components/AuthWrapper";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import SavedItems from "./pages/SavedItems";
 import EventBuilder from "./pages/EventBuilder";
 import NotFound from "./pages/NotFound";
 
@@ -33,6 +34,11 @@ const App = () => (
           <Route path="/event-builder/:riskAssessmentId" element={
             <ProtectedRoute>
               <EventBuilder />
+            </ProtectedRoute>
+          } />
+          <Route path="/saved" element={
+            <ProtectedRoute>
+              <SavedItems />
             </ProtectedRoute>
           } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
