@@ -313,6 +313,10 @@ const Index = () => {
               </Button>
               
               <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+                <Button onClick={handleSave} variant="outline" className="border-rafac-blue text-rafac-blue hover:bg-rafac-blue hover:text-white py-2 px-8 text-lg">
+                  <Save className="mr-2 h-5 w-5" /> {savedId ? "Update" : "Save"} Risk Assessment
+                </Button>
+
                 <Button onClick={handleExport} className="bg-rafac-blue hover:bg-rafac-navy text-white py-2 px-8 text-lg">
                   <FileText className="mr-2 h-5 w-5" /> Export Risk Assessment PDF
                 </Button>
