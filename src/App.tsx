@@ -32,6 +32,11 @@ const App = () => (
               <Index />
             </ProtectedRoute>
           } />
+          <Route path="/risk-assessment/:id" element={
+            <ProtectedRoute>
+              <Index />
+            </ProtectedRoute>
+          } />
           <Route path="/event-builder/:riskAssessmentId" element={
             <ProtectedRoute>
               <EventBuilder />
