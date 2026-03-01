@@ -1,6 +1,6 @@
 
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -11,7 +11,7 @@ import CommanderSignOff from "@/components/CommanderSignOff";
 import DynamicRA from "@/components/DynamicRA";
 import exportToPDF from "@/lib/pdfGenerator";
 import { HeaderFields, RiskEntry as RiskEntryType, CommanderFields, DynamicFields, SignOffEntry } from "@/lib/types";
-import { FilePenLine, FileText, Download, ChevronLeft, ChevronRight, Calendar, Home } from "lucide-react";
+import { FilePenLine, FileText, Download, ChevronLeft, ChevronRight, Calendar, Home, Save } from "lucide-react";
 import { getTestData } from "@/lib/testData";
 import { supabase } from "@/integrations/supabase/client";
 
