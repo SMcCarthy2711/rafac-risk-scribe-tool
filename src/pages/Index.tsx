@@ -21,13 +21,12 @@ import "jspdf-autotable";
 
 const Index = () => {
   const navigate = useNavigate();
-  // Initialize today's date in ISO format for database compatibility
+  const { id: editId } = useParams<{ id?: string }>();
   const today = new Date().toISOString().split('T')[0];
   
-  // State for active tab
   const [activeTab, setActiveTab] = useState("header");
+  const [savedId, setSavedId] = useState<string | null>(editId || null);
 
-  // State for form data
   const [headerFields, setHeaderFields] = useState<HeaderFields>({
     "Squadron": "",
     "Assessor Name": "",
@@ -37,7 +36,6 @@ const Index = () => {
     "Risk Assessment Type": ""
   });
   const [risks, setRisks] = useState<RiskEntryType[]>([]);
-  // Keep track of next reference number - start with 1
   const [nextRefNumber, setNextRefNumber] = useState<number>(1);
   const emptySignOff = { Name: "", Post: "", Date: today, Signature: "" };
   const [commanderFields, setCommanderFields] = useState<CommanderFields>({
@@ -53,6 +51,68 @@ const Index = () => {
     "Dynamic Officer Post": "",
     "Dynamic Date": today
   });
+
+  // Load saved RA if editing
+  useEffect(() => {
+    if (!editId) return;
+    const load = async () => {
+      const { data, error } = await supabase
+        .from("risk_assessments")
+        .select("*")
+        .eq("id", editId)
+        .single();
+      if (error || !data?.data) {
+        toast.error("Failed to load risk assessment");
+        return;
+      }
+      const saved = data.data as any;
+      if (saved.header) setHeaderFields(saved.header);
+      if (saved.risks) {
+        setRisks(saved.risks);
+        setNextRefNumber(saved.risks.length + 1);
+      }
+      if (saved.commander) setCommanderFields(saved.commander);
+      if (saved.dynamic) setDynamicFields(saved.dynamic);
+      setSavedId(data.id);
+    };
+    load();
+  }, [editId]);
+
+  const handleSave = async () => {
+    if (!headerFields.Squadron || !headerFields["Activity Title"]) {
+      toast.error("Please fill in Squadron and Activity Title before saving");
+      return;
+    }
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { toast.error("Please log in"); return; }
+
+      const payload = {
+        user_id: user.id,
+        squadron: headerFields.Squadron,
+        assessor_name: headerFields["Assessor Name"],
+        activity_title: headerFields["Activity Title"],
+        assessment_date: headerFields["Assessment Date"],
+        risk_assessment_type: headerFields["Risk Assessment Type"],
+        publications: headerFields.Publications,
+        data: { header: headerFields, risks, commander: commanderFields, dynamic: dynamicFields } as any,
+      };
+
+      if (savedId) {
+        const { error } = await supabase.from("risk_assessments").update(payload).eq("id", savedId);
+        if (error) throw error;
+        toast.success("Risk assessment updated!");
+      } else {
+        const { data: saved, error } = await supabase.from("risk_assessments").insert(payload).select().single();
+        if (error) throw error;
+        setSavedId(saved.id);
+        toast.success("Risk assessment saved!");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to save");
+    }
+  };
 
   const handleAddRisk = (risk: RiskEntryType) => {
     setRisks(prevRisks => [...prevRisks, risk]);
