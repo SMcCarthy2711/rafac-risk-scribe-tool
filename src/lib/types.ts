@@ -27,10 +27,17 @@ export interface RiskEntry {
   "List Required Actions (Who, When and How)": string;
 }
 
+export interface SignOffEntry {
+  Name: string;
+  Post: string;
+  Date: string;
+  Signature: string;
+}
+
 export interface CommanderFields {
-  "Commander Name": string;
-  "Commander Post": string;
-  "Commander Date": string;
+  activityCommander: SignOffEntry;
+  activityCommanderAdditional: SignOffEntry;
+  secondSignature: SignOffEntry;
 }
 
 export interface DynamicFields {
