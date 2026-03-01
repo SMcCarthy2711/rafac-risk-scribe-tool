@@ -60,9 +60,9 @@ export const getTestData = (): RiskAssessment => {
       }
     ],
     commander: {
-      "Commander Name": "Sqn Ldr Jane Williams",
-      "Commander Post": "Officer Commanding",
-      "Commander Date": new Date().toLocaleDateString("en-GB")
+      activityCommander: { Name: "Sqn Ldr Jane Williams", Post: "Officer Commanding", Date: new Date().toLocaleDateString("en-GB"), Signature: "" },
+      activityCommanderAdditional: { Name: "", Post: "", Date: new Date().toLocaleDateString("en-GB"), Signature: "" },
+      secondSignature: { Name: "Wg Cdr A. Brown", Post: "OC Wing", Date: new Date().toLocaleDateString("en-GB"), Signature: "" },
     },
     dynamic: {
       "Dynamic Reason": "Weather forecast deteriorated with heavy rain and wind warnings",

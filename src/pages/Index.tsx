@@ -10,7 +10,7 @@ import RiskList from "@/components/RiskList";
 import CommanderSignOff from "@/components/CommanderSignOff";
 import DynamicRA from "@/components/DynamicRA";
 import exportToPDF from "@/lib/pdfGenerator";
-import { HeaderFields, RiskEntry as RiskEntryType, CommanderFields, DynamicFields } from "@/lib/types";
+import { HeaderFields, RiskEntry as RiskEntryType, CommanderFields, DynamicFields, SignOffEntry } from "@/lib/types";
 import { FilePenLine, FileText, Download, ChevronLeft, ChevronRight, Calendar, Home } from "lucide-react";
 import { getTestData } from "@/lib/testData";
 import { supabase } from "@/integrations/supabase/client";
@@ -39,10 +39,11 @@ const Index = () => {
   const [risks, setRisks] = useState<RiskEntryType[]>([]);
   // Keep track of next reference number - start with 1
   const [nextRefNumber, setNextRefNumber] = useState<number>(1);
+  const emptySignOff = { Name: "", Post: "", Date: today, Signature: "" };
   const [commanderFields, setCommanderFields] = useState<CommanderFields>({
-    "Commander Name": "",
-    "Commander Post": "",
-    "Commander Date": today
+    activityCommander: { ...emptySignOff },
+    activityCommanderAdditional: { ...emptySignOff },
+    secondSignature: { ...emptySignOff },
   });
   const [dynamicFields, setDynamicFields] = useState<DynamicFields>({
     "Dynamic Reason": "",
