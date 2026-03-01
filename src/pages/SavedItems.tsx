@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { Home, FileText, Calendar, Trash2 } from "lucide-react";
+import { Home, FileText, Calendar, Trash2, Pencil } from "lucide-react";
 import { toast } from "sonner";
 
 const SavedItems = () => {
@@ -83,6 +83,9 @@ const SavedItems = () => {
                           </p>
                         </div>
                         <div className="flex gap-2">
+                          <Button size="sm" variant="outline" onClick={() => navigate(`/risk-assessment/${ra.id}`)}>
+                            <Pencil className="h-4 w-4 mr-1" /> Edit
+                          </Button>
                           <Button size="sm" variant="outline" onClick={() => navigate(`/event-builder/${ra.id}`)}>
                             <Calendar className="h-4 w-4 mr-1" /> Event
                           </Button>
