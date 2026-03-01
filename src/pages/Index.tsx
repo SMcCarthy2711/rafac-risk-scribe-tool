@@ -39,10 +39,11 @@ const Index = () => {
   const [risks, setRisks] = useState<RiskEntryType[]>([]);
   // Keep track of next reference number - start with 1
   const [nextRefNumber, setNextRefNumber] = useState<number>(1);
+  const emptySignOff = { Name: "", Post: "", Date: today, Signature: "" };
   const [commanderFields, setCommanderFields] = useState<CommanderFields>({
-    "Commander Name": "",
-    "Commander Post": "",
-    "Commander Date": today
+    activityCommander: { ...emptySignOff },
+    activityCommanderAdditional: { ...emptySignOff },
+    secondSignature: { ...emptySignOff },
   });
   const [dynamicFields, setDynamicFields] = useState<DynamicFields>({
     "Dynamic Reason": "",
