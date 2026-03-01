@@ -10,7 +10,7 @@ import RiskList from "@/components/RiskList";
 import CommanderSignOff from "@/components/CommanderSignOff";
 import DynamicRA from "@/components/DynamicRA";
 import exportToPDF from "@/lib/pdfGenerator";
-import { HeaderFields, RiskEntry as RiskEntryType, CommanderFields, DynamicFields } from "@/lib/types";
+import { HeaderFields, RiskEntry as RiskEntryType, CommanderFields, DynamicFields, SignOffEntry } from "@/lib/types";
 import { FilePenLine, FileText, Download, ChevronLeft, ChevronRight, Calendar, Home } from "lucide-react";
 import { getTestData } from "@/lib/testData";
 import { supabase } from "@/integrations/supabase/client";
