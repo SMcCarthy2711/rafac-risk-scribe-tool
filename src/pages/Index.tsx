@@ -127,6 +127,15 @@ const Index = () => {
     toast.success("Risk updated successfully!");
   };
 
+  const handleDeleteRisk = (index: number) => {
+    const newRisks = risks.filter((_, i) => i !== index);
+    // Renumber refs so they stay sequential
+    const renumbered = newRisks.map((risk, i) => ({ ...risk, "Ref": (i + 1).toString() }));
+    setRisks(renumbered);
+    setNextRefNumber(newRisks.length + 1);
+    toast.success("Risk deleted successfully!");
+  };
+
   const handleExport = async () => {
     // Validate that we have at least basic header info
     if (!headerFields.Squadron || !headerFields["Activity Title"]) {
@@ -282,7 +291,7 @@ const Index = () => {
 
           <TabsContent value="risks">
             <RiskEntry onAddRisk={handleAddRisk} nextRefNumber={nextRefNumber} />
-            <RiskList risks={risks} onEditRisk={handleEditRisk} />
+            <RiskList risks={risks} onEditRisk={handleEditRisk} onDeleteRisk={handleDeleteRisk} />
             <div className="mt-8 flex justify-between">
               <Button onClick={handleBack} variant="outline" className="border-rafac-blue text-rafac-blue hover:bg-rafac-blue hover:text-white">
                 <ChevronLeft className="mr-2 h-4 w-4" /> Back
