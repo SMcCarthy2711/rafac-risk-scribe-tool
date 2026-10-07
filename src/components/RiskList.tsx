@@ -5,14 +5,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { RiskEntry } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Pencil } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 
 interface RiskListProps {
   risks: RiskEntry[];
   onEditRisk: (index: number, risk: RiskEntry) => void;
+  onDeleteRisk?: (index: number) => void;
 }
 
-const RiskList: React.FC<RiskListProps> = ({ risks, onEditRisk }) => {
+const RiskList: React.FC<RiskListProps> = ({ risks, onEditRisk, onDeleteRisk }) => {
   const [editDialogOpen, setEditDialogOpen] = React.useState(false);
   const [editingIndex, setEditingIndex] = React.useState<number | null>(null);
   const [editingRisk, setEditingRisk] = React.useState<RiskEntry | null>(null);
@@ -96,15 +97,28 @@ const RiskList: React.FC<RiskListProps> = ({ risks, onEditRisk }) => {
                   <TableCell>{risk["Is Risk Acceptable"]}</TableCell>
                   <TableCell>{risk["Revised Risk Rating (LxI)"]}</TableCell>
                   <TableCell>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={() => handleEditClick(index)}
-                      className="flex items-center gap-1"
-                    >
-                      <Pencil className="h-4 w-4" />
-                      Edit
-                    </Button>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleEditClick(index)}
+                        className="flex items-center gap-1"
+                      >
+                        <Pencil className="h-4 w-4" />
+                        Edit
+                      </Button>
+                      {onDeleteRisk && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => onDeleteRisk(index)}
+                          className="flex items-center gap-1 text-red-500 hover:text-red-700"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          Delete
+                        </Button>
+                      )}
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
