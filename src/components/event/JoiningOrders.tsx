@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { FileText, Download, QrCode } from "lucide-react";
+import { exportJoiningOrdersPdf } from "@/lib/eventDocumentPdf";
 
 interface JoiningOrdersProps {
   eventPlan: any;
@@ -117,88 +118,16 @@ const JoiningOrders: React.FC<JoiningOrdersProps> = ({ eventPlan, riskAssessment
       return;
     }
 
-    // Create a simple HTML export
     const content = joiningOrder.content;
-    const html = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Joining Orders - ${content.event_name}</title>
-        <style>
-          body { font-family: Arial, sans-serif; margin: 20px; }
-          .header { text-align: center; border-bottom: 2px solid #0066cc; padding-bottom: 10px; }
-          .section { margin: 20px 0; }
-          .kit-item { margin: 5px 0; }
-          .kit-caption { font-style: italic; font-size: 0.9em; color: #666; margin-left: 10px; }
-          .schedule-item { border: 1px solid #ddd; padding: 10px; margin: 5px 0; }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <h1>JOINING ORDERS</h1>
-          <h2>${content.event_name}</h2>
-        </div>
-        
-        <div class="section">
-          <h3>Event Details</h3>
-          <p><strong>Location:</strong> ${content.location || 'TBC'}</p>
-          <p><strong>Date:</strong> ${content.start_date || 'TBC'} ${content.end_date && content.end_date !== content.start_date ? `to ${content.end_date}` : ''}</p>
-          <p><strong>Staff Lead:</strong> ${content.staff_lead || 'TBC'}</p>
-          <p><strong>Emergency Contact:</strong> ${content.emergency_contact || 'TBC'}</p>
-          ${content.event_description ? `<p><strong>Event Description:</strong> ${content.event_description}</p>` : ''}
-        </div>
-
-        ${content.travel_plan ? `
-        <div class="section">
-          <h3>Travel Arrangements</h3>
-          <p><strong>Collection Point:</strong> ${content.travel_plan.collection_point || 'TBC'}</p>
-          <p><strong>Departure Time:</strong> ${content.travel_plan.departure_time || 'TBC'}</p>
-          <p><strong>Return Time:</strong> ${content.travel_plan.return_time || 'TBC'}</p>
-        </div>
-        ` : ''}
-
-        ${content.kit_list && content.kit_list.cadet_kit ? `
-        <div class="section">
-          <h3>Required Kit</h3>
-          ${content.kit_list.cadet_kit.general ? `
-            <h4>General Kit (All Cadets)</h4>
-            ${content.kit_list.cadet_kit.general.map(item => `
-              <div class="kit-item">• ${item.item}
-                ${item.caption ? `<div class="kit-caption">${item.caption}</div>` : ''}
-              </div>
-            `).join('')}
-          ` : ''}
-          ${content.kit_list.cadet_kit.male ? `
-            <h4>Male Specific Kit</h4>
-            ${content.kit_list.cadet_kit.male.map(item => `
-              <div class="kit-item">• ${item.item}
-                ${item.caption ? `<div class="kit-caption">${item.caption}</div>` : ''}
-              </div>
-            `).join('')}
-          ` : ''}
-          ${content.kit_list.cadet_kit.female ? `
-            <h4>Female Specific Kit</h4>
-            ${content.kit_list.cadet_kit.female.map(item => `
-              <div class="kit-item">• ${item.item}
-                ${item.caption ? `<div class="kit-caption">${item.caption}</div>` : ''}
-              </div>
-            `).join('')}
-          ` : ''}
-        </div>
-        ` : ''}
-      </body>
-      </html>
-    `;
-
-    const blob = new Blob([html], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `joining-orders-${content.event_name.replace(/\s+/g, '-').toLowerCase()}.html`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    exportJoiningOrdersPdf({
+      eventPlan: content,
+      riskAssessment: content.risk_assessment,
+      travelPlan: content.travel_plan,
+      kitList: content.kit_list,
+      schedule: content.schedule,
+      eventDescription: content.event_description,
+    });
+    toast.success("Joining orders PDF exported");
   };
 
   return (
@@ -231,7 +160,7 @@ const JoiningOrders: React.FC<JoiningOrdersProps> = ({ eventPlan, riskAssessment
                 className="border-rafac-blue text-rafac-blue hover:bg-rafac-blue hover:text-white"
               >
                 <Download className="h-4 w-4 mr-2" />
-                Export as HTML
+                Export as PDF
               </Button>
             )}
           </div>
