@@ -25,6 +25,9 @@ const ExportOptions = ({ eventPlan, riskAssessment }) => {
         supabase.from("joining_orders").select("*").eq("event_plan_id", eventPlan.id).maybeSingle()
       ]);
 
+      for (const result of [travelData, kitData, scheduleData, joiningData]) {
+        if (result.error) throw result.error;
+      }
       const joiningContent = joiningData.data?.content;
       exportCompleteEventPackPdf({
         eventPlan,
