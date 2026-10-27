@@ -102,7 +102,7 @@ class PdfLayout {
   }
 
   subheading(title: string) {
-    this.ensureSpace(10);
+    this.ensureSpace(30);
     this.doc.setFont("helvetica", "bold");
     this.doc.setFontSize(10.5);
     this.doc.setTextColor(...DARK);
