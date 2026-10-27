@@ -81,6 +81,7 @@ const JoiningOrders: React.FC<JoiningOrdersProps> = ({ eventPlan, riskAssessment
           })
           .eq("id", joiningOrder.id);
         if (error) throw error;
+        setJoiningOrder({ ...joiningOrder, content: joData, qr_code_data: qrCodeData });
       } else {
         // Get current user for RLS compliance
         const { data: { user }, error: userError } = await supabase.auth.getUser();

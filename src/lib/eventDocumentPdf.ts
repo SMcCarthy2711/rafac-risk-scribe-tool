@@ -1,4 +1,5 @@
 import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 
 type RecordValue = Record<string, any>;
 
@@ -83,33 +84,25 @@ class PdfLayout {
 
   field(label: string, value: unknown) {
     const labelText = `${label}:`;
-    const labelWidth = Math.min(this.doc.getTextWidth(labelText) + 3, 48);
-    const lines = this.doc.splitTextToSize(safeText(value), CONTENT_WIDTH - labelWidth);
-    const height = Math.max(6, lines.length * 5);
-    this.ensureSpace(height + 2);
+    const labelWidth = 43;
     this.doc.setFontSize(10);
+    this.doc.setFont("helvetica", "normal");
+    const lines = this.doc.splitTextToSize(safeText(value), CONTENT_WIDTH - labelWidth);
+    this.ensureSpace(8);
     this.doc.setTextColor(...DARK);
     this.doc.setFont("helvetica", "bold");
     this.doc.text(labelText, PAGE_MARGIN, this.y);
     this.doc.setFont("helvetica", "normal");
-    this.doc.text(lines, PAGE_MARGIN + labelWidth, this.y);
-    this.y += height + 2;
-  }
-
-  paragraph(text: unknown) {
-    const lines = this.doc.splitTextToSize(safeText(text, ""), CONTENT_WIDTH);
-    if (!lines.length) return;
-    const height = lines.length * 5;
-    this.ensureSpace(height + 3);
-    this.doc.setFont("helvetica", "normal");
-    this.doc.setFontSize(10);
-    this.doc.setTextColor(...DARK);
-    this.doc.text(lines, PAGE_MARGIN, this.y);
-    this.y += height + 3;
+    for (const line of lines) {
+      this.ensureSpace(5);
+      this.doc.text(line, PAGE_MARGIN + labelWidth, this.y);
+      this.y += 5;
+    }
+    this.y += 3;
   }
 
   subheading(title: string) {
-    this.ensureSpace(10);
+    this.ensureSpace(30);
     this.doc.setFont("helvetica", "bold");
     this.doc.setFontSize(10.5);
     this.doc.setTextColor(...DARK);
@@ -118,24 +111,34 @@ class PdfLayout {
   }
 
   bullet(item: unknown, caption?: unknown) {
+    this.doc.setFont("helvetica", "normal");
+    this.doc.setFontSize(10);
     const itemLines = this.doc.splitTextToSize(safeText(item), CONTENT_WIDTH - 9);
     const captionText = safeText(caption, "");
+    this.doc.setFont("helvetica", "italic");
+    this.doc.setFontSize(9);
     const captionLines = captionText ? this.doc.splitTextToSize(captionText, CONTENT_WIDTH - 13) : [];
     const height = itemLines.length * 5 + captionLines.length * 4.5 + 3;
-    this.ensureSpace(height);
+    this.ensureSpace(Math.min(height, PAGE_BOTTOM - PAGE_MARGIN));
     this.doc.setFillColor(...BLUE);
     this.doc.circle(PAGE_MARGIN + 1.5, this.y - 1.2, 0.8, "F");
     this.doc.setTextColor(...DARK);
     this.doc.setFont("helvetica", "normal");
     this.doc.setFontSize(10);
-    this.doc.text(itemLines, PAGE_MARGIN + 6, this.y);
-    this.y += itemLines.length * 5;
+    for (const line of itemLines) {
+      this.ensureSpace(5);
+      this.doc.text(line, PAGE_MARGIN + 6, this.y);
+      this.y += 5;
+    }
     if (captionLines.length) {
       this.doc.setFont("helvetica", "italic");
       this.doc.setFontSize(9);
       this.doc.setTextColor(...MUTED);
-      this.doc.text(captionLines, PAGE_MARGIN + 10, this.y);
-      this.y += captionLines.length * 4.5;
+      for (const line of captionLines) {
+        this.ensureSpace(4.5);
+        this.doc.text(line, PAGE_MARGIN + 10, this.y);
+        this.y += 4.5;
+      }
     }
     this.y += 3;
   }
@@ -145,26 +148,16 @@ class PdfLayout {
     const activity = safeText(item.activity);
     const details = `Lead: ${safeText(item.lead_person)} | Audience: ${safeText(item.target_audience, "All")}`;
     const notes = safeText(item.notes, "");
-    const activityLines = this.doc.splitTextToSize(activity, CONTENT_WIDTH - 6);
-    const notesLines = notes ? this.doc.splitTextToSize(`Notes: ${notes}`, CONTENT_WIDTH - 6) : [];
-    const height = 13 + activityLines.length * 5 + notesLines.length * 4.5;
-    this.ensureSpace(height + 3);
-    this.doc.setDrawColor(203, 213, 225);
-    this.doc.roundedRect(PAGE_MARGIN, this.y - 4, CONTENT_WIDTH, height, 1, 1, "S");
-    this.doc.setTextColor(...BLUE);
-    this.doc.setFont("helvetica", "bold");
-    this.doc.setFontSize(9.5);
-    this.doc.text(time, PAGE_MARGIN + 3, this.y + 1);
-    this.doc.setTextColor(...DARK);
-    this.doc.text(activityLines, PAGE_MARGIN + 3, this.y + 7);
-    let lineY = this.y + 8 + activityLines.length * 5;
-    this.doc.setFont("helvetica", "normal");
-    this.doc.setFontSize(8.5);
-    this.doc.setTextColor(...MUTED);
-    this.doc.text(details, PAGE_MARGIN + 3, lineY);
-    lineY += 5;
-    if (notesLines.length) this.doc.text(notesLines, PAGE_MARGIN + 3, lineY);
-    this.y += height + 4;
+    autoTable(this.doc, {
+      startY: this.y - 2,
+      margin: { top: PAGE_MARGIN, left: PAGE_MARGIN, right: PAGE_MARGIN, bottom: 17 },
+      theme: "grid",
+      body: [[time, `${activity}\n${details}${notes ? `\nNotes: ${notes}` : ""}`]],
+      styles: { fontSize: 9, cellPadding: 3, textColor: DARK, overflow: "linebreak" },
+      columnStyles: { 0: { cellWidth: 37, fontStyle: "bold" } },
+      didDrawPage: (hook) => { this.y = hook.cursor?.y ?? PAGE_MARGIN; },
+    });
+    this.y += 7;
   }
 
   footer() {
@@ -206,7 +199,11 @@ const addTravel = (layout: PdfLayout, travelPlan?: RecordValue | null) => {
 };
 
 const addKitGroup = (layout: PdfLayout, title: string, value: unknown) => {
-  const items = asRecords(value);
+  const items = Array.isArray(value) ? value.flatMap((item) => {
+    if (typeof item === "string" && item.trim()) return [{ item, caption: "" }];
+    if (item && typeof item === "object" && !Array.isArray(item)) return [item as RecordValue];
+    return [];
+  }) : [];
   if (!items.length) return;
   layout.subheading(title);
   items.forEach((item) => layout.bullet(item.item, item.caption));
@@ -215,9 +212,10 @@ const addKitGroup = (layout: PdfLayout, title: string, value: unknown) => {
 const addKit = (layout: PdfLayout, kitList?: RecordValue | null) => {
   if (!kitList) return;
   const cadetKit = kitList.cadet_kit && typeof kitList.cadet_kit === "object" ? kitList.cadet_kit as RecordValue : {};
-  const hasKit = asRecords(cadetKit.general).length || asRecords(cadetKit.male).length || asRecords(cadetKit.female).length || asRecords(kitList.staff_kit).length;
+  const hasKit = [cadetKit.general, cadetKit.male, cadetKit.female, kitList.staff_kit].some((items) => Array.isArray(items) && items.length);
   if (!hasKit) return;
   layout.section("Required kit");
+  if (kitList.activity_type) layout.field("Activity type", kitList.activity_type);
   addKitGroup(layout, "General kit (all cadets)", cadetKit.general);
   addKitGroup(layout, "Male-specific kit", cadetKit.male);
   addKitGroup(layout, "Female-specific kit", cadetKit.female);
