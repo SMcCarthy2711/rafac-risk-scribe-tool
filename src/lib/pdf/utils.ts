@@ -24,10 +24,7 @@ export const addSvgLogo = async (
     
     // Calculate logo width accounting for left and right margins
     const logoWidth = pageWidth - (logoMargin * 2); // Subtract both left and right margins
-    const logoHeight = 255 * 0.352778; // Convert 255px to mm
-
     console.log(`Page dimensions: ${pageWidth}mm x ${pageHeight}mm`);
-    console.log(`Logo will be: ${logoWidth}mm x ${logoHeight}mm`);
 
     // Try to load SVG from public directory
     const svgUrl = '/RAFAC_RISK_Header.svg';
@@ -52,6 +49,12 @@ export const addSvgLogo = async (
     const parser = new DOMParser();
     const svgDoc = parser.parseFromString(cleanSvgText, 'image/svg+xml');
     const svgElement = svgDoc.documentElement;
+    const viewBox = svgElement.getAttribute('viewBox')?.trim().split(/[\s,]+/).map(Number);
+    const aspectRatio = viewBox && viewBox.length === 4 && viewBox[2] > 0 && viewBox[3] > 0
+      ? viewBox[2] / viewBox[3]
+      : 1107 / 255;
+    // Match the drawing's aspect ratio so unused viewport space does not inflate the table gap.
+    const logoHeight = logoWidth / aspectRatio;
     
     console.log('Parsed SVG element successfully');
     
