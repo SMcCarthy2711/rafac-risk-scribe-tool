@@ -30,23 +30,27 @@ export const addRiskTable = (
     ]
   ];
 
-  // Create rows for each risk with wrapped text (no truncation)
-  const riskRows = risks.map(risk => [
-    risk.Ref,
-    risk["Activity/Element"],
-    risk["Hazards Identified"],
-    risk["Who or What Might be Harmed and How"],
-    risk["Existing Control Measures"],
-    { content: risk.Likelihood, styles: { halign: 'center', fontStyle: 'bold' } },
-    { content: risk.Impact, styles: { halign: 'center', fontStyle: 'bold' } },
-    { content: risk["Risk Rating (LxI)"], styles: { halign: 'center', fontStyle: 'bold' } },
-    { content: risk["Is Risk Acceptable"], styles: { halign: 'center', fontStyle: 'bold' } },
-    risk["Reasonable Additional Control Measures"],
-    { content: risk["Revised Likelihood"], styles: { halign: 'center', fontStyle: 'bold' } },
-    { content: risk["Revised Impact"], styles: { halign: 'center', fontStyle: 'bold' } },
-    { content: risk["Revised Risk Rating (LxI)"], styles: { halign: 'center', fontStyle: 'bold' } },
-    risk["List Required Actions (Who, When and How)"]
-  ]);
+  // Create rows for each risk with wrapped text (no truncation).
+  // When a row has no Additional Controls (column j), columns k, l and m stay blank.
+  const riskRows = risks.map(risk => {
+    const hasAdditionalControls = (risk["Reasonable Additional Control Measures"] ?? "").trim().length > 0;
+    return [
+      risk.Ref,
+      risk["Activity/Element"],
+      risk["Hazards Identified"],
+      risk["Who or What Might be Harmed and How"],
+      risk["Existing Control Measures"],
+      { content: risk.Likelihood, styles: { halign: 'center', fontStyle: 'bold' } },
+      { content: risk.Impact, styles: { halign: 'center', fontStyle: 'bold' } },
+      { content: risk["Risk Rating (LxI)"], styles: { halign: 'center', fontStyle: 'bold' } },
+      { content: risk["Is Risk Acceptable"], styles: { halign: 'center', fontStyle: 'bold' } },
+      risk["Reasonable Additional Control Measures"],
+      { content: hasAdditionalControls ? risk["Revised Likelihood"] : '', styles: { halign: 'center', fontStyle: 'bold' } },
+      { content: hasAdditionalControls ? risk["Revised Impact"] : '', styles: { halign: 'center', fontStyle: 'bold' } },
+      { content: hasAdditionalControls ? risk["Revised Risk Rating (LxI)"] : '', styles: { halign: 'center', fontStyle: 'bold' } },
+      risk["List Required Actions (Who, When and How)"]
+    ];
+  });
 
   // Add a default example row if no risks
   if (riskRows.length === 0) {
