@@ -73,14 +73,14 @@ export const addRiskTable = (
       'Driver fatigue causes RTA',
       'Injuries to personnel',
       'Designated drivers · JSP800',
-      { content: '2', styles: { halign: 'center', fontStyle: 'bold' } }, 
-      { content: '5', styles: { halign: 'center', fontStyle: 'bold' } }, 
-      { content: '10', styles: { halign: 'center', fontStyle: 'bold' } },
+      { content: '2', styles: { halign: 'center', fontStyle: 'bold' } },
+      { content: '5', styles: { halign: 'center', fontStyle: 'bold' } },
+      { content: '10', styles: { halign: 'center', fontStyle: 'bold', fillColor: ratingColor('10') } },
       { content: 'NO', styles: { halign: 'center', fontStyle: 'bold' } },
       'Vehicle commander to monitor',
       { content: '1', styles: { halign: 'center', fontStyle: 'bold' } },
       { content: '5', styles: { halign: 'center', fontStyle: 'bold' } },
-      { content: '5', styles: { halign: 'center', fontStyle: 'bold' } },
+      { content: '5', styles: { halign: 'center', fontStyle: 'bold', fillColor: ratingColor('5') } },
       'CFAV to implement controls'
     ]);
   }
