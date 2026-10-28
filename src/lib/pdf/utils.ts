@@ -75,13 +75,12 @@ export const addSvgLogo = async (
     console.error('Error in addSvgLogo:', error);
     
     // Fallback: add a text header if SVG fails
-    const logoMargin = 10 * 0.352778; // Convert 10px to mm
     doc.setFontSize(16);
     doc.setTextColor(5, 52, 133);
-    doc.text('RAFAC RISK ASSESSMENT', logoMargin, logoMargin + 10);
+    doc.text('RAFAC RISK ASSESSMENT', logoMargin, logoMargin + topOffset + 10);
     console.log('Added fallback text header due to SVG loading failure');
     
-    return logoMargin + 20;
+    return logoMargin + topOffset + 20;
   }
 };
 
