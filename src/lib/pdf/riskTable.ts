@@ -2,6 +2,19 @@
 import { jsPDF } from 'jspdf';
 import { RiskEntry } from '../types';
 
+// Background colours for rating cells (columns h and m), matching the Risk Score Calculation matrix
+const ratingColor = (value: string | undefined): number[] | undefined => {
+  const rating = parseInt((value ?? '').trim(), 10);
+  if (!Number.isFinite(rating)) return undefined; // blank / non-numeric -> no colour
+  const clamped = Math.min(Math.max(rating, 1), 25);
+  if (clamped <= 4) return [61, 190, 102];    // green
+  if (clamped <= 9) return [135, 216, 92];    // light green
+  if (clamped <= 14) return [251, 255, 47];   // yellow
+  if (clamped <= 19) return [245, 168, 34];   // orange
+  if (clamped <= 24) return [242, 36, 22];    // red
+  return [179, 36, 40];                       // dark red (25)
+};
+
 // Add risk table to the PDF
 export const addRiskTable = (
   doc: jsPDF,
