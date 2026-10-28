@@ -55,12 +55,12 @@ export const addRiskTable = (
       risk["Existing Control Measures"],
       { content: risk.Likelihood, styles: { halign: 'center', fontStyle: 'bold' } },
       { content: risk.Impact, styles: { halign: 'center', fontStyle: 'bold' } },
-      { content: risk["Risk Rating (LxI)"], styles: { halign: 'center', fontStyle: 'bold' } },
+      { content: risk["Risk Rating (LxI)"], styles: { halign: 'center', fontStyle: 'bold', fillColor: ratingColor(risk["Risk Rating (LxI)"]) } },
       { content: risk["Is Risk Acceptable"], styles: { halign: 'center', fontStyle: 'bold' } },
       risk["Reasonable Additional Control Measures"],
       { content: hasAdditionalControls ? risk["Revised Likelihood"] : '', styles: { halign: 'center', fontStyle: 'bold' } },
       { content: hasAdditionalControls ? risk["Revised Impact"] : '', styles: { halign: 'center', fontStyle: 'bold' } },
-      { content: hasAdditionalControls ? risk["Revised Risk Rating (LxI)"] : '', styles: { halign: 'center', fontStyle: 'bold' } },
+      { content: hasAdditionalControls ? risk["Revised Risk Rating (LxI)"] : '', styles: { halign: 'center', fontStyle: 'bold', fillColor: ratingColor(hasAdditionalControls ? risk["Revised Risk Rating (LxI)"] : undefined) } },
       risk["List Required Actions (Who, When and How)"]
     ];
   });
