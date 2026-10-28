@@ -60,16 +60,16 @@ export const addSvgLogo = async (
     
     console.log('Parsed SVG element successfully');
     
-    // Use svg2pdf to convert and add the SVG with 10px margins on all sides
+    // Use svg2pdf to convert and add the SVG with 10px side margins and the extra 10px top offset
     await svg2pdf(svgElement, doc, {
       x: logoMargin, // 10px left margin
-      y: logoMargin, // 10px top margin
+      y: logoMargin + topOffset, // 10px top margin, shifted down 10px more
       width: logoWidth,
       height: logoHeight
     });
     
-    console.log(`SVG added to PDF using svg2pdf at position (${logoMargin}, ${logoMargin}) with size ${logoWidth}x${logoHeight}`);
-    return logoMargin + logoHeight; // Return position after logo (no extra gap here)
+    console.log(`SVG added to PDF using svg2pdf at position (${logoMargin}, ${logoMargin + topOffset}) with size ${logoWidth}x${logoHeight}`);
+    return logoMargin + topOffset + logoHeight; // Return position after logo (no extra gap here)
 
   } catch (error) {
     console.error('Error in addSvgLogo:', error);
