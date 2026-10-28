@@ -15,14 +15,15 @@ export const addSvgLogo = async (
   doc: jsPDF,
   margin: number
 ): Promise<number> => {
+  // 10px margins converted to mm (1px ≈ 0.352778mm)
+  const logoMargin = 10 * 0.352778;
+  // Shift all content down by a further 10px so the header sits clear of the page top.
+  const topOffset = 10 * 0.352778;
   try {
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     
     // Set specific margins for the logo (10px converted to mm)
-    const logoMargin = 10 * 0.352778; // Convert 10px to mm (1px ≈ 0.352778mm)
-    // Shift all content down by a further 10px so the header sits clear of the page top.
-    const topOffset = 10 * 0.352778;
     
     // Calculate logo width accounting for left and right margins
     const logoWidth = pageWidth - (logoMargin * 2); // Subtract both left and right margins
