@@ -15,12 +15,15 @@ export const addSvgLogo = async (
   doc: jsPDF,
   margin: number
 ): Promise<number> => {
+  // 10px margins converted to mm (1px ≈ 0.352778mm)
+  const logoMargin = 10 * 0.352778;
+  // Shift all content down by a further 10px so the header sits clear of the page top.
+  const topOffset = 10 * 0.352778;
   try {
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     
     // Set specific margins for the logo (10px converted to mm)
-    const logoMargin = 10 * 0.352778; // Convert 10px to mm (1px ≈ 0.352778mm)
     
     // Calculate logo width accounting for left and right margins
     const logoWidth = pageWidth - (logoMargin * 2); // Subtract both left and right margins
@@ -58,28 +61,27 @@ export const addSvgLogo = async (
     
     console.log('Parsed SVG element successfully');
     
-    // Use svg2pdf to convert and add the SVG with 10px margins on all sides
+    // Use svg2pdf to convert and add the SVG with 10px side margins and the extra 10px top offset
     await svg2pdf(svgElement, doc, {
       x: logoMargin, // 10px left margin
-      y: logoMargin, // 10px top margin
+      y: logoMargin + topOffset, // 10px top margin, shifted down 10px more
       width: logoWidth,
       height: logoHeight
     });
     
-    console.log(`SVG added to PDF using svg2pdf at position (${logoMargin}, ${logoMargin}) with size ${logoWidth}x${logoHeight}`);
-    return logoMargin + logoHeight; // Return position after logo (no extra gap here)
+    console.log(`SVG added to PDF using svg2pdf at position (${logoMargin}, ${logoMargin + topOffset}) with size ${logoWidth}x${logoHeight}`);
+    return logoMargin + topOffset + logoHeight; // Return position after logo (no extra gap here)
 
   } catch (error) {
     console.error('Error in addSvgLogo:', error);
     
     // Fallback: add a text header if SVG fails
-    const logoMargin = 10 * 0.352778; // Convert 10px to mm
     doc.setFontSize(16);
     doc.setTextColor(5, 52, 133);
-    doc.text('RAFAC RISK ASSESSMENT', logoMargin, logoMargin + 10);
+    doc.text('RAFAC RISK ASSESSMENT', logoMargin, logoMargin + topOffset + 10);
     console.log('Added fallback text header due to SVG loading failure');
     
-    return logoMargin + 20;
+    return logoMargin + topOffset + 20;
   }
 };
 
