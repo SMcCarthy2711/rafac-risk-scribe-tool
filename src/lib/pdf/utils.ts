@@ -90,9 +90,10 @@ export const addPdfHeader = (doc: jsPDF, margin: number, pageWidth: number): voi
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7);
   doc.setTextColor(128, 128, 128);
-  // Keep the labels above the diagram, which starts at the 10px top margin.
-  doc.text('Uncontrolled copy when Printed', margin, 2.5);
-  doc.text('RAFAC Form 5010(c)', pageWidth - margin, 2.5, { align: 'right' });
+  // Drop the header labels 5px below the page top edge; the diagram and tables stay put.
+  const headerDrop = 5 * 0.352778;
+  doc.text('Uncontrolled copy when Printed', margin, 2.5 + headerDrop);
+  doc.text('RAFAC Form 5010(c)', pageWidth - margin, 2.5 + headerDrop, { align: 'right' });
 };
 
 // Add version info to the bottom of the PDF
