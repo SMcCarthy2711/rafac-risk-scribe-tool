@@ -2,7 +2,7 @@
 import { RiskAssessment } from "./types";
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
-import { createPdfDocument, addVersionNumber, addSvgLogo } from './pdf/utils';
+import { createPdfDocument, addVersionNumber, addPdfHeader } from './pdf/utils';
 import { addHeaderSection } from './pdf/headerSection';
 import { addRiskTable } from './pdf/riskTable';
 import { addCommanderSection } from './pdf/commanderSection';
@@ -24,7 +24,11 @@ const exportToPDF = async (assessment: RiskAssessment) => {
     const commanderSectionY = addCommanderSection(doc, autoTable, assessment.commander, riskTableY, margin);
     const dynamicSectionY = addDynamicSection(doc, autoTable, assessment.dynamic, commanderSectionY + 5, margin);
 
-    addVersionNumber(doc, pageWidth, pageHeight);
+    for (let page = 1; page <= doc.getNumberOfPages(); page += 1) {
+      doc.setPage(page);
+      addPdfHeader(doc, margin, pageWidth);
+      addVersionNumber(doc, pageWidth, pageHeight, margin);
+    }
     doc.save('RAFAC_Risk_Assessment_5010c.pdf');
 
     return true;

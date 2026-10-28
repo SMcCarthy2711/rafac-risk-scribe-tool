@@ -82,18 +82,23 @@ export const addSvgLogo = async (
 
 // Add header text to the PDF
 export const addPdfHeader = (doc: jsPDF, margin: number, pageWidth: number): void => {
-  doc.setFontSize(8);
-  doc.setTextColor(0, 0, 0);
-  doc.text('Uncontrolled copy when printed', margin, margin);
-  doc.text('RAFAC Form 5010(c)', pageWidth - 35, margin);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(7);
+  doc.setTextColor(128, 128, 128);
+  // Keep the labels above the diagram, which starts at the 10px top margin.
+  doc.text('Uncontrolled copy when Printed', margin, 2.5);
+  doc.text('RAFAC Form 5010(c)', pageWidth - margin, 2.5, { align: 'right' });
 };
 
 // Add version info to the bottom of the PDF
 export const addVersionNumber = (
   doc: jsPDF,
   pageWidth: number,
-  pageHeight: number
+  pageHeight: number,
+  margin = 12
 ): void => {
-  doc.setFontSize(8);
-  doc.text('Version: 2.0X', pageWidth - 25, pageHeight - 5);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(7);
+  doc.setTextColor(128, 128, 128);
+  doc.text('Version 2.0x', pageWidth - margin, pageHeight - 5, { align: 'right' });
 };
