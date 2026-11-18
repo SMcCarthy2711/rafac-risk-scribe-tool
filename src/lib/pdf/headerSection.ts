@@ -132,12 +132,17 @@ export const addHeaderSection = async (
 
   const publicationsFinalY = (doc as any).lastAutoTable.finalY;
 
-  // RA Review (Step 5) - right half: label cell plus 5 date boxes
-  // (Original Assessment, Review 1, Review 2, Review 3, Review 4).
+  // RA Review (Step 5) - right half: the title cell spans both rows as one
+  // coloured cell, with 5 date boxes (Original Assessment, Review 1-4) beside it.
+  // The date cells stretch down so the bottom of the row meets the risk table
+  // (i.e. aligns with the bottom of the taller publications box).
+  const reviewHeadHeight = 9; // mm - two-line fontSize 6 header plus padding
+  const reviewBodyMinHeight = Math.max(0, publicationsFinalY - y - reviewHeadHeight);
+
   autoTable(doc, {
     startY: y,
     head: [[
-      { content: 'RA Review (Step 5):', styles: { valign: 'middle' as const } },
+      { content: 'RA Review (Step 5):', rowSpan: 2, styles: { valign: 'middle' as const } },
       { content: 'Original\nAssessment', styles: { halign: 'center' as const, fontSize: 6 } },
       { content: 'Review 1', styles: { halign: 'center' as const, fontSize: 6 } },
       { content: 'Review 2', styles: { halign: 'center' as const, fontSize: 6 } },
@@ -145,12 +150,11 @@ export const addHeaderSection = async (
       { content: 'Review 4', styles: { halign: 'center' as const, fontSize: 6 } }
     ]],
     body: [[
-      '',
-      { content: headerFields["Assessment Date"] || '', styles: { halign: 'center' as const } },
-      { content: headerFields["Review 1 Date"] || '', styles: { halign: 'center' as const } },
-      { content: headerFields["Review 2 Date"] || '', styles: { halign: 'center' as const } },
-      { content: headerFields["Review 3 Date"] || '', styles: { halign: 'center' as const } },
-      { content: headerFields["Review 4 Date"] || '', styles: { halign: 'center' as const } }
+      { content: headerFields["Assessment Date"] || '', styles: { halign: 'center' as const, valign: 'middle' as const, minCellHeight: reviewBodyMinHeight } },
+      { content: headerFields["Review 1 Date"] || '', styles: { halign: 'center' as const, valign: 'middle' as const } },
+      { content: headerFields["Review 2 Date"] || '', styles: { halign: 'center' as const, valign: 'middle' as const } },
+      { content: headerFields["Review 3 Date"] || '', styles: { halign: 'center' as const, valign: 'middle' as const } },
+      { content: headerFields["Review 4 Date"] || '', styles: { halign: 'center' as const, valign: 'middle' as const } }
     ]],
     theme: 'grid',
     styles: {
