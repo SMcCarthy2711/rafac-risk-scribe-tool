@@ -106,7 +106,11 @@ export const addHeaderSection = async (
   // Publications - create a numbered list format similar to the example
   const publicationsText = headerFields.Publications || "";
   const publications = publicationsText.split('\n').map((item, index) => `${index + 1}.    ${item.trim()}`).join('\n');
-  
+
+  // Publications takes the left half of the row; RA Review (Step 5) sits on the right half.
+  const pageWidth = doc.internal.pageSize.width;
+  const halfWidth = (pageWidth - margin * 2) / 2;
+
   autoTable(doc, {
     startY: y,
     head: [['Relevant Publications / Pamphlets / Procedures:']],
@@ -117,13 +121,56 @@ export const addHeaderSection = async (
       cellPadding: 2,
       lineWidth: 0.1,
     },
-    margin: { left: margin, right: margin },
+    margin: { left: margin },
+    tableWidth: halfWidth,
     headStyles: {
       fillColor: [5, 52, 133], // Changed to #053485 (RGB: 5, 52, 133)
       textColor: [255, 255, 255], // White text for better contrast
       fontStyle: 'bold'
     }
   });
-    
-  return (doc as any).lastAutoTable.finalY;
+
+  const publicationsFinalY = (doc as any).lastAutoTable.finalY;
+
+  // RA Review (Step 5) - right half: label cell plus 5 date boxes
+  // (Original Assessment, Review 1, Review 2, Review 3, Review 4).
+  autoTable(doc, {
+    startY: y,
+    head: [[
+      { content: 'RA Review (Step 5):', styles: { valign: 'middle' as const } },
+      { content: 'Original\nAssessment', styles: { halign: 'center' as const, fontSize: 6 } },
+      { content: 'Review 1', styles: { halign: 'center' as const, fontSize: 6 } },
+      { content: 'Review 2', styles: { halign: 'center' as const, fontSize: 6 } },
+      { content: 'Review 3', styles: { halign: 'center' as const, fontSize: 6 } },
+      { content: 'Review 4', styles: { halign: 'center' as const, fontSize: 6 } }
+    ]],
+    body: [[
+      '',
+      { content: headerFields["Assessment Date"] || '', styles: { halign: 'center' as const } },
+      { content: headerFields["Review 1 Date"] || '', styles: { halign: 'center' as const } },
+      { content: headerFields["Review 2 Date"] || '', styles: { halign: 'center' as const } },
+      { content: headerFields["Review 3 Date"] || '', styles: { halign: 'center' as const } },
+      { content: headerFields["Review 4 Date"] || '', styles: { halign: 'center' as const } }
+    ]],
+    theme: 'grid',
+    styles: {
+      fontSize: 7,
+      cellPadding: 2,
+      lineWidth: 0.1,
+    },
+    margin: { left: margin + halfWidth },
+    tableWidth: halfWidth,
+    columnStyles: {
+      0: { cellWidth: 28 },
+    },
+    headStyles: {
+      fillColor: [5, 52, 133], // Changed to #053485 (RGB: 5, 52, 133)
+      textColor: [255, 255, 255], // White text for better contrast
+      fontStyle: 'bold'
+    }
+  });
+
+  const reviewFinalY = (doc as any).lastAutoTable.finalY;
+
+  return Math.max(publicationsFinalY, reviewFinalY);
 };

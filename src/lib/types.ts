@@ -6,6 +6,10 @@ export interface HeaderFields {
   "Assessment Date": string;
   "Publications": string;
   "Risk Assessment Type": "Generic" | "Specific" | ""; // Limited to these two options
+  "Review 1 Date"?: string; // RA Review (Step 5) - first review date
+  "Review 2 Date"?: string; // RA Review (Step 5) - second review date
+  "Review 3 Date"?: string; // RA Review (Step 5) - third review date
+  "Review 4 Date"?: string; // RA Review (Step 5) - fourth review date
   "SvgLogo"?: string; // Optional SVG logo data
   "PngImage"?: string; // Optional PNG image path
 }

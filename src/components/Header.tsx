@@ -98,6 +98,48 @@ const Header: React.FC<HeaderProps> = ({ headerFields, setHeaderFields }) => {
             <p className="text-xs text-gray-500">Each line will be numbered in the final document.</p>
           </div>
 
+          <div className="space-y-2 md:col-span-2">
+            <Label>RA Review (Step 5) - Review Dates</Label>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="space-y-1">
+                <Label htmlFor="review1" className="text-xs">Review 1</Label>
+                <Input
+                  id="review1"
+                  value={headerFields["Review 1 Date"] || ""}
+                  onChange={(e) => handleInputChange("Review 1 Date", e.target.value)}
+                  placeholder="DD/MM/YYYY"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="review2" className="text-xs">Review 2</Label>
+                <Input
+                  id="review2"
+                  value={headerFields["Review 2 Date"] || ""}
+                  onChange={(e) => handleInputChange("Review 2 Date", e.target.value)}
+                  placeholder="DD/MM/YYYY"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="review3" className="text-xs">Review 3</Label>
+                <Input
+                  id="review3"
+                  value={headerFields["Review 3 Date"] || ""}
+                  onChange={(e) => handleInputChange("Review 3 Date", e.target.value)}
+                  placeholder="DD/MM/YYYY"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="review4" className="text-xs">Review 4</Label>
+                <Input
+                  id="review4"
+                  value={headerFields["Review 4 Date"] || ""}
+                  onChange={(e) => handleInputChange("Review 4 Date", e.target.value)}
+                  placeholder="DD/MM/YYYY"
+                />
+              </div>
+            </div>
+          </div>
+
           <div className="space-y-4 md:col-span-2">
             <Label>Type of Risk Assessment</Label>
             <RadioGroup 

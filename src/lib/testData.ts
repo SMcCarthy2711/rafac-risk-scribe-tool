@@ -22,6 +22,10 @@ export const getTestData = (): RiskAssessment => {
       "Assessment Date": new Date().toLocaleDateString("en-GB"),
       "Publications": "AP1034 - RAF Health and Safety Guidelines\nACP 4 - Air Cadet Health and Safety Manual\nJSP 375 - MOD Health and Safety Handbook",
       "Risk Assessment Type": "Generic",
+      "Review 1 Date": "01/03/2026",
+      "Review 2 Date": "01/06/2026",
+      "Review 3 Date": "",
+      "Review 4 Date": "",
       // "SvgLogo": rafSvgLogo // Adding the SVG logo to test data
       "PngImage": riskMatrixPng // Using PNG image instead of SVG
     },
