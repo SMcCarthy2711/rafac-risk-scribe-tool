@@ -136,10 +136,7 @@ export const addHeaderSection = async (
   // coloured cell, with 5 date boxes (Original Assessment, Review 1-4) beside it.
   // The date cells stretch down so the bottom of the row meets the risk table
   // (i.e. aligns with the bottom of the taller publications box).
-  const reviewHeadHeight = 9; // mm - two-line fontSize 6 header plus padding
-  const reviewBodyMinHeight = Math.max(0, publicationsFinalY - y - reviewHeadHeight);
-
-  autoTable(doc, {
+  const reviewTableConfig = (bodyMinHeight: number) => ({
     startY: y,
     head: [[
       { content: 'RA Review (Step 5):', rowSpan: 2, styles: { valign: 'middle' as const } },
@@ -150,7 +147,9 @@ export const addHeaderSection = async (
       { content: 'Review 4', styles: { halign: 'center' as const, fontSize: 6 } }
     ]],
     body: [[
-      { content: headerFields["Assessment Date"] || '', styles: { halign: 'center' as const, valign: 'middle' as const, minCellHeight: reviewBodyMinHeight } },
+      // Placeholder for the column covered by the rowSpan title cell
+      { content: '', styles: { minCellHeight: bodyMinHeight } },
+      { content: headerFields["Assessment Date"] || '', styles: { halign: 'center' as const, valign: 'middle' as const } },
       { content: headerFields["Review 1 Date"] || '', styles: { halign: 'center' as const, valign: 'middle' as const } },
       { content: headerFields["Review 2 Date"] || '', styles: { halign: 'center' as const, valign: 'middle' as const } },
       { content: headerFields["Review 3 Date"] || '', styles: { halign: 'center' as const, valign: 'middle' as const } },
@@ -173,6 +172,17 @@ export const addHeaderSection = async (
       fontStyle: 'bold'
     }
   });
+
+  // Measure the exact header row height with a head-only pass on a throwaway
+  // document, so the date row can be stretched to end flush with the
+  // publications box (no gap above the risk table).
+  const measureDoc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+  const headOnlyConfig = { ...reviewTableConfig(0), body: [] as any[] };
+  autoTable(measureDoc, headOnlyConfig);
+  const reviewHeadHeight = (measureDoc as any).lastAutoTable.finalY - y;
+
+  const reviewBodyMinHeight = Math.max(0, publicationsFinalY - y - reviewHeadHeight);
+  autoTable(doc, reviewTableConfig(reviewBodyMinHeight));
 
   const reviewFinalY = (doc as any).lastAutoTable.finalY;
 
