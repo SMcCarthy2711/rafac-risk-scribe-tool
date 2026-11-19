@@ -15,6 +15,7 @@ export interface HeaderFields {
 }
 
 export interface RiskEntry {
+  section?: "activity" | "environmental";
   Ref: string;
   "Activity/Element": string;
   "Hazards Identified": string;

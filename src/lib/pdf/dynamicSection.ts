@@ -1,6 +1,8 @@
 
 import { jsPDF } from 'jspdf';
 import { DynamicFields } from '../types';
+import { richTextPlain } from '../richText';
+import { richCell, richTextCellHooks } from './richTextCells';
 
 // Add dynamic risk assessment section to the PDF if provided
 export const addDynamicSection = (
@@ -11,9 +13,9 @@ export const addDynamicSection = (
   margin: number
 ): number => {
   // Check if any dynamic fields are provided before adding this section
-  if (!dynamicFields["Dynamic Reason"] && 
-      !dynamicFields["New Restrictions"] && 
-      !dynamicFields.Remarks) {
+  if (!richTextPlain(dynamicFields["Dynamic Reason"]).trim() && 
+      !richTextPlain(dynamicFields["New Restrictions"]).trim() && 
+      !richTextPlain(dynamicFields.Remarks).trim()) {
     return startY; // Return same Y position if no dynamic fields to add
   }
 
@@ -39,12 +41,13 @@ export const addDynamicSection = (
   let y = (doc as any).lastAutoTable.finalY;
       
   autoTable(doc, {
+    ...richTextCellHooks(doc),
     startY: y,
     head: [['Dynamic Reason:', 'New Restrictions:', 'Remarks:']],
     body: [[
-      dynamicFields["Dynamic Reason"], 
-      dynamicFields["New Restrictions"],
-      dynamicFields.Remarks
+      richCell(dynamicFields["Dynamic Reason"]), 
+      richCell(dynamicFields["New Restrictions"]),
+      richCell(dynamicFields.Remarks)
     ]],
     theme: 'grid',
     styles: {

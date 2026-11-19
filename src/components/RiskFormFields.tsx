@@ -1,3 +1,4 @@
+import RichTextEditor from "./RichTextEditor";
 
 import React from "react";
 import { Input } from "@/components/ui/input";
@@ -25,41 +26,37 @@ const RiskFormFields: React.FC<RiskFormFieldsProps> = ({ currentRisk, onInputCha
       
       <div className="space-y-2">
         <Label htmlFor="activity">Activity/Element</Label>
-        <Input
+        <RichTextEditor
           id="activity"
           value={currentRisk["Activity/Element"]}
-          onChange={(e) => onInputChange("Activity/Element", e.target.value)}
-          placeholder="Enter activity or element"
+          onChange={(value) => onInputChange("Activity/Element", value)}
         />
       </div>
       
       <div className="space-y-2 md:col-span-2">
         <Label htmlFor="hazards">Hazards Identified</Label>
-        <Input
+        <RichTextEditor
           id="hazards"
           value={currentRisk["Hazards Identified"]}
-          onChange={(e) => onInputChange("Hazards Identified", e.target.value)}
-          placeholder="Describe hazards"
+          onChange={(value) => onInputChange("Hazards Identified", value)}
         />
       </div>
       
       <div className="space-y-2 md:col-span-2">
         <Label htmlFor="who-harmed">Who or What Might be Harmed and How</Label>
-        <Input
+        <RichTextEditor
           id="who-harmed"
           value={currentRisk["Who or What Might be Harmed and How"]}
-          onChange={(e) => onInputChange("Who or What Might be Harmed and How", e.target.value)}
-          placeholder="Describe who/what might be harmed"
+          onChange={(value) => onInputChange("Who or What Might be Harmed and How", value)}
         />
       </div>
       
       <div className="space-y-2 md:col-span-2">
         <Label htmlFor="existing-controls">Existing Control Measures</Label>
-        <Input
+        <RichTextEditor
           id="existing-controls"
           value={currentRisk["Existing Control Measures"]}
-          onChange={(e) => onInputChange("Existing Control Measures", e.target.value)}
-          placeholder="Describe existing controls"
+          onChange={(value) => onInputChange("Existing Control Measures", value)}
         />
       </div>
     </>

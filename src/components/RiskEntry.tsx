@@ -1,4 +1,5 @@
 
+import { richTextPlain } from "@/lib/richText";
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -85,7 +86,7 @@ const RiskEntry: React.FC<RiskEntryProps> = ({ onAddRisk, nextRefNumber }) => {
 
   const handleAddRisk = () => {
     // Simple validation to ensure key fields are filled
-    if (!currentRisk["Activity/Element"] || !currentRisk["Hazards Identified"]) {
+    if (!richTextPlain(currentRisk["Activity/Element"]).trim() || !richTextPlain(currentRisk["Hazards Identified"]).trim()) {
       toast.error("Please fill in Activity/Element and Hazards Identified");
       return;
     }

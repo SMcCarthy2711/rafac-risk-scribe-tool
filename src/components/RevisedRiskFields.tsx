@@ -1,3 +1,4 @@
+import RichTextEditor from "./RichTextEditor";
 
 import React from "react";
 import { Input } from "@/components/ui/input";
@@ -15,11 +16,10 @@ const RevisedRiskFields: React.FC<RevisedRiskFieldsProps> = ({ currentRisk, onIn
     <>
       <div className="space-y-2 md:col-span-2">
         <Label htmlFor="additional-controls">Reasonable Additional Control Measures</Label>
-        <Input
+        <RichTextEditor
           id="additional-controls"
           value={currentRisk["Reasonable Additional Control Measures"]}
-          onChange={(e) => onInputChange("Reasonable Additional Control Measures", e.target.value)}
-          placeholder="Describe additional controls"
+          onChange={(value) => onInputChange("Reasonable Additional Control Measures", value)}
         />
       </div>
       
@@ -69,11 +69,10 @@ const RevisedRiskFields: React.FC<RevisedRiskFieldsProps> = ({ currentRisk, onIn
       
       <div className="space-y-2 md:col-span-2">
         <Label htmlFor="required-actions">List Required Actions (Who, When and How)</Label>
-        <Input
+        <RichTextEditor
           id="required-actions"
           value={currentRisk["List Required Actions (Who, When and How)"]}
-          onChange={(e) => onInputChange("List Required Actions (Who, When and How)", e.target.value)}
-          placeholder="Describe required actions"
+          onChange={(value) => onInputChange("List Required Actions (Who, When and How)", value)}
         />
       </div>
     </>

@@ -1,9 +1,9 @@
+import RichTextEditor from "./RichTextEditor";
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { DynamicFields } from "@/lib/types";
 
 interface DynamicRAProps {
@@ -25,34 +25,28 @@ const DynamicRA: React.FC<DynamicRAProps> = ({ dynamicFields, setDynamicFields }
         <div className="grid grid-cols-1 gap-4">
           <div className="space-y-2">
             <Label htmlFor="dynamic-reason">Dynamic Reason</Label>
-            <Textarea
+            <RichTextEditor
               id="dynamic-reason"
               value={dynamicFields["Dynamic Reason"]}
-              onChange={(e) => handleInputChange("Dynamic Reason", e.target.value)}
-              placeholder="Reason for dynamic risk assessment"
-              className="min-h-[100px]"
+              onChange={(value) => handleInputChange("Dynamic Reason", value)}
             />
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="new-restrictions">New Restrictions</Label>
-            <Textarea
+            <RichTextEditor
               id="new-restrictions"
               value={dynamicFields["New Restrictions"]}
-              onChange={(e) => handleInputChange("New Restrictions", e.target.value)}
-              placeholder="New restrictions to be implemented"
-              className="min-h-[100px]"
+              onChange={(value) => handleInputChange("New Restrictions", value)}
             />
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="remarks">Remarks</Label>
-            <Textarea
+            <RichTextEditor
               id="remarks"
               value={dynamicFields.Remarks}
-              onChange={(e) => handleInputChange("Remarks", e.target.value)}
-              placeholder="Additional remarks"
-              className="min-h-[100px]"
+              onChange={(value) => handleInputChange("Remarks", value)}
             />
           </div>
           

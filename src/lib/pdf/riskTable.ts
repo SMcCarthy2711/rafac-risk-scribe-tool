@@ -1,6 +1,9 @@
 
 import { jsPDF } from 'jspdf';
 import { RiskEntry } from '../types';
+import { richTextPlain } from '../richText';
+import { splitRisks, environmentalHeading } from '../riskSections';
+import { richCell, richTextCellHooks } from './richTextCells';
 
 // Background colours for rating cells (columns h and m), matching the Risk Score Calculation matrix
 const ratingColor = (value: string | undefined): number[] | undefined => {
@@ -45,24 +48,28 @@ export const addRiskTable = (
 
   // Create rows for each risk with wrapped text (no truncation).
   // When a row has no Additional Controls (column j), columns k, l and m stay blank.
-  const riskRows = risks.map(risk => {
-    const hasAdditionalControls = (risk["Reasonable Additional Control Measures"] ?? "").trim().length > 0;
-    return [
+  const grouped = splitRisks(risks);
+  const ordered = [...grouped.activity, ...grouped.environmental];
+  const riskRows = ordered.flatMap(risk => {
+    const hasAdditionalControls = richTextPlain(risk["Reasonable Additional Control Measures"] ?? "").trim().length > 0;
+    const row = [
       risk.Ref,
-      risk["Activity/Element"],
-      risk["Hazards Identified"],
-      risk["Who or What Might be Harmed and How"],
-      risk["Existing Control Measures"],
+      richCell(risk["Activity/Element"]),
+      richCell(risk["Hazards Identified"]),
+      richCell(risk["Who or What Might be Harmed and How"]),
+      richCell(risk["Existing Control Measures"]),
       { content: risk.Likelihood, styles: { halign: 'center', fontStyle: 'bold' } },
       { content: risk.Impact, styles: { halign: 'center', fontStyle: 'bold' } },
       { content: risk["Risk Rating (LxI)"], styles: { halign: 'center', fontStyle: 'bold', fillColor: ratingColor(risk["Risk Rating (LxI)"]) } },
       { content: risk["Is Risk Acceptable"], styles: { halign: 'center', fontStyle: 'bold' } },
-      risk["Reasonable Additional Control Measures"],
+      richCell(risk["Reasonable Additional Control Measures"]),
       { content: hasAdditionalControls ? risk["Revised Likelihood"] : '', styles: { halign: 'center', fontStyle: 'bold' } },
       { content: hasAdditionalControls ? risk["Revised Impact"] : '', styles: { halign: 'center', fontStyle: 'bold' } },
       { content: hasAdditionalControls ? risk["Revised Risk Rating (LxI)"] : '', styles: { halign: 'center', fontStyle: 'bold', fillColor: ratingColor(hasAdditionalControls ? risk["Revised Risk Rating (LxI)"] : undefined) } },
-      risk["List Required Actions (Who, When and How)"]
+      richCell(risk["List Required Actions (Who, When and How)"])
     ];
+    if (risk === grouped.environmental[0]) return [[{ content: environmentalHeading, colSpan: 14, styles: { fillColor: [5, 52, 133], textColor: [255, 255, 255], fontStyle: 'bold' } }], row];
+    return [row];
   });
 
   // Add a default example row if no risks
@@ -87,6 +94,8 @@ export const addRiskTable = (
 
   // Create the main risk table with optimized column widths and text wrapping
   autoTable(doc, {
+    ...richTextCellHooks(doc),
+    rowPageBreak: 'avoid',
     startY: startY,
     head: riskHeaders,
     body: riskRows,
