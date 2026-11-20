@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { RiskEntry } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Pencil, Trash2, Leaf, ArrowUp } from 'lucide-react';
+import { Pencil, Trash2, Leaf } from 'lucide-react';
 import { editorContent, sanitizeRichText } from '@/lib/richText';
 import { environmentalHeading } from '@/lib/riskSections';
 import RiskFormFields from './RiskFormFields';
@@ -47,7 +47,7 @@ const RiskList: React.FC<RiskListProps> = ({ risks, onEditRisk, onDeleteRisk }) 
           <TableCell>{risk['Risk Rating (LxI)']}</TableCell><TableCell>{risk['Is Risk Acceptable']}</TableCell><TableCell>{risk['Revised Risk Rating (LxI)']}</TableCell>
           <TableCell><div className="flex flex-wrap gap-1">
             <Button variant="ghost" size="sm" onClick={() => { setEditingIndex(index); setEditingRisk({ ...risk }); }}><Pencil />Edit</Button>
-            <Button variant="outline" size="sm" onClick={() => onEditRisk(index, { ...risk, section: environmental ? 'activity' : 'environmental' })}>{environmental ? <ArrowUp /> : <Leaf />}{environmental ? 'Move to Activity' : 'Move to Environmental'}</Button>
+            <Button variant="ghost" size="sm" title={environmental ? 'Remove environmental marking' : 'Mark as environmental risk'} aria-label={environmental ? 'Remove environmental marking' : 'Mark as environmental risk'} className={environmental ? 'text-primary' : 'text-muted-foreground'} onClick={() => onEditRisk(index, { ...risk, section: environmental ? 'activity' : 'environmental' })}><Leaf className={environmental ? 'fill-current' : ''} /></Button>
             {onDeleteRisk && <Button variant="ghost" size="sm" className="text-destructive" onClick={() => onDeleteRisk(index)}><Trash2 />Delete</Button>}
           </div></TableCell>
         </TableRow>)}</TableBody>
