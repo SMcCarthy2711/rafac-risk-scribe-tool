@@ -18,7 +18,8 @@ export function richTextRuns(value: string): TextRun[] {
     if (!(node instanceof Element)) return;
     const tag = node.tagName.toLowerCase();
     if (tag === 'br') { append('\n'); return; }
-    if (['p', 'li', 'ul', 'ol'].includes(tag)) newline();
+    const firstListParagraph = tag === 'p' && node.parentElement?.tagName === 'LI' && node === node.parentElement.firstElementChild;
+    if (['p', 'li', 'ul', 'ol'].includes(tag) && !firstListParagraph) newline();
     if (tag === 'li') {
       const siblings = Array.from(node.parentElement?.children || []);
       append(node.parentElement?.tagName === 'OL' ? `${siblings.indexOf(node) + 1}. ` : '• ', style);
