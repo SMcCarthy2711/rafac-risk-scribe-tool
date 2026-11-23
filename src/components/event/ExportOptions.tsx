@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Download, FileText, Users, UserCheck } from "lucide-react";
 import { exportCompleteEventPackPdf } from "@/lib/eventDocumentPdf";
 
-const ExportOptions = ({ eventPlan, riskAssessment }) => {
+const ExportOptions = ({ eventPlan, riskAssessment, eventDescription }) => {
   const exportEventPack = async () => {
     if (!eventPlan) {
       toast.error("Event plan data not available");
@@ -35,9 +35,9 @@ const ExportOptions = ({ eventPlan, riskAssessment }) => {
         travelPlan: travelData.data,
         kitList: kitData.data,
         schedule: scheduleData.data,
-        eventDescription: joiningContent && typeof joiningContent === "object" && "event_description" in joiningContent
+        eventDescription: eventDescription ?? eventPlan.description ?? (joiningContent && typeof joiningContent === "object" && "event_description" in joiningContent
           ? String(joiningContent.event_description || "")
-          : "",
+          : ""),
       });
       
       toast.success("Complete event pack exported successfully");

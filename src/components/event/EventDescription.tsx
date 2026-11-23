@@ -1,16 +1,19 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
+import RichTextEditor from "@/components/RichTextEditor";
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { FileText } from "lucide-react";
 
 interface EventDescriptionProps {
   description: string;
   setDescription: (description: string) => void;
+  onSave: () => Promise<void>;
+  saving: boolean;
 }
 
-const EventDescription: React.FC<EventDescriptionProps> = ({ description, setDescription }) => {
+const EventDescription: React.FC<EventDescriptionProps> = ({ description, setDescription, onSave, saving }) => {
   return (
     <Card>
       <CardHeader>
@@ -22,16 +25,13 @@ const EventDescription: React.FC<EventDescriptionProps> = ({ description, setDes
       <CardContent>
         <div className="space-y-2">
           <Label htmlFor="event-description">Event Description</Label>
-          <Textarea
+          <RichTextEditor
             id="event-description"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Provide a detailed description of the event that will be included in joining orders..."
-            className="min-h-[120px]"
+            onChange={setDescription}
+            label="Event Description"
           />
-          <p className="text-xs text-gray-500">
-            This description will be included in the joining orders to provide cadets and staff with detailed information about the event.
-          </p>
+          <Button onClick={onSave} disabled={saving}>{saving ? 'Saving…' : 'Save Description'}</Button>
         </div>
       </CardContent>
     </Card>

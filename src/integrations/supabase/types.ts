@@ -17,12 +17,16 @@ export type Database = {
       event_plans: {
         Row: {
           created_at: string
+          description: string
           emergency_contact: string | null
           end_date: string | null
           id: string
+          lead_squadron: string
           location: string | null
           name: string
+          other_squadrons: string[]
           risk_assessment_id: string | null
+          sms_reference: string
           staff_lead: string | null
           start_date: string | null
           total_cadets: number | null
@@ -32,12 +36,16 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          description?: string
           emergency_contact?: string | null
           end_date?: string | null
           id?: string
+          lead_squadron?: string
           location?: string | null
           name: string
+          other_squadrons?: string[]
           risk_assessment_id?: string | null
+          sms_reference?: string
           staff_lead?: string | null
           start_date?: string | null
           total_cadets?: number | null
@@ -47,12 +55,16 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          description?: string
           emergency_contact?: string | null
           end_date?: string | null
           id?: string
+          lead_squadron?: string
           location?: string | null
           name?: string
+          other_squadrons?: string[]
           risk_assessment_id?: string | null
+          sms_reference?: string
           staff_lead?: string | null
           start_date?: string | null
           total_cadets?: number | null
@@ -75,6 +87,7 @@ export type Database = {
           activity: string
           created_at: string
           date: string
+          end_date: string | null
           end_time: string
           event_plan_id: string
           id: string
@@ -89,6 +102,7 @@ export type Database = {
           activity: string
           created_at?: string
           date: string
+          end_date?: string | null
           end_time: string
           event_plan_id: string
           id?: string
@@ -103,6 +117,7 @@ export type Database = {
           activity?: string
           created_at?: string
           date?: string
+          end_date?: string | null
           end_time?: string
           event_plan_id?: string
           id?: string

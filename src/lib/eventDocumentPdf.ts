@@ -1,5 +1,6 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
+import { richCell, richTextCellHooks } from './pdf/richTextCells';
 
 type RecordValue = Record<string, any>;
 
@@ -110,6 +111,20 @@ class PdfLayout {
     this.y += 7;
   }
 
+  description(value: string) {
+    this.subheading('Description');
+    autoTable(this.doc, {
+      startY: this.y - 2,
+      margin: { top: PAGE_MARGIN, left: PAGE_MARGIN, right: PAGE_MARGIN, bottom: 17 },
+      theme: 'plain',
+      body: [[richCell(value)]],
+      styles: { fontSize: 10, cellPadding: 0, overflow: 'linebreak' },
+      ...richTextCellHooks(this.doc),
+      didDrawPage: hook => { this.y = hook.cursor?.y ?? PAGE_MARGIN; },
+    });
+    this.y += 8;
+  }
+
   bullet(item: unknown, caption?: unknown) {
     this.doc.setFont("helvetica", "normal");
     this.doc.setFontSize(10);
@@ -144,7 +159,7 @@ class PdfLayout {
   }
 
   scheduleItem(item: RecordValue) {
-    const time = `${safeText(item.start_time)} - ${safeText(item.end_time)}`;
+    const time = `${safeText(item.start_time)} - ${safeText(item.end_time)}${item.end_date && item.end_date !== item.date ? `\nEnds ${formatDate(item.end_date)}` : ''}`;
     const activity = safeText(item.activity);
     const details = `Lead: ${safeText(item.lead_person)} | Audience: ${safeText(item.target_audience, "All")}`;
     const notes = safeText(item.notes, "");
@@ -177,9 +192,12 @@ const addEventOverview = (layout: PdfLayout, eventPlan: RecordValue, description
   layout.field("Location", eventPlan.location);
   layout.field("Dates", `${formatDate(eventPlan.start_date)} to ${formatDate(eventPlan.end_date || eventPlan.start_date)}`);
   layout.field("Staff lead", eventPlan.staff_lead);
+  if (eventPlan.sms_reference) layout.field('SMS reference', eventPlan.sms_reference);
+  if (eventPlan.lead_squadron) layout.field('Lead squadron', eventPlan.lead_squadron);
+  if (Array.isArray(eventPlan.other_squadrons) && eventPlan.other_squadrons.length) layout.field('Other squadrons', eventPlan.other_squadrons.join(', '));
   layout.field("Participants", `${safeText(eventPlan.total_cadets, "0")} cadets, ${safeText(eventPlan.total_staff, "0")} staff`);
   layout.field("Emergency contact", eventPlan.emergency_contact);
-  if (description) layout.field("Description", description);
+  if (description) layout.description(description);
 };
 
 const addTravel = (layout: PdfLayout, travelPlan?: RecordValue | null) => {

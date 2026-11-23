@@ -1,15 +1,16 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Users, MapPin, Calendar, Phone } from "lucide-react";
+import { Users, MapPin, Calendar, Phone, Plus, Trash2 } from "lucide-react";
 
 const EventOverview = ({ eventPlan, setEventPlan }) => {
+  const [otherSquadrons, setOtherSquadrons] = useState<string[]>(eventPlan?.other_squadrons || []);
+  useEffect(() => { setOtherSquadrons(eventPlan?.other_squadrons || []); }, [eventPlan?.id]);
   const handleUpdate = async (field, value) => {
     try {
       const { data, error } = await supabase
@@ -37,6 +38,26 @@ const EventOverview = ({ eventPlan, setEventPlan }) => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <Label htmlFor="sms-reference">SMS Reference Number</Label>
+            <Input id="sms-reference" defaultValue={eventPlan?.sms_reference || ''} onBlur={e => { if (e.target.value !== eventPlan?.sms_reference) handleUpdate('sms_reference', e.target.value); }} />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="lead-squadron">Lead Squadron Name</Label>
+            <Input id="lead-squadron" defaultValue={eventPlan?.lead_squadron || ''} onBlur={e => { if (e.target.value !== eventPlan?.lead_squadron) handleUpdate('lead_squadron', e.target.value); }} />
+          </div>
+        </div>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <Label>Other Squadrons</Label>
+            <Button variant="outline" size="sm" onClick={() => setOtherSquadrons(prev => [...prev, ''])}><Plus className="h-4 w-4 mr-2" />Add Squadron</Button>
+          </div>
+          {otherSquadrons.map((squadron, index) => <div key={index} className="flex gap-2">
+            <Input aria-label={`Other Squadron ${index + 1}`} value={squadron} onChange={e => setOtherSquadrons(prev => prev.map((value, i) => i === index ? e.target.value : value))} onBlur={() => handleUpdate('other_squadrons', otherSquadrons.filter(value => value.trim()))} />
+            <Button variant="ghost" size="icon" aria-label={`Remove Squadron ${index + 1}`} title="Remove squadron" onClick={() => { const remaining = otherSquadrons.filter((_, i) => i !== index); setOtherSquadrons(remaining); handleUpdate('other_squadrons', remaining.filter(value => value.trim())); }}><Trash2 className="h-4 w-4" /></Button>
+          </div>)}
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <Label htmlFor="event-name">Event Name</Label>

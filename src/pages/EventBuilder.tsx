@@ -14,6 +14,7 @@ import KitList from "@/components/event/KitList";
 import EventSchedule from "@/components/event/EventSchedule";
 import JoiningOrders from "@/components/event/JoiningOrders";
 import ExportOptions from "@/components/event/ExportOptions";
+import { sanitizeRichText } from "@/lib/richText";
 
 const EventBuilder = () => {
   const { riskAssessmentId } = useParams();
@@ -23,6 +24,7 @@ const EventBuilder = () => {
   const [riskAssessment, setRiskAssessment] = useState(null);
   const [eventDescription, setEventDescription] = useState("");
   const [loading, setLoading] = useState(true);
+  const [savingDescription, setSavingDescription] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -77,6 +79,7 @@ const EventBuilder = () => {
           setEventPlan(newEventPlan);
         } else {
           setEventPlan(epData);
+          setEventDescription(epData.description || "");
         }
       } catch (error) {
         console.error("Error loading data:", error);
@@ -88,6 +91,22 @@ const EventBuilder = () => {
 
     loadData();
   }, [riskAssessmentId, navigate]);
+
+  const saveDescription = async () => {
+    if (!eventPlan?.id) return;
+    setSavingDescription(true);
+    try {
+      const description = sanitizeRichText(eventDescription);
+      const { error } = await supabase.from('event_plans').update({ description }).eq('id', eventPlan.id);
+      if (error) throw error;
+      setEventPlan(prev => ({ ...prev, description }));
+      toast.success('Event description saved');
+    } catch {
+      toast.error('Failed to save event description');
+    } finally {
+      setSavingDescription(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -183,7 +202,7 @@ const EventBuilder = () => {
           </TabsContent>
 
           <TabsContent value="description">
-            <EventDescription description={eventDescription} setDescription={setEventDescription} />
+            <EventDescription description={eventDescription} setDescription={setEventDescription} onSave={saveDescription} saving={savingDescription} />
           </TabsContent>
 
           <TabsContent value="travel">
@@ -207,7 +226,7 @@ const EventBuilder = () => {
           </TabsContent>
 
           <TabsContent value="export">
-            <ExportOptions eventPlan={eventPlan} riskAssessment={riskAssessment} />
+            <ExportOptions eventPlan={eventPlan} riskAssessment={riskAssessment} eventDescription={eventDescription} />
           </TabsContent>
         </Tabs>
       </div>

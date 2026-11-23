@@ -4,23 +4,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Clock, Plus, Trash2, Calendar } from "lucide-react";
+import { emptyScheduleItem, nextScheduleItem, scheduleEndsAfterStart } from '@/lib/eventSchedule';
 
 const EventSchedule = ({ eventPlanId }) => {
   const [scheduleItems, setScheduleItems] = useState([]);
-  const [newItem, setNewItem] = useState({
-    date: "",
-    start_time: "",
-    end_time: "",
-    activity: "",
-    lead_person: "",
-    target_audience: "All",
-    notes: ""
-  });
+  const [newItem, setNewItem] = useState(emptyScheduleItem);
 
   useEffect(() => {
     loadSchedule();
@@ -37,6 +29,8 @@ const EventSchedule = ({ eventPlanId }) => {
 
       if (error) throw error;
       setScheduleItems(data || []);
+      const last = data?.at(-1);
+      setNewItem(last ? nextScheduleItem(last) : emptyScheduleItem());
     } catch (error) {
       console.error("Error loading schedule:", error);
       toast.error("Failed to load schedule");
@@ -44,8 +38,12 @@ const EventSchedule = ({ eventPlanId }) => {
   };
 
   const addScheduleItem = async () => {
-    if (!newItem.date || !newItem.start_time || !newItem.end_time || !newItem.activity) {
+    if (!newItem.date || !newItem.end_date || !newItem.start_time || !newItem.end_time || !newItem.activity) {
       toast.error("Please fill in all required fields");
+      return;
+    }
+    if (!scheduleEndsAfterStart(newItem)) {
+      toast.error('End date and time must be after the start');
       return;
     }
 
@@ -70,15 +68,7 @@ const EventSchedule = ({ eventPlanId }) => {
       if (error) throw error;
 
       setScheduleItems([...scheduleItems, data]);
-      setNewItem({
-        date: "",
-        start_time: "",
-        end_time: "",
-        activity: "",
-        lead_person: "",
-        target_audience: "All",
-        notes: ""
-      });
+      setNewItem(nextScheduleItem(data));
       toast.success("Schedule item added");
     } catch (error) {
       console.error("Error adding schedule item:", error);
@@ -127,14 +117,14 @@ const EventSchedule = ({ eventPlanId }) => {
             <CardTitle className="text-lg">Add Schedule Item</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="date">Date *</Label>
+                <Label htmlFor="date">Start Date *</Label>
                 <Input
                   id="date"
                   type="date"
                   value={newItem.date}
-                  onChange={(e) => setNewItem(prev => ({ ...prev, date: e.target.value }))}
+                  onChange={(e) => setNewItem(prev => ({ ...prev, date: e.target.value, end_date: !prev.end_date || prev.end_date === prev.date ? e.target.value : prev.end_date }))}
                 />
               </div>
               
@@ -148,6 +138,10 @@ const EventSchedule = ({ eventPlanId }) => {
                 />
               </div>
               
+              <div className="space-y-2">
+                <Label htmlFor="end-date">End Date *</Label>
+                <Input id="end-date" type="date" value={newItem.end_date} min={newItem.date} onChange={e => setNewItem(prev => ({ ...prev, end_date: e.target.value }))} />
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="end-time">End Time *</Label>
                 <Input
@@ -240,6 +234,7 @@ const EventSchedule = ({ eventPlanId }) => {
                         <div>
                           <span className="text-sm font-medium text-slate-600">Time:</span>
                           <p className="font-medium">{item.start_time} - {item.end_time}</p>
+                          {item.end_date && item.end_date !== item.date && <p className="text-sm text-muted-foreground">Ends {item.end_date}</p>}
                         </div>
                         <div>
                           <span className="text-sm font-medium text-slate-600">Activity:</span>

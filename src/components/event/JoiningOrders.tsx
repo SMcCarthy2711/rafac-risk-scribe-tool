@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { FileText, Download, QrCode } from "lucide-react";
 import { exportJoiningOrdersPdf } from "@/lib/eventDocumentPdf";
+import { editorContent } from '@/lib/richText';
 
 interface JoiningOrdersProps {
   eventPlan: any;
@@ -59,6 +60,9 @@ const JoiningOrders: React.FC<JoiningOrdersProps> = ({ eventPlan, riskAssessment
         end_date: eventPlan.end_date,
         staff_lead: eventPlan.staff_lead,
         emergency_contact: eventPlan.emergency_contact,
+        sms_reference: eventPlan.sms_reference,
+        lead_squadron: eventPlan.lead_squadron,
+        other_squadrons: eventPlan.other_squadrons,
         event_description: eventDescription || "",
         travel_plan: travelData.data,
         kit_list: kitData.data,
@@ -179,7 +183,7 @@ const JoiningOrders: React.FC<JoiningOrdersProps> = ({ eventPlan, riskAssessment
                   <p className="text-sm text-slate-600">Location: {joiningOrder.content.location}</p>
                   <p className="text-sm text-slate-600">Date: {joiningOrder.content.start_date}</p>
                   {joiningOrder.content.event_description && (
-                    <p className="text-sm text-slate-600 mt-2">Description: {joiningOrder.content.event_description}</p>
+                    <div className="rich-text-display text-sm text-muted-foreground mt-2" dangerouslySetInnerHTML={{ __html: editorContent(joiningOrder.content.event_description) }} />
                   )}
                 </div>
                 
