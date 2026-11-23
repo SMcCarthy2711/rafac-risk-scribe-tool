@@ -214,6 +214,8 @@ export type Database = {
           impact: number
           likelihood: number
           required_actions: string | null
+          revised_impact: number | null
+          revised_likelihood: number | null
           subcategory_id: string | null
           updated_at: string
           who_might_be_harmed: string
@@ -229,6 +231,8 @@ export type Database = {
           impact: number
           likelihood: number
           required_actions?: string | null
+          revised_impact?: number | null
+          revised_likelihood?: number | null
           subcategory_id?: string | null
           updated_at?: string
           who_might_be_harmed: string
@@ -244,6 +248,8 @@ export type Database = {
           impact?: number
           likelihood?: number
           required_actions?: string | null
+          revised_impact?: number | null
+          revised_likelihood?: number | null
           subcategory_id?: string | null
           updated_at?: string
           who_might_be_harmed?: string

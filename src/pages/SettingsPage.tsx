@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import RichTextEditor from "@/components/RichTextEditor";
+import { richTextPlain } from "@/lib/richText";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +21,8 @@ interface RiskForm {
   existing_control_measures: string;
   likelihood: number;
   impact: number;
+  revised_likelihood: number;
+  revised_impact: number;
   additional_control_measures: string;
   required_actions: string;
   category_id: string;
@@ -33,6 +36,8 @@ const emptyRisk: RiskForm = {
   existing_control_measures: "",
   likelihood: 1,
   impact: 1,
+  revised_likelihood: 1,
+  revised_impact: 1,
   additional_control_measures: "",
   required_actions: "",
   category_id: "",
@@ -141,6 +146,8 @@ const SettingsPage = () => {
       existing_control_measures: risk.existing_control_measures,
       likelihood: risk.likelihood,
       impact: risk.impact,
+      revised_likelihood: risk.revised_likelihood ?? risk.likelihood,
+      revised_impact: risk.revised_impact ?? risk.impact,
       additional_control_measures: risk.additional_control_measures || "",
       required_actions: risk.required_actions || "",
       category_id: risk.category_id,
@@ -150,12 +157,14 @@ const SettingsPage = () => {
   };
 
   const saveRisk = async () => {
-    if (!riskForm.activity_element || !riskForm.category_id || !riskForm.hazards_identified || !riskForm.existing_control_measures || !riskForm.who_might_be_harmed) {
+    if (!riskForm.category_id || [riskForm.activity_element, riskForm.hazards_identified, riskForm.existing_control_measures, riskForm.who_might_be_harmed].some(v => !richTextPlain(v).trim())) {
       toast.error("Please fill in all required fields");
       return;
     }
     const payload = {
       ...riskForm,
+      revised_likelihood: riskForm.likelihood * riskForm.impact >= 10 ? riskForm.revised_likelihood : null,
+      revised_impact: riskForm.likelihood * riskForm.impact >= 10 ? riskForm.revised_impact : null,
       subcategory_id: riskForm.subcategory_id || null,
     };
 
@@ -268,8 +277,8 @@ const SettingsPage = () => {
                 <CardContent className="py-3 px-4">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-sm">{risk.activity_element}</p>
-                      <p className="text-xs text-slate-500 mt-1 truncate">{risk.hazards_identified}</p>
+                      <p className="font-medium text-sm">{richTextPlain(risk.activity_element)}</p>
+                      <p className="text-xs text-slate-500 mt-1 truncate">{richTextPlain(risk.hazards_identified)}</p>
                       <div className="flex gap-2 mt-2 flex-wrap">
                         <Badge variant="secondary" className="text-xs">{getCategoryName(risk.category_id)}</Badge>
                         {getSubcategoryName(risk.subcategory_id) && (
@@ -323,19 +332,19 @@ const SettingsPage = () => {
               </div>
               <div>
                 <Label>Activity / Element *</Label>
-                <Input value={riskForm.activity_element} onChange={e => setRiskForm(f => ({ ...f, activity_element: e.target.value }))} />
+                <RichTextEditor label="activity_element" value={riskForm.activity_element} onChange={v => setRiskForm(f => ({ ...f, activity_element: v }))} />
               </div>
               <div>
                 <Label>Hazards Identified *</Label>
-                <Textarea value={riskForm.hazards_identified} onChange={e => setRiskForm(f => ({ ...f, hazards_identified: e.target.value }))} rows={2} />
+                <RichTextEditor label="hazards_identified" value={riskForm.hazards_identified} onChange={v => setRiskForm(f => ({ ...f, hazards_identified: v }))} />
               </div>
               <div>
                 <Label>Who Might Be Harmed *</Label>
-                <Input value={riskForm.who_might_be_harmed} onChange={e => setRiskForm(f => ({ ...f, who_might_be_harmed: e.target.value }))} />
+                <RichTextEditor label="who_might_be_harmed" value={riskForm.who_might_be_harmed} onChange={v => setRiskForm(f => ({ ...f, who_might_be_harmed: v }))} />
               </div>
               <div>
                 <Label>Existing Control Measures *</Label>
-                <Textarea value={riskForm.existing_control_measures} onChange={e => setRiskForm(f => ({ ...f, existing_control_measures: e.target.value }))} rows={2} />
+                <RichTextEditor label="existing_control_measures" value={riskForm.existing_control_measures} onChange={v => setRiskForm(f => ({ ...f, existing_control_measures: v }))} />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -349,12 +358,28 @@ const SettingsPage = () => {
               </div>
               <div>
                 <Label>Additional Control Measures</Label>
-                <Textarea value={riskForm.additional_control_measures} onChange={e => setRiskForm(f => ({ ...f, additional_control_measures: e.target.value }))} rows={2} />
+                <RichTextEditor label="additional_control_measures" value={riskForm.additional_control_measures} onChange={v => setRiskForm(f => ({ ...f, additional_control_measures: v }))} />
               </div>
               <div>
                 <Label>Required Actions</Label>
-                <Textarea value={riskForm.required_actions} onChange={e => setRiskForm(f => ({ ...f, required_actions: e.target.value }))} rows={2} />
+                <RichTextEditor label="required_actions" value={riskForm.required_actions} onChange={v => setRiskForm(f => ({ ...f, required_actions: v }))} />
               </div>
+              {riskForm.likelihood * riskForm.impact >= 10 && (
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <Label>Revised Likelihood (1-5)</Label>
+                    <Input type="number" min={1} max={5} value={riskForm.revised_likelihood} onChange={e => setRiskForm(f => ({ ...f, revised_likelihood: parseInt(e.target.value) || 1 }))} />
+                  </div>
+                  <div>
+                    <Label>Revised Impact (1-5)</Label>
+                    <Input type="number" min={1} max={5} value={riskForm.revised_impact} onChange={e => setRiskForm(f => ({ ...f, revised_impact: parseInt(e.target.value) || 1 }))} />
+                  </div>
+                  <div>
+                    <Label>Revised Rating</Label>
+                    <Input readOnly value={riskForm.revised_likelihood * riskForm.revised_impact} />
+                  </div>
+                </div>
+              )}
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setRiskDialogOpen(false)}>Cancel</Button>

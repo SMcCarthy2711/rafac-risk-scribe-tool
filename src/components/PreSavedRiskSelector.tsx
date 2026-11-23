@@ -1,3 +1,4 @@
+import { richTextPlain } from "@/lib/richText";
 
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -34,6 +35,8 @@ interface PreSavedRisk {
   impact: number;
   additional_control_measures: string | null;
   required_actions: string | null;
+  revised_likelihood: number | null;
+  revised_impact: number | null;
 }
 
 interface PreSavedRiskSelectorProps {
@@ -120,9 +123,9 @@ const PreSavedRiskSelector: React.FC<PreSavedRiskSelectorProps> = ({
       "Risk Rating (LxI)": (preSavedRisk.likelihood * preSavedRisk.impact).toString(),
       "Is Risk Acceptable": (preSavedRisk.likelihood * preSavedRisk.impact) < 10 ? "Yes" : "No",
       "Reasonable Additional Control Measures": preSavedRisk.additional_control_measures || "",
-      "Revised Likelihood": preSavedRisk.likelihood.toString(),
-      "Revised Impact": preSavedRisk.impact.toString(),
-      "Revised Risk Rating (LxI)": (preSavedRisk.likelihood * preSavedRisk.impact).toString(),
+      "Revised Likelihood": (preSavedRisk.revised_likelihood ?? preSavedRisk.likelihood).toString(),
+      "Revised Impact": (preSavedRisk.revised_impact ?? preSavedRisk.impact).toString(),
+      "Revised Risk Rating (LxI)": ((preSavedRisk.revised_likelihood ?? preSavedRisk.likelihood) * (preSavedRisk.revised_impact ?? preSavedRisk.impact)).toString(),
       "List Required Actions (Who, When and How)": preSavedRisk.required_actions || ""
     };
 
@@ -219,7 +222,7 @@ const PreSavedRiskSelector: React.FC<PreSavedRiskSelectorProps> = ({
                   <Card key={risk.id} className="hover:shadow-md transition-shadow">
                     <CardHeader>
                       <div className="flex justify-between items-start">
-                        <CardTitle className="text-lg">{risk.activity_element}</CardTitle>
+                        <CardTitle className="text-lg">{richTextPlain(risk.activity_element)}</CardTitle>
                         <Button onClick={() => handleRiskSelect(risk)} size="sm">
                           <Plus className="h-4 w-4 mr-2" />
                           Add Risk
@@ -229,15 +232,15 @@ const PreSavedRiskSelector: React.FC<PreSavedRiskSelectorProps> = ({
                     <CardContent className="space-y-2">
                       <div>
                         <strong className="text-sm">Hazards:</strong>
-                        <p className="text-sm text-muted-foreground">{risk.hazards_identified}</p>
+                        <p className="text-sm text-muted-foreground">{richTextPlain(risk.hazards_identified)}</p>
                       </div>
                       <div>
                         <strong className="text-sm">Who Might be Harmed:</strong>
-                        <p className="text-sm text-muted-foreground">{risk.who_might_be_harmed}</p>
+                        <p className="text-sm text-muted-foreground">{richTextPlain(risk.who_might_be_harmed)}</p>
                       </div>
                       <div>
                         <strong className="text-sm">Existing Controls:</strong>
-                        <p className="text-sm text-muted-foreground">{risk.existing_control_measures}</p>
+                        <p className="text-sm text-muted-foreground">{richTextPlain(risk.existing_control_measures)}</p>
                       </div>
                       <div className="flex gap-4 pt-2">
                         <Badge variant="outline">Likelihood: {risk.likelihood}</Badge>

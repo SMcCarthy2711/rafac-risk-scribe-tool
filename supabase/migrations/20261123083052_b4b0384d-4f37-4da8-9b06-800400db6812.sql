@@ -1,0 +1,1 @@
+ALTER TABLE public.pre_saved_risks ADD COLUMN revised_likelihood integer, ADD COLUMN revised_impact integer;
