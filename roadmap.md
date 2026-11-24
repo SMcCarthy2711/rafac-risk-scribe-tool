@@ -1,5 +1,7 @@
 # Tasks
 
+- [ ] Sweep assessment, review, sign-off and dynamic dates for incomplete-year entry; verify legacy date compatibility.
+
 - [x] Fix incomplete year entry in Event Builder overview and schedule dates and verify typed/calendar input with sample data.
 
 - [x] Add and save rich event descriptions with formatted PDF output.

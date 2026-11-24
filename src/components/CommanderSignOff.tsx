@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CommanderFields, SignOffEntry } from "@/lib/types";
+import EventDatePicker from './EventDatePicker';
+import { displayDateEntry } from '@/lib/dateEntry';
 
 interface CommanderSignOffProps {
   commanderFields: CommanderFields;
@@ -68,14 +70,14 @@ const CommanderSignOff: React.FC<CommanderSignOffProps> = ({
               {fields.map((f) => (
                 <div key={f.key} className="space-y-2">
                   <Label htmlFor={`${section.key}-${f.key}`}>{f.label}</Label>
-                  <Input
+                  {f.key === 'Date' ? <EventDatePicker id={`${section.key}-${f.key}`} label={`${section.title} Date`} value={commanderFields[section.key].Date} onChange={value => handleChange(section.key, 'Date', displayDateEntry(value))} /> : <Input
                     id={`${section.key}-${f.key}`}
                     value={commanderFields[section.key][f.key]}
                     onChange={(e) =>
                       handleChange(section.key, f.key, e.target.value)
                     }
                     placeholder={`Enter ${f.label}`}
-                  />
+                  />}
                 </div>
               ))}
             </div>

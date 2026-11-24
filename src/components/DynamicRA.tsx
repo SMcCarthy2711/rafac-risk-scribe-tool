@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DynamicFields } from "@/lib/types";
+import EventDatePicker from './EventDatePicker';
+import { displayDateEntry } from '@/lib/dateEntry';
 
 interface DynamicRAProps {
   dynamicFields: DynamicFields;
@@ -73,11 +75,11 @@ const DynamicRA: React.FC<DynamicRAProps> = ({ dynamicFields, setDynamicFields }
             
             <div className="space-y-2">
               <Label htmlFor="dynamic-date">Dynamic Date</Label>
-              <Input
+              <EventDatePicker
                 id="dynamic-date"
+                label="Dynamic Date"
                 value={dynamicFields["Dynamic Date"]}
-                onChange={(e) => handleInputChange("Dynamic Date", e.target.value)}
-                placeholder="DD/MM/YYYY"
+                onChange={(value) => handleInputChange("Dynamic Date", displayDateEntry(value))}
               />
             </div>
           </div>

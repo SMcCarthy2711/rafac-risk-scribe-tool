@@ -14,14 +14,15 @@ export default function EventDatePicker({ id, label, value, onChange, min }: Pro
   const [invalid, setInvalid] = useState(false);
   const [open, setOpen] = useState(false);
   useEffect(() => { setDraft(displayDateEntry(value)); setInvalid(false); }, [value]);
-  const parsed = value ? parse(value, 'yyyy-MM-dd', new Date()) : undefined;
+  const normalizedValue = parseDateEntry(value) || value;
+  const parsed = normalizedValue ? parse(normalizedValue, 'yyyy-MM-dd', new Date()) : undefined;
   const selected = parsed && isValid(parsed) && parsed.getFullYear() >= 1000 ? parsed : undefined;
   const commit = () => {
     if (!draft.trim()) { setInvalid(false); if (value) onChange(''); return; }
     const date = parseDateEntry(draft);
     if (!date || (min && date < min)) { setInvalid(true); return; }
     setInvalid(false);
-    if (date !== value) onChange(date);
+    if (date !== normalizedValue) onChange(date);
   };
   const year = selected?.getFullYear() || new Date().getFullYear();
   return <div className="space-y-1">

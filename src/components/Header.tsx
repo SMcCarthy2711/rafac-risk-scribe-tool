@@ -9,6 +9,8 @@ import { HeaderFields } from "@/lib/types";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useAuth } from "@/components/AuthWrapper";
 import { LogOut, Shield } from "lucide-react";
+import EventDatePicker from './EventDatePicker';
+import { displayDateEntry } from '@/lib/dateEntry';
 
 interface HeaderProps {
   headerFields: HeaderFields;
@@ -78,11 +80,11 @@ const Header: React.FC<HeaderProps> = ({ headerFields, setHeaderFields }) => {
 
           <div className="space-y-2">
             <Label htmlFor="date">Assessment Date</Label>
-            <Input
+            <EventDatePicker
               id="date"
+              label="Assessment Date"
               value={headerFields["Assessment Date"]}
-              onChange={(e) => handleInputChange("Assessment Date", e.target.value)}
-              placeholder="DD/MM/YYYY"
+              onChange={(value) => handleInputChange("Assessment Date", value)}
             />
           </div>
 
@@ -103,38 +105,38 @@ const Header: React.FC<HeaderProps> = ({ headerFields, setHeaderFields }) => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="space-y-1">
                 <Label htmlFor="review1" className="text-xs">Review 1</Label>
-                <Input
+                <EventDatePicker
                   id="review1"
+                  label="Review 1"
                   value={headerFields["Review 1 Date"] || ""}
-                  onChange={(e) => handleInputChange("Review 1 Date", e.target.value)}
-                  placeholder="DD/MM/YYYY"
+                  onChange={(value) => handleInputChange("Review 1 Date", displayDateEntry(value))}
                 />
               </div>
               <div className="space-y-1">
                 <Label htmlFor="review2" className="text-xs">Review 2</Label>
-                <Input
+                <EventDatePicker
                   id="review2"
+                  label="Review 2"
                   value={headerFields["Review 2 Date"] || ""}
-                  onChange={(e) => handleInputChange("Review 2 Date", e.target.value)}
-                  placeholder="DD/MM/YYYY"
+                  onChange={(value) => handleInputChange("Review 2 Date", displayDateEntry(value))}
                 />
               </div>
               <div className="space-y-1">
                 <Label htmlFor="review3" className="text-xs">Review 3</Label>
-                <Input
+                <EventDatePicker
                   id="review3"
+                  label="Review 3"
                   value={headerFields["Review 3 Date"] || ""}
-                  onChange={(e) => handleInputChange("Review 3 Date", e.target.value)}
-                  placeholder="DD/MM/YYYY"
+                  onChange={(value) => handleInputChange("Review 3 Date", displayDateEntry(value))}
                 />
               </div>
               <div className="space-y-1">
                 <Label htmlFor="review4" className="text-xs">Review 4</Label>
-                <Input
+                <EventDatePicker
                   id="review4"
+                  label="Review 4"
                   value={headerFields["Review 4 Date"] || ""}
-                  onChange={(e) => handleInputChange("Review 4 Date", e.target.value)}
-                  placeholder="DD/MM/YYYY"
+                  onChange={(value) => handleInputChange("Review 4 Date", displayDateEntry(value))}
                 />
               </div>
             </div>
