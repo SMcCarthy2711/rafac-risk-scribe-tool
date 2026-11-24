@@ -6,3 +6,4 @@
 - Store risk grouping on each risk with an optional section; missing sections are activity risks so old assessments retain their grouping.
 - Persist event descriptions and squadron metadata on event plans; use shared rich-text rendering for descriptions in previews and PDFs so saved formatting stays consistent.
 - Store schedule end dates explicitly and derive new-item defaults through `src/lib/eventSchedule.ts` so overnight items carry their finish date and time correctly.
+- Use shared draft date entry with the Shadcn calendar in Event Builder; commit only complete validated dates so typing a year cannot persist partial years.

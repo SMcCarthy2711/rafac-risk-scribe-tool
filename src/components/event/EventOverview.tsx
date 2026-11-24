@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Users, MapPin, Calendar, Phone, Plus, Trash2 } from "lucide-react";
+import EventDatePicker from '@/components/EventDatePicker';
 
 const EventOverview = ({ eventPlan, setEventPlan }) => {
   const [otherSquadrons, setOtherSquadrons] = useState<string[]>(eventPlan?.other_squadrons || []);
@@ -99,21 +100,21 @@ const EventOverview = ({ eventPlan, setEventPlan }) => {
               <Calendar className="h-4 w-4" />
               Start Date
             </Label>
-            <Input
+            <EventDatePicker
               id="start-date"
-              type="date"
+              label="Start Date"
               value={eventPlan?.start_date || ""}
-              onChange={(e) => handleUpdate("start_date", e.target.value)}
+              onChange={(value) => handleUpdate("start_date", value || null)}
             />
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="end-date">End Date</Label>
-            <Input
+            <EventDatePicker
               id="end-date"
-              type="date"
+              label="End Date"
               value={eventPlan?.end_date || ""}
-              onChange={(e) => handleUpdate("end_date", e.target.value)}
+              onChange={(value) => handleUpdate("end_date", value || null)}
             />
           </div>
         </div>

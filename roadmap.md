@@ -1,5 +1,7 @@
 # Tasks
 
+- [x] Fix incomplete year entry in Event Builder overview and schedule dates and verify typed/calendar input with sample data.
+
 - [x] Add and save rich event descriptions with formatted PDF output.
 - [x] Carry schedule end date/time into the next item.
 - [x] Add saved SMS reference, lead squadron and other squadrons.

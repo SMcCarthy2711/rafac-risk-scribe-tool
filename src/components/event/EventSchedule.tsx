@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Clock, Plus, Trash2, Calendar } from "lucide-react";
 import { emptyScheduleItem, nextScheduleItem, scheduleEndsAfterStart } from '@/lib/eventSchedule';
+import EventDatePicker from '@/components/EventDatePicker';
 
 const EventSchedule = ({ eventPlanId }) => {
   const [scheduleItems, setScheduleItems] = useState([]);
@@ -120,11 +121,11 @@ const EventSchedule = ({ eventPlanId }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="date">Start Date *</Label>
-                <Input
+                <EventDatePicker
                   id="date"
-                  type="date"
+                  label="Start Date *"
                   value={newItem.date}
-                  onChange={(e) => setNewItem(prev => ({ ...prev, date: e.target.value, end_date: !prev.end_date || prev.end_date === prev.date ? e.target.value : prev.end_date }))}
+                  onChange={(value) => setNewItem(prev => ({ ...prev, date: value, end_date: !prev.end_date || prev.end_date === prev.date ? value : prev.end_date }))}
                 />
               </div>
               
@@ -140,7 +141,7 @@ const EventSchedule = ({ eventPlanId }) => {
               
               <div className="space-y-2">
                 <Label htmlFor="schedule-end-date">End Date *</Label>
-                <Input id="schedule-end-date" type="date" value={newItem.end_date} min={newItem.date} onChange={e => setNewItem(prev => ({ ...prev, end_date: e.target.value }))} />
+                <EventDatePicker id="schedule-end-date" label="End Date *" value={newItem.end_date} min={newItem.date} onChange={value => setNewItem(prev => ({ ...prev, end_date: value }))} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="end-time">End Time *</Label>
