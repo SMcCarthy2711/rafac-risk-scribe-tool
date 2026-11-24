@@ -139,8 +139,8 @@ const EventSchedule = ({ eventPlanId }) => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="end-date">End Date *</Label>
-                <Input id="end-date" type="date" value={newItem.end_date} min={newItem.date} onChange={e => setNewItem(prev => ({ ...prev, end_date: e.target.value }))} />
+                <Label htmlFor="schedule-end-date">End Date *</Label>
+                <Input id="schedule-end-date" type="date" value={newItem.end_date} min={newItem.date} onChange={e => setNewItem(prev => ({ ...prev, end_date: e.target.value }))} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="end-time">End Time *</Label>

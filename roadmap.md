@@ -1,9 +1,10 @@
 # Tasks
 
-- [ ] Add and save rich event descriptions with formatted PDF output.
-- [ ] Carry schedule end date/time into the next item.
-- [ ] Add saved SMS reference, lead squadron and other squadrons.
-- [ ] Verify Event Builder changes; hosted signed-in checks depend on external session access.
+- [x] Add and save rich event descriptions with formatted PDF output.
+- [x] Carry schedule end date/time into the next item.
+- [x] Add saved SMS reference, lead squadron and other squadrons.
+- [x] Verify controls with sample data, PDF output, desktop/mobile layout and schedule tests.
+- [ ] Verify hosted Event Builder save/reload; blocked by unavailable external Supabase session.
 
 - [x] Replace joining-orders HTML download with PDF.
 - [x] Replace complete-event-pack HTML download with PDF.
